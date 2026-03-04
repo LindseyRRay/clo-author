@@ -1,9 +1,12 @@
 ---
 name: new-project
-description: Full research pipeline from idea to paper. Orchestrates all phases — interview, literature review, data discovery, identification strategy, analysis, paper drafting, and peer review. Use when starting a new research project from scratch.
-disable-model-invocation: true
+description: >-
+  Orchestrates full research pipeline from idea to paper. Manages all phases —
+  interview, literature review, data discovery, identification strategy,
+  analysis, paper drafting, and peer review. Triggers on: "new project",
+  "start a new research project", "full pipeline".
 argument-hint: "[research topic or 'interactive' for guided start]"
-allowed-tools: ["Read", "Grep", "Glob", "Write", "Edit", "Bash", "Task", "WebSearch", "WebFetch"]
+allowed-tools: ["Read", "Write", "Edit", "Grep", "Glob", "Bash", "Task", "WebSearch", "WebFetch"]
 ---
 
 # New Project
@@ -12,11 +15,15 @@ Launch a full research pipeline from idea to paper, orchestrated through the dep
 
 **Input:** `$ARGUMENTS` — a research topic or `interactive` for a guided start via `/interview-me`.
 
+**Research spec:** !`ls -t quality_reports/specs/*.md 2>/dev/null | head -1`
+**Domain profile:** !`test -f .claude/rules/domain-profile.md && echo "found" || echo "not found"`
+**Existing plans:** !`ls -t quality_reports/plans/*.md 2>/dev/null | head -3`
+
 ---
 
 ## Pipeline Overview
 
-This skill orchestrates the full v3 dependency graph. Each phase activates when its dependencies are met. The orchestrator manages agent dispatch, three-strikes escalation, and quality gates.
+This skill orchestrates the full dependency graph. Each phase activates when its dependencies are met. The orchestrator manages agent dispatch, three-strikes escalation, and quality gates.
 
 ```
 Phase 1: Discovery
@@ -49,7 +56,7 @@ Phase 5: Submission (depends on Phase 4, score >= 95)
 
 1. **If `interactive` or no research spec exists:**
    Run `/interview-me` to produce:
-   - Research specification (`quality_reports/research_spec_*.md`)
+   - Research specification (`quality_reports/specs/research_spec_*.md`)
    - Domain profile (`.claude/rules/domain-profile.md`) — if still template
 
 2. **Run `/lit-review`** with the research topic:
@@ -74,7 +81,7 @@ Phase 5: Submission (depends on Phase 4, score >= 95)
 ### Step 3: Execution Phase
 
 5. **Run `/data-analysis`** to implement the strategy:
-   - Coder writes scripts
+   - Coder writes scripts (Python/Stata)
    - Debugger reviews code
 
 6. **Run `/draft-paper`** to write up results:

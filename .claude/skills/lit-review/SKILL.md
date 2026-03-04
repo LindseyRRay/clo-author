@@ -1,9 +1,13 @@
 ---
 name: lit-review
-description: Structured literature search dispatching the Librarian agent for collection and Editor agent for coverage critique. Searches top-5 journals, NBER/SSRN, and field journals. Produces synthesis with gap identification and BibTeX entries.
-disable-model-invocation: true
+description: >-
+  Conducts structured literature search dispatching the Librarian agent for
+  collection and Editor agent for coverage critique. Searches top-5 journals,
+  NBER/SSRN, and field journals. Produces synthesis with gap identification and
+  BibTeX entries. Triggers on: "lit review", "search the literature", "find
+  papers on".
 argument-hint: "[topic, paper title, or research question]"
-allowed-tools: ["Read", "Grep", "Glob", "Write", "WebSearch", "WebFetch", "Task"]
+allowed-tools: ["Read", "Write", "Edit", "Grep", "Glob", "Bash", "Task", "WebSearch", "WebFetch"]
 ---
 
 # Literature Review
@@ -11,6 +15,10 @@ allowed-tools: ["Read", "Grep", "Glob", "Write", "WebSearch", "WebFetch", "Task"
 Conduct a structured literature search and synthesis by dispatching the **Librarian** (collector) and **Editor** (critic).
 
 **Input:** `$ARGUMENTS` — a topic, paper title, research question, or phenomenon to investigate.
+
+**Research spec:** !`ls -t quality_reports/specs/*.md 2>/dev/null | head -1`
+**Domain profile:** !`test -f .claude/rules/domain-profile.md && echo "found" || echo "not found"`
+**Existing bibliography:** !`test -f Bibliography_base.bib && wc -l < Bibliography_base.bib || echo "not found"`
 
 ---
 
@@ -20,7 +28,7 @@ Conduct a structured literature search and synthesis by dispatching the **Librar
 
 1. Parse the topic from `$ARGUMENTS`
 2. Read `.claude/rules/domain-profile.md` for field-specific journal tiers and seminal references
-3. Check `master_supporting_docs/` for uploaded papers
+3. Check `docs/` for uploaded reference papers
 4. Read `Bibliography_base.bib` for papers already in the project
 
 ### Step 2: Launch Librarian Agent
@@ -96,9 +104,6 @@ If Editor identifies gaps:
 ## Suggested Next Steps
 
 ## BibTeX Entries
-```bibtex
-@article{...}
-```
 ```
 
 ---

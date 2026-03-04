@@ -1,9 +1,12 @@
 ---
 name: research-ideation
-description: Generate structured research questions, testable hypotheses, and empirical strategies from a topic or dataset
-disable-model-invocation: true
+description: >-
+  Generates structured research questions, testable hypotheses, and empirical
+  strategies from a topic or dataset. Ranks by feasibility and contribution.
+  Triggers on: "research ideas", "brainstorm research questions",
+  "what could I study with this data".
 argument-hint: "[topic, phenomenon, or dataset description]"
-allowed-tools: ["Read", "Grep", "Glob", "Write"]
+allowed-tools: ["Read", "Write", "Edit", "Grep", "Glob", "Bash", "Task"]
 ---
 
 # Research Ideation
@@ -12,11 +15,15 @@ Generate structured research questions, testable hypotheses, and empirical strat
 
 **Input:** `$ARGUMENTS` — a topic (e.g., "minimum wage effects on employment"), a phenomenon (e.g., "why do firms cluster geographically?"), or a dataset description (e.g., "panel of US counties with pollution and health outcomes, 2000-2020").
 
+**Research specs:** !`ls -t quality_reports/specs/*.md 2>/dev/null | head -3`
+**Domain profile:** !`test -f .claude/rules/domain-profile.md && echo "found" || echo "not found"`
+**Reference papers:** !`ls docs/*.pdf 2>/dev/null | head -5`
+
 ---
 
 ## Steps
 
-1. **Understand the input.** Read `$ARGUMENTS` and any referenced files. Check `master_supporting_docs/` for related papers. Check `.claude/rules/` for domain conventions.
+1. **Understand the input.** Read `$ARGUMENTS` and any referenced files. Check `docs/` for related papers. Check `.claude/rules/` for domain conventions.
 
 2. **Generate 3-5 research questions** ordered from descriptive to causal:
    - **Descriptive:** What are the patterns? (e.g., "How has X evolved over time?")

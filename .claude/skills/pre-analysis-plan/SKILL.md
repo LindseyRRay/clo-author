@@ -1,9 +1,12 @@
 ---
 name: pre-analysis-plan
-description: Draft pre-analysis plans by dispatching the Strategist agent in PAP mode. Covers AEA RCT Registry, OSF, and EGAP standards. Specifies outcomes, subgroups, multiple testing, power calculations, and exclusion rules.
-disable-model-invocation: true
+description: >-
+  Drafts pre-analysis plans by dispatching the Strategist agent in PAP mode.
+  Covers AEA RCT Registry, OSF, and EGAP standards. Specifies outcomes,
+  subgroups, multiple testing, power calculations, and exclusion rules. Triggers
+  on: "pre-analysis plan", "PAP", "register the study", "write the PAP".
 argument-hint: "[research-spec file OR topic OR 'interactive' for guided interview]"
-allowed-tools: ["Read", "Grep", "Glob", "Write", "Task"]
+allowed-tools: ["Read", "Write", "Edit", "Grep", "Glob", "Bash", "Task"]
 ---
 
 # Pre-Analysis Plan
@@ -11,6 +14,10 @@ allowed-tools: ["Read", "Grep", "Glob", "Write", "Task"]
 Draft a pre-analysis plan by dispatching the **Strategist** agent in PAP mode.
 
 **Input:** `$ARGUMENTS` — path to research spec file, a topic, or `interactive` for guided questions.
+
+**Research spec:** !`ls -t quality_reports/specs/*.md 2>/dev/null | head -1`
+**Strategy memo:** !`ls -t quality_reports/strategy_memo_*.md 2>/dev/null | head -1`
+**Domain profile:** !`test -f .claude/rules/domain-profile.md && echo "found" || echo "not found"`
 
 ---
 

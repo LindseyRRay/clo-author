@@ -66,7 +66,7 @@ User idea → check dependencies → dispatch agents (parallel if possible)
 
 ## Simplified Mode
 
-For standalone skill invocations (`/econometrics-check`, `/review-r`, etc.):
+For standalone skill invocations (`/econometrics-check`, `/review-code`, etc.):
 - Skip dependency checks
 - Dispatch the requested agent(s) directly
 - Return results without full pipeline orchestration

@@ -1,9 +1,12 @@
 ---
 name: respond-to-referee
-description: Structure point-by-point referee responses using the revision-protocol routing. Classifies comments (NEW ANALYSIS / CLARIFICATION / DISAGREE / MINOR), dispatches appropriate agents, and tracks revisions. Use when asked to "respond to referees" or "draft revision".
-disable-model-invocation: true
+description: >-
+  Structures point-by-point referee responses using revision-protocol routing.
+  Classifies comments (NEW ANALYSIS / CLARIFICATION / DISAGREE / MINOR),
+  dispatches appropriate agents, and tracks revisions. Triggers on: "respond to
+  referees", "draft revision", "R&R response", "referee response".
 argument-hint: "[referee-report file path] [paper file path (optional)]"
-allowed-tools: ["Read", "Grep", "Glob", "Write", "Edit", "Task"]
+allowed-tools: ["Read", "Write", "Edit", "Grep", "Glob", "Bash", "Task"]
 ---
 
 # Respond to Referee
@@ -12,6 +15,11 @@ Structure a point-by-point response to referee reports with classification, agen
 
 **Input:** `$ARGUMENTS` — path to referee report file(s). Optionally followed by paper path.
 
+**Paper:** !`test -f Paper/main.tex && echo "found" || echo "not found"`
+**Referee reports:** !`ls docs/referee_*.* quality_reports/referee_*_report.md 2>/dev/null | head -5`
+**Strategy memo:** !`ls -t quality_reports/strategy_memo_*.md 2>/dev/null | head -1`
+**Existing tracker:** !`test -f quality_reports/referee_response_tracker.md && echo "found" || echo "not found"`
+
 ---
 
 ## Workflow
@@ -19,7 +27,7 @@ Structure a point-by-point response to referee reports with classification, agen
 ### Step 1: Parse Inputs
 
 1. Read referee report(s) from `$ARGUMENTS`
-   - Check `master_supporting_docs/` if path not explicit
+   - Check `docs/` if path not explicit
    - Support multiple reports (Referee 1, Referee 2, Editor)
 2. Read the paper (`Paper/main.tex` or specified path)
 3. Read `.claude/rules/revision-protocol.md` for routing rules

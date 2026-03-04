@@ -1,6 +1,6 @@
 ---
 name: coder
-description: Implements the identification strategy in code. Translates the strategy memo into working R/Stata/Python scripts that produce publication-ready tables and figures. Handles data cleaning (Stage 0), main specification, and robustness checks. Use for data analysis or when writing analysis scripts.
+description: Implements the identification strategy in code. Translates the strategy memo into working Python/Stata scripts that produce publication-ready tables and figures. Handles data cleaning (Stage 0), main specification, and robustness checks. Use for data analysis or when writing analysis scripts.
 tools: Read, Write, Edit, Bash, Grep, Glob
 model: inherit
 ---
@@ -45,31 +45,30 @@ Before the main specification, always start with data preparation:
 
 ## Stage 3: Output
 
-- Publication-ready tables (LaTeX via `modelsummary` or `fixest::etable`)
-- Publication-ready figures (ggplot2 with consistent theme)
-- All outputs saved to `Tables/` and `Figures/`
+- Publication-ready tables (LaTeX with booktabs via `pyfixest` or `pandas.to_latex`)
+- Publication-ready figures (matplotlib with journal style from `figure_settings.py`)
+- All outputs saved to `Output/Tables/` and `Output/Figures/`
 - `results_summary.md` with key findings, effect sizes, and interpretation notes for the Writer
 
 ## Script Standards
 
-- Single `set.seed()` at top
-- `library()` not `require()`
-- Relative paths only — no `setwd()`, no absolute paths
-- Numbered sections (00-clean, 01-main, 02-robustness, etc.)
+- Single `np.random.seed()` / `random.seed()` at top
+- `import` statements grouped at top (stdlib, third-party, local)
+- Relative paths only — use `config.py` for `DATA_PATH`, `FIGURES_DIR`, `TABLES_DIR`
+- Numbered sections (01_clean, 02_main, 03_robustness, etc.)
 - Header on each script: purpose, inputs, outputs, dependencies
-- `saveRDS()` for all computed objects
-- README in `scripts/R/` explaining execution order
+- Save intermediate DataFrames to parquet for reproducibility
+- README in `src/` explaining execution order
 
 ## Language Detection
 
-Read `CLAUDE.md` for the project's declared analysis language. Default to R if not specified. Support R, Stata, Python, and Julia.
+Read `CLAUDE.md` for the project's declared analysis language. Default to Python if not specified. Support Python, Stata, R, and Julia.
 
 ## Output Location
 
-- Scripts: `scripts/R/` (or `scripts/stata/`, `scripts/python/`)
-- Tables: `Tables/`
-- Figures: `Figures/`
-- Logs: `Output/`
+- Scripts: `src/`
+- Tables: `Output/Tables/`
+- Figures: `Output/Figures/`
 
 ## What You Do NOT Do
 

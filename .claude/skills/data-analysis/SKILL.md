@@ -1,112 +1,117 @@
 ---
 name: data-analysis
-description: End-to-end data analysis dispatching the Coder agent for implementation and Debugger agent for code review. Supports R, Stata, Python, and Julia. Produces scripts, tables, figures, and results summary.
-disable-model-invocation: true
+description: >-
+  End-to-end empirical analysis: implement regressions, analyze data, run
+  estimations, build analysis scripts, produce tables and figures. Dispatches
+  Coder and Debugger agents. Defaults to Python; uses Stata when specified.
+  Triggers on: "run the analysis", "analyze the data", "implement the
+  regressions", "estimate the model", "run DiD", "run event study".
 argument-hint: "[dataset path or description of analysis goal]"
-allowed-tools: ["Read", "Grep", "Glob", "Write", "Edit", "Bash", "Task"]
+allowed-tools: ["Read", "Write", "Edit", "Grep", "Glob", "Bash", "Task"]
 ---
 
 # Data Analysis Workflow
 
 Run an end-to-end data analysis by dispatching the **Coder** (implementer) and **Debugger** (code critic).
 
-**Input:** `$ARGUMENTS` — a dataset path (e.g., `Data/cleaned/panel.csv`) or a description of the analysis goal.
+**Input:** `$ARGUMENTS` — a dataset path or description of the analysis goal. Data paths should reference `config.py` (e.g., `config.RAW_DATA_PATH / "source/file.csv"`).
+
+**Existing scripts:** !`find src/ -name "*.py" -o -name "*.do" 2>/dev/null | head -10`
+**Config:** !`find . -maxdepth 2 -name "config.py" -o -name "figure_settings.py" 2>/dev/null`
+**Strategy memo:** !`ls -t quality_reports/ 2>/dev/null | grep -m1 -E 'strategy|memo'`
+**Existing outputs:** !`find Output/ -name "*.tex" -o -name "*.pdf" -o -name "*.png" 2>/dev/null | head -10`
+
+---
+
+## Pre-Flight Check
+
+**Arguments received:** `$ARGUMENTS`
+
+If `$ARGUMENTS` is empty:
+1. Check `quality_reports/plans/` for the most recent approved plan
+2. Check `quality_reports/specs/` for the most recent spec
+3. If a plan or spec exists, use it as the analysis goal
+4. If neither exists, STOP and ask: "What dataset or analysis goal should I work from? Provide a file path, a description, or point me to an existing plan."
+
+If `config.py` is MISSING:
+1. Create `config.py` from the template at `~/.claude/templates/config.py`
+2. STOP and ask the user to fill in `DATA_PATH` before proceeding
+
+---
+
+## Language Selection
+
+Default to **Python** unless any of the following are true:
+- The strategy memo specifies Stata commands (e.g., `reghdfe`, `xtabond2`, `ivreg2`)
+- Existing scripts in `src/` are predominantly `.do` files
+- `$ARGUMENTS` explicitly mentions Stata
+
+If using Stata: follow `.do` file conventions, output `.tex` via `esttab`, intermediate data as `.dta`. Use the Stata skill (`~/.claude/skills/stata/SKILL.md`) for execution.
 
 ---
 
 ## Workflow
 
-### Step 1: Context Gathering
+### Step 1: Launch Coder Agent
 
-1. Read `.claude/rules/domain-profile.md` for field conventions
-2. Read any strategy memo in `quality_reports/` (if analysis implements a pre-specified design)
-3. Check `CLAUDE.md` for language preference (R/Stata/Python/Julia)
-4. Scan existing scripts in `scripts/R/` (or `scripts/stata/`, etc.) for project patterns
-
-### Step 2: Launch Coder Agent
-
-Delegate to the `coder` agent via Task tool:
+Delegate to the `coder` agent via Task tool. Include all necessary context in the prompt:
 
 ```
 Prompt: Implement analysis for "[goal]" using data at "[path]".
+
+Context to read first:
+  - config.py for DATA_PATH and output directory conventions
+  - figure_settings.py for plot styling (if it exists)
+  - .claude/rules/domain-profile.md for field conventions
+  - Any strategy memo in quality_reports/ (cross-reference code against stated design)
+  - Existing scripts in src/ for project patterns
+
 Follow 4 stages:
   Stage 0: Data cleaning (if raw data provided)
   Stage 1: Main specification (from strategy memo or user description)
   Stage 2: Robustness checks
-  Stage 3: Publication-ready output (tables to Tables/, figures to Figures/)
-Produce results_summary.md with all estimates, SEs, and key statistics.
-Save scripts to scripts/R/ (or appropriate language directory).
+  Stage 3: Publication-ready output
+
+Save scripts to src/.
+Use config.py for all data paths (DATA_PATH, FIGURES_DIR, TABLES_DIR).
+Use figure_settings.py for plot styling if available; skip gracefully if missing.
+Use the Python template at .claude/skills/data-analysis/references/python-template.py as a starting point.
 ```
 
-The Coder follows these principles:
-- **Script structure:** Header, setup, data loading, analysis, output, export
-- **Packages:** `fixest` for panel data, `modelsummary` for tables, `ggplot2` for figures
-- **Standard errors:** Cluster at appropriate level (match treatment assignment)
-- **Output:** `.tex` tables for LaTeX, `.pdf`/`.png` figures, `.rds` for intermediate objects
-- **No hardcoded paths.** All paths relative to repository root.
+### Step 2: Run Quality Pipeline
 
-### Step 3: Launch Debugger Agent (Code Critic)
+After the Coder returns scripts, run the Code Quality Pipeline defined in `~/.claude/CLAUDE.md` (ruff, mypy, pytest, then code-review skill for changes >5 lines).
 
-After Coder returns, delegate to the `debugger` agent:
+### Step 3: Launch Debugger Agent (Strategy Critic)
+
+Delegate to the `debugger` agent for strategy-level review:
 
 ```
-Prompt: Review the script(s) at scripts/R/[script_name].R.
-Run all 12 check categories:
-  Strategic (1-3): code-strategy alignment, sanity checks, robustness sufficiency
-  Code Quality (4-12): structure, console hygiene, reproducibility, functions,
-    figure quality, RDS pattern, comments, error handling, polish
+Prompt: Review the scripts the Coder produced in src/.
+Focus on strategic alignment:
+  1. Code-strategy alignment — does the code implement the stated identification strategy?
+  2. Sanity checks — are summary stats, balance tests, and diagnostic plots present?
+  3. Robustness sufficiency — enough alternative specifications?
 If strategy memo exists, cross-reference code against stated design.
-Save report to quality_reports/[script]_code_review.md
+Save report to quality_reports/YYYY-MM-DD_[script]_code_review.md
 ```
 
 ### Step 4: Fix Issues
 
 If Debugger finds Critical or Major issues:
 1. Re-dispatch Coder with specific fixes (max 3 rounds per `three-strikes.md`)
-2. Re-run Debugger to verify fixes
+2. Re-run quality pipeline and Debugger to verify fixes
 
 ### Step 5: Present Results
 
-Show the user:
-1. **Results summary** — key estimates with SEs and interpretation
-2. **Scripts created** — paths and descriptions
-3. **Output files** — tables in `Tables/`, figures in `Figures/`
-4. **Code review score** — from Debugger
-5. **Any TODO items** — missing data, additional specifications needed
-
----
-
-## Script Structure Template
-
-```r
-# ============================================================
-# [Descriptive Title]
-# Author: [from project context]
-# Purpose: [What this script does]
-# Inputs: [Data files]
-# Outputs: [Figures, tables, RDS files]
-# ============================================================
-
-# 0. Setup ----
-library(tidyverse)
-library(fixest)
-library(modelsummary)
-
-set.seed(42)
-
-dir.create("Tables", recursive = TRUE, showWarnings = FALSE)
-dir.create("Figures", recursive = TRUE, showWarnings = FALSE)
-
-# 1. Data Loading ----
-
-# 2. Exploratory Analysis ----
-
-# 3. Main Analysis ----
-
-# 4. Tables and Figures ----
-
-# 5. Export ----
-```
+Report the following:
+- **Scripts created/modified:** paths and descriptions
+- **Tables:** paths to `.tex` files
+- **Figures:** paths to `.pdf`/`.png` files
+- **Debugger score:** XX/100
+- **Issues fixed:** summary of what was flagged and resolved
+- **Known limitations:** missing data, unimplemented specifications from the strategy memo, or Debugger issues deferred for later
+- **Next suggested step:** e.g., "Run `/proofread` to check that tables match manuscript"
 
 ---
 
@@ -115,6 +120,6 @@ dir.create("Figures", recursive = TRUE, showWarnings = FALSE)
 - **Reproduce, don't guess.** If the user specifies a regression, run exactly that.
 - **Show your work.** Print summary statistics before jumping to regressions.
 - **Strategy alignment.** If a strategy memo exists, the code MUST implement it faithfully.
-- **Worker-critic pairing.** Coder creates, Debugger critiques. Never skip the review.
-- **saveRDS everything.** Every computed object gets saved for downstream use.
-- **Publication-ready output.** Tables and figures should be directly includable in the paper.
+- **Debugger review is mandatory.** After Coder returns, always dispatch Debugger before presenting results.
+- **Persist intermediate DataFrames.** Save every cleaned or transformed DataFrame to parquet before the next stage.
+- **Publication-ready output.** Tables (booktabs LaTeX) and figures should be directly includable in the paper.

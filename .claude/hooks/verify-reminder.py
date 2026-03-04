@@ -2,8 +2,8 @@
 """
 Verification Reminder Hook
 
-Non-blocking reminder that fires on Write/Edit to academic files (.tex, .qmd, .R)
-to remind about compiling/rendering before marking a task as done.
+Non-blocking reminder that fires on Write/Edit to academic files (.tex, .py, .do)
+to remind about compiling/running before marking a task as done.
 
 Hook Event: PostToolUse (matcher: "Write|Edit")
 Returns: Exit code 0 (non-blocking, reminder visible but doesn't stop work)
@@ -28,9 +28,7 @@ NC = "\033[0m"  # No color
 
 # Files that need verification
 VERIFY_EXTENSIONS = {
-    ".tex": "compile with /compile-latex",
-    ".qmd": "render with quarto render",
-    ".R": "run to verify output",
+    ".tex": "compile with xelatex (see CLAUDE.md Commands)",
     ".do": "run to verify output",
     ".py": "run to verify output",
     ".jl": "run to verify output"

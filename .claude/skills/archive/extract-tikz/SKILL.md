@@ -28,7 +28,7 @@ cd Figures/$ARGUMENTS
 
 ### Step 2: Compile the extract_tikz.tex file
 ```bash
-TEXINPUTS=../../Preambles:$TEXINPUTS xelatex -interaction=nonstopmode extract_tikz.tex
+TEXINPUTS=../../preambles:$TEXINPUTS xelatex -interaction=nonstopmode extract_tikz.tex
 ```
 
 ### Step 3: Count the number of pages

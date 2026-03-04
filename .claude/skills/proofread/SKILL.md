@@ -1,13 +1,26 @@
 ---
 name: proofread
-description: Manuscript proofreading dispatching the Proofreader agent. Checks 6 categories — structure, claims-evidence alignment, identification fidelity, writing quality, grammar, and compilation. Produces report without editing files.
+description: >-
+  Dispatches the Proofreader agent for manuscript review across 6 categories —
+  structure, claims-evidence alignment, identification fidelity, writing quality,
+  grammar, and compilation. Produces report without editing files. Triggers on:
+  "proofread", "check the writing", "review the manuscript".
 argument-hint: "[filename or 'all']"
-allowed-tools: ["Read", "Grep", "Glob", "Write", "Task"]
+allowed-tools: ["Read", "Write", "Edit", "Grep", "Glob", "Bash", "Task"]
 ---
 
 # Proofread Manuscript
 
 Run the proofreading protocol by dispatching the **Proofreader** agent.
+
+**Input:** `$ARGUMENTS` — path to `.tex` file, or `all` for full manuscript.
+
+**Paper:** !`test -f Paper/main.tex && echo "found" || echo "not found"`
+**Sections:** !`ls Paper/sections/*.tex 2>/dev/null | head -5`
+**Strategy memo:** !`ls -t quality_reports/strategy_memo_*.md 2>/dev/null | head -1`
+**Domain profile:** !`test -f .claude/rules/domain-profile.md && echo "found" || echo "not found"`
+
+---
 
 ## Workflow
 
@@ -15,7 +28,7 @@ Run the proofreading protocol by dispatching the **Proofreader** agent.
 
 - If `$ARGUMENTS` is a specific `.tex` file: review that file
 - If `$ARGUMENTS` is `all`: review `Paper/main.tex` and all files in `Paper/sections/`
-- If `$ARGUMENTS` is a talk file in `Talks/`: review as **advisory** (non-blocking)
+- If `$ARGUMENTS` is a talk file in `Slides/`: review as **advisory** (non-blocking)
 
 ### Step 2: Launch Proofreader Agent
 

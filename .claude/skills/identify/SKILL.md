@@ -1,9 +1,12 @@
 ---
 name: identify
-description: Design identification strategy by dispatching the Strategist agent (proposer) and Econometrician agent (critic). Produces strategy memo, pseudo-code, robustness plan, and falsification tests. Use when asked to "identify the effect", "design the strategy", or "write the strategy memo".
-disable-model-invocation: true
+description: >-
+  Designs identification strategy by dispatching the Strategist agent (proposer)
+  and Econometrician agent (critic). Produces strategy memo, pseudo-code,
+  robustness plan, and falsification tests. Triggers on: "identify the effect",
+  "design the strategy", "write the strategy memo", "what's the identification".
 argument-hint: "[research question or research-spec file path]"
-allowed-tools: ["Read", "Grep", "Glob", "Write", "Task"]
+allowed-tools: ["Read", "Write", "Edit", "Grep", "Glob", "Bash", "Task"]
 ---
 
 # Identify
@@ -12,15 +15,20 @@ Design an identification strategy by dispatching the **Strategist** (proposer) a
 
 **Input:** `$ARGUMENTS` — research question, description of available variation, or path to research spec.
 
+**Research spec:** !`ls -t quality_reports/specs/*.md 2>/dev/null | head -1`
+**Literature review:** !`ls -t quality_reports/*lit_review*.md 2>/dev/null | head -1`
+**Data assessment:** !`ls -t quality_reports/*data_exploration*.md 2>/dev/null | head -1`
+**Domain profile:** !`test -f .claude/rules/domain-profile.md && echo "found" || echo "not found"`
+
 ---
 
 ## Workflow
 
 ### Step 1: Context Gathering
 
-1. Read research spec if exists (`quality_reports/research_spec_*.md`)
-2. Read literature review if exists (`quality_reports/lit_review_*.md`)
-3. Read data assessment if exists (`quality_reports/data_exploration_*.md`)
+1. Read research spec if it exists in `quality_reports/specs/`
+2. Read literature review if it exists in `quality_reports/`
+3. Read data assessment if it exists in `quality_reports/`
 4. Read `.claude/rules/domain-profile.md` for common identification strategies in the field
 
 ### Step 2: Launch Strategist Agent
@@ -34,7 +42,7 @@ Available variation: [from research spec or user description].
 
 Produce:
   1. Strategy memo — design choice, estimand, assumptions, comparison group
-  2. Pseudo-code — implementation sketch (what the R/Stata code will do)
+  2. Pseudo-code — implementation sketch (what the Python/Stata code will do)
   3. Robustness plan — ordered list of robustness checks with rationale
   4. Falsification tests — what SHOULD NOT show effects (and why)
   5. Referee objection anticipation — top 5 objections with pre-emptive responses
@@ -71,34 +79,7 @@ If unresolved after 3 rounds: escalate to user with both perspectives.
 
 ### Step 5: Present Results
 
-```markdown
-# Identification Strategy: [Topic]
-**Date:** [YYYY-MM-DD]
-**Design:** [DiD / IV / RDD / SC / Event Study]
-**Estimand:** [ATT / ATE / LATE]
-
-## Strategy Summary
-[2-3 sentence description of the identification strategy]
-
-## Key Assumptions
-1. [Assumption 1] — [how it will be defended]
-2. [Assumption 2] — [how it will be defended]
-
-## Econometrician Assessment: [SOUND / CONCERNS / CRITICAL ISSUES]
-- Critical issues: N
-- Major issues: N
-- Strategy memo score: XX/100
-
-## Robustness Plan (ordered)
-1. [Most important check]
-2. [Second check]
-...
-
-## Next Steps
-- [ ] Implement main specification (→ /data-analysis)
-- [ ] Run falsification tests
-- [ ] Generate pre-trend evidence / first stage / McCrary
-```
+Present the strategy summary with: design type, estimand, key assumptions, Econometrician assessment and score, ordered robustness plan, and next steps (e.g., implement via `/data-analysis`).
 
 ---
 

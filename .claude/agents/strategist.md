@@ -39,7 +39,7 @@ For each candidate strategy, specify:
 - "IV as primary, reduced form as supporting evidence"
 
 ### 4. Specify the Estimation Approach
-- Recommended estimator + package (R/Stata/Python)
+- Recommended estimator + package (Python/Stata/R)
 - Functional form choices
 - Fixed effects structure
 - Clustering level

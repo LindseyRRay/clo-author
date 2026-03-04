@@ -36,7 +36,7 @@ The Orchestrator selects agents based on what the task requires:
 | Literature/references | Librarian + Editor |
 | Data sourcing | Explorer + Surveyor |
 | Identification strategy | Strategist + Econometrician |
-| R/Stata/Python scripts | Coder + Debugger |
+| Python/Stata scripts | Coder + Debugger |
 | Paper manuscript | Writer + Proofreader |
 | Peer review | Editor → Referee 1 + Referee 2 |
 | Beamer talks | Storyteller + Discussant |
@@ -57,9 +57,9 @@ Independent phases run concurrently:
 - **Verification retries:** max 2 attempts
 - Never loop indefinitely
 
-## Simplified Mode (R Scripts / Explorations)
+## Simplified Mode (Scripts / Explorations)
 
-For standalone R scripts, simulations, and explorations — use the simplified loop:
+For standalone scripts, simulations, and explorations — use the simplified loop:
 
 ```
 Plan approved → implement → run code → check outputs → score → done
@@ -70,9 +70,9 @@ No multi-agent reviews. Just: write, test, verify quality >= 80.
 ### Verification Checklist (Simplified)
 
 - [ ] Script runs without errors
-- [ ] All packages loaded at top
+- [ ] All packages imported at top
 - [ ] No hardcoded absolute paths
-- [ ] `set.seed()` once at top if stochastic
+- [ ] Random seed set at top if stochastic
 - [ ] Output files created at expected paths
 - [ ] Quality score >= 80
 

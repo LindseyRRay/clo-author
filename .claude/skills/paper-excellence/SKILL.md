@@ -1,9 +1,12 @@
 ---
 name: paper-excellence
-description: Multi-agent paper review dispatching Econometrician, Debugger, Proofreader, and Verifier in parallel. Computes weighted aggregate score per scoring-protocol.md. Use for comprehensive quality check before submission or major milestones.
-disable-model-invocation: true
+description: >-
+  Runs multi-agent paper review dispatching Econometrician, Debugger,
+  Proofreader, and Verifier in parallel. Computes weighted aggregate score per
+  scoring-protocol.md. Triggers on: "paper excellence", "comprehensive review",
+  "quality check", "score the paper".
 argument-hint: "[paper .tex path OR 'all' for full project review]"
-allowed-tools: ["Read", "Grep", "Glob", "Write", "Task", "Bash"]
+allowed-tools: ["Read", "Write", "Edit", "Grep", "Glob", "Bash", "Task"]
 ---
 
 # Paper Excellence Review
@@ -12,6 +15,12 @@ Run all review agents in parallel for a comprehensive paper quality assessment. 
 
 **Input:** `$ARGUMENTS` — path to paper `.tex` file, or `all` for full project review.
 
+**Paper:** !`test -f Paper/main.tex && echo "found" || echo "not found"`
+**Scripts:** !`ls src/*.py src/*.do 2>/dev/null | head -5`
+**Talks:** !`ls Slides/*.tex 2>/dev/null | head -3`
+**Domain profile:** !`test -f .claude/rules/domain-profile.md && echo "found" || echo "not found"`
+**Existing reports:** !`ls -t quality_reports/*_review.md quality_reports/*_report.md 2>/dev/null | head -5`
+
 ---
 
 ## Workflow
@@ -19,8 +28,8 @@ Run all review agents in parallel for a comprehensive paper quality assessment. 
 ### Step 1: Identify Targets
 
 - If `$ARGUMENTS` is a `.tex` file: review that file
-- If `$ARGUMENTS` is `all`: review `Paper/main.tex` + all scripts in `scripts/R/`
-- Also scan for `Talks/*.tex` for auxiliary scoring
+- If `$ARGUMENTS` is `all`: review `Paper/main.tex` + all scripts in `src/`
+- Also scan for `Slides/*.tex` for auxiliary scoring
 
 ### Step 2: Gather Context
 
@@ -36,14 +45,14 @@ Launch up to 4 agents simultaneously via Task tool:
 **Agent 1: Econometrician** (subagent_type: econometrician)
 ```
 Review [paper.tex] through all 4 phases: claim, design validity, inference, polish.
-Also check scripts in scripts/R/ for code-theory alignment.
+Also check scripts in src/ for code-theory alignment.
 Save report to quality_reports/[file]_econometrics_review.md
 ```
 **Weight:** Identification 25% of aggregate score.
 
-**Agent 2: Debugger** (subagent_type: general-purpose, with debugger agent instructions)
+**Agent 2: Debugger** (subagent_type: debugger)
 ```
-Review all scripts in scripts/R/ for code quality and correctness.
+Review all scripts in src/ for code quality and correctness.
 Run categories 4-12 (code quality) plus categories 1-3 (strategic) if strategy memo exists.
 Save report to quality_reports/[script]_code_review.md
 ```
@@ -67,7 +76,7 @@ Save report to quality_reports/[file]_verification.md
 
 ### Step 4: Launch Talk Review (Advisory, if talks exist)
 
-If `Talks/*.tex` files exist, launch:
+If `Slides/*.tex` files exist, launch:
 
 **Storyteller Review** — check notation matches paper, slide count within format range.
 **Discussant Review** — narrative flow, visual quality, content fidelity.

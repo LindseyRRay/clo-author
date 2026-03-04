@@ -1,9 +1,12 @@
 ---
 name: review-paper
-description: Full manuscript review dispatching 2 blind Referee agents and the Editor agent for editorial decision. Produces referee reports and accept/revise/reject recommendation. Use when asked to "review the paper", "get feedback", or "simulate peer review".
-disable-model-invocation: true
+description: >-
+  Runs full manuscript review dispatching 2 blind Referee agents and the Editor
+  agent for editorial decision. Produces referee reports and accept/revise/reject
+  recommendation. Triggers on: "review the paper", "get feedback", "simulate
+  peer review", "referee reports".
 argument-hint: "[paper .tex path]"
-allowed-tools: ["Read", "Grep", "Glob", "Write", "Task"]
+allowed-tools: ["Read", "Write", "Edit", "Grep", "Glob", "Bash", "Task"]
 ---
 
 # Review Paper
@@ -11,6 +14,11 @@ allowed-tools: ["Read", "Grep", "Glob", "Write", "Task"]
 Simulate peer review by dispatching two **Referee** agents (blind reviewers) and the **Editor** agent (editorial decision).
 
 **Input:** `$ARGUMENTS` — path to paper `.tex` file. Defaults to `Paper/main.tex`.
+
+**Paper:** !`test -f Paper/main.tex && echo "found" || echo "not found"`
+**Strategy memo:** !`ls -t quality_reports/strategy_memo_*.md 2>/dev/null | head -1`
+**Domain profile:** !`test -f .claude/rules/domain-profile.md && echo "found" || echo "not found"`
+**Bibliography:** !`test -f Bibliography_base.bib && echo "found" || echo "not found"`
 
 ---
 
@@ -27,7 +35,7 @@ Simulate peer review by dispatching two **Referee** agents (blind reviewers) and
 
 Launch 2 Referee agents simultaneously via Task tool, each with different focus:
 
-**Referee 1** (subagent_type: general-purpose, with referee instructions)
+**Referee 1** (subagent_type: referee)
 ```
 You are Referee 1 for a blind peer review. Review [paper.tex].
 Score across 5 dimensions:
@@ -40,7 +48,7 @@ Provide: summary, detailed comments, recommendation (Accept/Minor/Major/Reject).
 Save to quality_reports/referee_1_report.md
 ```
 
-**Referee 2** (subagent_type: general-purpose, with referee instructions)
+**Referee 2** (subagent_type: referee)
 ```
 You are Referee 2 for a blind peer review. Review [paper.tex].
 Same 5-dimension scoring as Referee 1 but independently.

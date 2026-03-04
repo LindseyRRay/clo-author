@@ -138,49 +138,71 @@ _Runs after Phase 2. If Phase 2 found critical issues, still review but flag tha
 - [ ] Bonferroni/Benjamini-Hochberg/Romano-Wolf when testing multiple outcomes
 - [ ] Stars match stated significance levels
 
-### Code-Theory Alignment (when R scripts exist)
+### Code-Theory Alignment (when analysis scripts exist)
 - [ ] Estimand in code matches paper claim (ATT vs ATE vs LATE)
 - [ ] Standard errors in code match stated method (cluster level, HC type)
 - [ ] Sample restrictions in code match paper description
 
 #### Package-Specific Checks
 
-**`fixest`:**
-- [ ] `feols()` clustering via `cluster = ~unit` (not deprecated `se = "cluster"`)
+##### Python
+
+**`pyfixest`:**
+- [ ] `feols()` clustering via `vcov={"CRV1": "unit"}` syntax
 - [ ] Fixed effects specification matches paper equation
-- [ ] `i()` used correctly for event study interactions
-- [ ] `sunab()` correctly specified if using Sun-Abraham
+- [ ] Interaction terms correctly specified for event studies
 - [ ] Absorbed variables not also included as controls
 
-**`did` / `fastdid`:**
-- [ ] `control_group` parameter matches paper choice ("nevertreated" vs "notyettreated")
-- [ ] `anticipation` parameter set if pre-treatment effects expected
-- [ ] Aggregation method matches paper presentation (simple, group, calendar, event)
-- [ ] Panel vs. repeated cross-section correctly specified
+**`differences` / `csdid`:**
+- [ ] Control group parameter matches paper choice (never-treated vs not-yet-treated)
+- [ ] Anticipation parameter set if pre-treatment effects expected
+- [ ] Aggregation method matches paper presentation
 
-**`rdrobust`:**
+**`rdrobust` (Python):**
 - [ ] Bandwidth selector matches paper description
 - [ ] Kernel choice documented (triangular default)
 - [ ] Bias-corrected confidence intervals used (not conventional)
-- [ ] Cluster option used if data is clustered
 
-**`Synth` / `tidysynth` / `augsynth`:**
-- [ ] Predictor variables match paper
-- [ ] Time periods for fitting correct
-- [ ] Permutation loop covers all donor units
+**`linearmodels`:**
+- [ ] Panel model specification (fixed effects, first differences, random effects) matches paper
+- [ ] Clustering and robust SE options correctly set
 
-**`sandwich` / `clubSandwich`:**
-- [ ] Correct `type` argument (HC1/HC2/HC3, CR0/CR1/CR2)
-- [ ] Small-sample adjustment appropriate for cluster count
+**`statsmodels`:**
+- [ ] IV via `IV2SLS` correctly specified (endog, exog, instruments)
+- [ ] Correct `cov_type` for clustered or robust SEs
+
+##### Stata
+
+**`reghdfe`:**
+- [ ] `absorb()` matches paper fixed effects
+- [ ] `cluster()` matches paper clustering level
+- [ ] `vce(cluster)` not confused with `robust`
+
+**`did_multiplegt` / `csdid` / `did_imputation`:**
+- [ ] Estimator matches paper choice (Callaway-Sant'Anna, BJS, dCDH)
+- [ ] Options match design (never-treated, not-yet-treated, aggregation)
+
+**`rdrobust` (Stata):**
+- [ ] Bandwidth selector matches paper description
+- [ ] Kernel and polynomial order documented
+
+**`ivregress` / `ivreg2`:**
+- [ ] Instrument specification matches paper
+- [ ] First-stage diagnostics reported
+
+##### R (if applicable)
+
+**`fixest`:**
+- [ ] `feols()` clustering via `cluster = ~unit`
+- [ ] `i()` used correctly for event study interactions
+- [ ] `sunab()` correctly specified if using Sun-Abraham
+
+**`did` / `fastdid`:**
+- [ ] `control_group` parameter matches paper choice
+- [ ] Aggregation method matches paper presentation
 
 **Other recognized packages:**
-- `staggered`, `did2s`, `didimputation`, `eventstudyr` — check options match design
-- `ivreg`, `ivpack` — check instrument specification
-- `rdlocrand` — check window selection for randomization inference RDD
-- `gsynth`, `augsynth` — check factor model or augmented specifications
-- `sensemakr` — Oster-style sensitivity for observational studies
-- `wildrwolf`, `fwildclusterboot` — check bootstrap parameters
-- `pwr`, `DeclareDesign` — check power calculation assumptions
+- `rdrobust`, `Synth`, `augsynth`, `sandwich`, `clubSandwich` — check options match design
 
 **Note:** Flag non-standard package choices for user awareness but do NOT treat them as errors. Validate correctness within the chosen package's API.
 

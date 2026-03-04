@@ -27,12 +27,12 @@ A creator cannot evaluate the quality of its own work. The score always comes fr
 | Librarian | Annotated bibliography | Editor |
 | Explorer | Data assessment | Surveyor |
 | Strategist | Strategy memo | Econometrician |
-| Coder | R/Stata/Python scripts | Debugger |
+| Coder | Python/Stata scripts | Debugger |
 | Writer | Paper manuscript | Proofreader |
 | Storyteller | Beamer talk | Discussant |
 
 ## Enforcement
 
 The Orchestrator flags violations:
-- If a critic invocation produces a file in `scripts/`, `Paper/`, or `Talks/` → flag
+- If a critic invocation produces a file in `src/`, `Paper/`, or `Slides/` → flag
 - If a creator reports its own score → discard, dispatch critic

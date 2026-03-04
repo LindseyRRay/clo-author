@@ -1,9 +1,12 @@
 ---
 name: target-journal
-description: Journal targeting dispatching the Editor agent in journal-selection mode. Analyzes paper fit, suggests ranked journal list from domain-profile.md tiers, provides formatting requirements and submission strategy.
-disable-model-invocation: true
+description: >-
+  Dispatches the Editor agent in journal-selection mode for paper targeting.
+  Analyzes paper fit, suggests ranked journal list from domain-profile.md tiers,
+  provides formatting requirements and submission strategy. Triggers on: "target
+  journal", "where should I submit", "journal recommendations".
 argument-hint: "[paper path or abstract]"
-allowed-tools: ["Read", "Grep", "Glob", "Write", "WebSearch", "WebFetch", "Task"]
+allowed-tools: ["Read", "Write", "Edit", "Grep", "Glob", "Bash", "Task", "WebSearch", "WebFetch"]
 ---
 
 # Target Journal
@@ -11,6 +14,10 @@ allowed-tools: ["Read", "Grep", "Glob", "Write", "WebSearch", "WebFetch", "Task"
 Analyze a paper and recommend journals for submission by dispatching the **Editor** agent in journal-selection mode.
 
 **Input:** `$ARGUMENTS` — path to paper `.tex` file, or a text abstract/summary.
+
+**Paper:** !`test -f Paper/main.tex && echo "found" || echo "not found"`
+**Domain profile:** !`test -f .claude/rules/domain-profile.md && echo "found" || echo "not found"`
+**Existing reviews:** !`ls -t quality_reports/*review*.md quality_reports/*editorial*.md 2>/dev/null | head -3`
 
 ---
 

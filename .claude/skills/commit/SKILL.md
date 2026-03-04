@@ -1,79 +1,80 @@
 ---
 name: commit
-description: Stage, commit, create PR, and merge to main. Use for the standard commit-PR-merge cycle.
-disable-model-invocation: true
+description: >-
+  Stages changes and commits directly to main. Optionally pushes to origin.
+  Triggers on: "commit", "save changes", "commit this".
 argument-hint: "[optional: commit message]"
-allowed-tools: ["Bash", "Read", "Glob"]
+allowed-tools: ["Read", "Write", "Edit", "Grep", "Glob", "Bash", "Task"]
 ---
 
-# Commit, PR, and Merge
+# Commit to Main
 
-Stage changes, commit with a descriptive message, create a PR, and merge to main.
+Stage changes and commit directly to main with a descriptive message.
+
+**Current state:**
+- !`git status --short`
+- !`git log --oneline -5`
+
+---
 
 ## Steps
 
-1. **Check current state:**
+### Step 1: Check current state
 
 ```bash
 git status
-git diff --stat
+git diff
+git diff --cached
 git log --oneline -5
 ```
 
-2. **Create a branch** from the current state:
+### Step 2: Pre-staging scan
 
-```bash
-git checkout -b <short-descriptive-branch-name>
-```
+Before staging, scan for sensitive files that must NOT be committed:
 
-3. **Stage files** — add specific files (never use `git add -A`):
+- `.claude/settings.local.json`
+- `.env`, `credentials.*`, files containing `API_KEY`, `PASSWORD`, `SECRET`
+- `.dta` files (large Stata datasets — typically gitignored)
+
+Use `Grep` to check staged candidates for secrets if uncertain.
+
+### Step 3: Stage files
+
+Add specific files (never use `git add -A` or `git add .`):
 
 ```bash
 git add <file1> <file2> ...
 ```
 
-Do NOT stage `.claude/settings.local.json` or any files containing secrets.
-
-4. **Commit** with a descriptive message:
+### Step 4: Commit
 
 If `$ARGUMENTS` is provided, use it as the commit message. Otherwise, analyze the staged changes and write a message that explains *why*, not just *what*.
 
 ```bash
 git commit -m "$(cat <<'EOF'
 <commit message here>
+
+Co-Authored-By: Claude <noreply@anthropic.com>
 EOF
 )"
 ```
 
-5. **Push and create PR:**
+### Step 5: Push (if asked)
+
+Only push if the user explicitly requests it:
 
 ```bash
-git push -u origin <branch-name>
-gh pr create --title "<short title>" --body "$(cat <<'EOF'
-## Summary
-<1-3 bullet points>
-
-## Test plan
-<checklist>
-
-🤖 Generated with [Claude Code](https://claude.com/claude-code)
-EOF
-)"
+git push origin main
 ```
 
-6. **Merge and clean up:**
+### Step 6: Report and log
 
-```bash
-gh pr merge <pr-number> --merge --delete-branch
-git checkout main
-git pull
-```
-
-7. **Report** the PR URL and what was merged.
+1. Report what was committed (files, commit hash)
+2. Append an entry to `SESSION_REPORT.md` and `.claude/SESSION_REPORT.md` with the commit hash
 
 ## Important
 
-- Always create a NEW branch — never commit directly to main
-- Exclude `settings.local.json` and sensitive files from staging
-- Use `--merge` (not `--squash` or `--rebase`) unless asked otherwise
-- If the commit message from `$ARGUMENTS` is provided, use it exactly
+- Commit directly to main — no branch/PR unless the user asks for one
+- Exclude `settings.local.json`, `.env`, `.dta`, and sensitive files from staging
+- If the commit message from `$ARGUMENTS` is provided, use it exactly (still append the Co-Authored-By trailer)
+- Never push without explicit user request

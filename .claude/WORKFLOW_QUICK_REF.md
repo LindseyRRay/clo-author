@@ -32,6 +32,11 @@ Enter at any stage. Use `/new-project` for the full pipeline.
 
 ## Key Skills by Research Stage
 
+### Full Pipeline
+| Command | Agents | What It Does |
+|---------|--------|-------------|
+| `/new-project [topic]` | All | Full pipeline: idea → paper (orchestrated) |
+
 ### Ideation & Literature
 | Command | Agents | What It Does |
 |---------|--------|-------------|
@@ -51,13 +56,12 @@ Enter at any stage. Use `/new-project` for the full pipeline.
 |---------|--------|-------------|
 | `/data-analysis [dataset]` | Coder + Debugger | End-to-end analysis + code review |
 | `/draft-paper [section]` | Writer | Paper sections + humanizer pass |
-| `/compile-latex [file]` | — | 3-pass XeLaTeX + bibtex |
 
 ### Quality & Review
 | Command | Agents | What It Does |
 |---------|--------|-------------|
 | `/econometrics-check [file]` | Econometrician | 4-phase causal inference audit |
-| `/review-r [file]` | Debugger | Code quality review (standalone) |
+| `/review-code [file]` | Debugger | Code quality review (standalone) |
 | `/proofread [file]` | Proofreader | 6-category manuscript review |
 | `/paper-excellence [file]` | 4 parallel | Multi-agent review + weighted score |
 | `/review-paper [file]` | 2 Referees + Editor | Simulated peer review |
@@ -84,9 +88,7 @@ Enter at any stage. Use `/new-project` for the full pipeline.
 | `/commit [msg]` | Stage, commit, PR, merge |
 | `/humanizer [file]` | Strip 24 AI writing patterns |
 | `/journal` | Research journal timeline |
-| `/context-status` | Session health + context usage |
 | `/learn` | Extract discoveries into skills |
-| `/deploy` | Build + deploy to GitHub Pages |
 
 ---
 

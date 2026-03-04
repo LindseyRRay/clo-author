@@ -1,9 +1,12 @@
 ---
 name: find-data
-description: Data discovery and assessment dispatching the Explorer agent (finder) and Surveyor agent (critic). Searches public, administrative, survey, and novel data sources. Scores feasibility and measurement quality.
-disable-model-invocation: true
+description: >-
+  Discovers and assesses datasets by dispatching the Explorer agent (finder)
+  and Surveyor agent (critic). Searches public, administrative, survey, and
+  novel data sources. Scores feasibility and measurement quality. Triggers on:
+  "find data", "what data exists", "data sources for".
 argument-hint: "[research question or data requirements description]"
-allowed-tools: ["Read", "Grep", "Glob", "Write", "WebSearch", "WebFetch", "Task"]
+allowed-tools: ["Read", "Write", "Edit", "Grep", "Glob", "Bash", "Task", "WebSearch", "WebFetch"]
 ---
 
 # Find Data
@@ -12,14 +15,17 @@ Discover and assess datasets by dispatching the **Explorer** (data finder) and *
 
 **Input:** `$ARGUMENTS` — research question, variable requirements, or description of needed data.
 
+**Strategy memo:** !`ls -t quality_reports/*.md 2>/dev/null | grep -m1 -E 'strategy|spec|memo'`
+**Domain profile:** !`test -f .claude/rules/domain-profile.md && echo "found" || echo "not found"`
+
 ---
 
 ## Workflow
 
 ### Step 1: Context Gathering
 
-1. Read research spec if it exists (`quality_reports/research_spec_*.md`)
-2. Read strategy memo if it exists (`quality_reports/strategy_memo_*.md`)
+1. Read research spec if it exists in `quality_reports/specs/`
+2. Read strategy memo if it exists in `quality_reports/plans/`
 3. Read `.claude/rules/domain-profile.md` for common data sources in the field
 4. Understand what variables are needed: treatment, outcome, controls, time period, geography
 
@@ -63,34 +69,7 @@ Save critique to quality_reports/data_critique_[topic].md
 
 ### Step 4: Synthesize Recommendations
 
-After both agents return, present:
-
-```markdown
-# Data Assessment: [Topic]
-**Date:** [YYYY-MM-DD]
-
-## Recommended Datasets (ranked)
-
-### 1. [Dataset Name] — Feasibility: [A/B/C/D]
-- **Why:** [Best match for research question]
-- **Variables:** [Key variables available]
-- **Concerns:** [Surveyor's critique]
-- **Access:** [How to obtain]
-
-### 2. [Dataset Name] — Feasibility: [A/B/C/D]
-...
-
-## Rejected Datasets
-| Dataset | Reason for Rejection |
-|---------|---------------------|
-| [Name] | [Surveyor's deal-breaker] |
-
-## Data Gaps
-[Variables needed but not found in any dataset]
-
-## Next Steps
-[Concrete actions: apply for access, download, contact provider]
-```
+After both agents return, present ranked datasets with feasibility grades, Surveyor concerns, access instructions, data gaps, and concrete next steps.
 
 ---
 

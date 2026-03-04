@@ -1,11 +1,9 @@
 ---
 paths:
-  - "Paper/**/*.tex"
-  - "Talks/**/*.tex"
-  - "scripts/**/*.R"
-  - "scripts/**/*.do"
-  - "scripts/**/*.py"
-  - "scripts/**/*.jl"
+  - "paper/**/*.tex"
+  - "slides/**/*.tex"
+  - "src/**/*.py"
+  - "src/**/*.do"
 ---
 
 # Quality Gates & Scoring Rubrics
@@ -36,7 +34,7 @@ The overall score is a weighted aggregate of component scores. At the submission
 | Minor | Overfull hbox 1-10pt | -1 |
 | Minor | Long lines (>100 chars) | -1 (EXCEPT math formulas) |
 
-## R Scripts (.R)
+## Python Scripts (.py)
 
 | Severity | Issue | Deduction |
 |----------|-------|-----------|
@@ -46,12 +44,12 @@ The overall score is a weighted aggregate of component scores. At the submission
 | Critical | Hardcoded absolute paths | -20 |
 | Major | Missing robustness checks from memo | -15 |
 | Major | Wrong clustering level | -15 |
-| Major | Missing set.seed() | -10 |
-| Major | Missing RDS saves (HIGH — Quarto can't render) | -10 |
+| Major | Missing random seed (`np.random.seed` / `random.seed`) | -10 |
+| Major | Missing output persistence (intermediate results not saved) | -10 |
 | Major | Magnitude of main result implausible | -10 |
 | Major | Missing figure/table generation | -5 |
-| Major | Non-reproducible output (no session info) | -5 |
-| Minor | No documentation headers | -5 |
+| Major | Non-reproducible output (no environment info) | -5 |
+| Minor | No documentation headers / docstrings | -5 |
 | Minor | Missing outputs (stale) | -5 |
 
 ## Stata Scripts (.do)

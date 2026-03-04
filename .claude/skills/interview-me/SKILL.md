@@ -1,9 +1,12 @@
 ---
 name: interview-me
-description: Interactive interview to formalize a research idea into a structured specification with hypotheses and empirical strategy
-disable-model-invocation: true
+description: >-
+  Conducts an interactive research interview to formalize a research idea into
+  a structured specification with hypotheses and empirical strategy. Also
+  populates the domain profile. Triggers on: "interview me", "help me think
+  through my research idea", "start a new project idea".
 argument-hint: "[brief topic or 'start fresh']"
-allowed-tools: ["Read", "Write"]
+allowed-tools: ["Read", "Write", "Edit", "Grep", "Glob", "Bash", "Task"]
 ---
 
 # Research Interview
@@ -11,6 +14,8 @@ allowed-tools: ["Read", "Write"]
 Conduct a structured interview to help formalize a research idea into a concrete specification.
 
 **Input:** `$ARGUMENTS` — a brief topic description or "start fresh" for an open-ended exploration.
+
+**Domain profile:** !`test -f .claude/rules/domain-profile.md && echo "found" || echo "not found"`
 
 ---
 
@@ -55,76 +60,26 @@ Once you have enough information (typically 5-8 exchanges), produce TWO outputs:
 
 ### Output 1: Domain Profile
 
-If `.claude/rules/domain-profile.md` still contains placeholders, fill it in based on the interview. This calibrates all agents to the researcher's field:
+If `.claude/rules/domain-profile.md` still contains placeholders, fill it in based on the interview:
+- Field & adjacent subfields
+- Target journals (ranked by tier)
+- Common data sources
+- Common identification strategies
+- Field conventions
+- Seminal references
+- Field-specific referee concerns
 
-- **Field & adjacent subfields** — inferred from the topic
-- **Target journals** — ranked by tier for this field
-- **Common data sources** — datasets typical for this area
-- **Common identification strategies** — designs used in this literature
-- **Field conventions** — estimation quirks, outcome transformations, clustering norms
-- **Seminal references** — papers every referee will expect you to cite
-- **Field-specific referee concerns** — the "gotcha" questions referees always ask
-
-Save directly to `.claude/rules/domain-profile.md` (overwrite the template).
-
-If the domain profile is already filled (from a previous interview or manual entry), confirm with the user whether to update or keep the existing one.
+Save directly to `.claude/rules/domain-profile.md`. If already filled, confirm with user whether to update.
 
 ### Output 2: Research Specification Document
 
-Produce a **Research Specification Document**:
-
-```markdown
-# Research Specification: [Title]
-
-**Date:** [YYYY-MM-DD]
-**Researcher:** [from conversation context]
-
-## Research Question
-
-[Clear, specific question in one sentence]
-
-## Motivation
-
-[2-3 paragraphs: why this matters, theoretical context, policy relevance]
-
-## Hypothesis
-
-[Testable prediction with expected direction]
-
-## Empirical Strategy
-
-- **Method:** [e.g., Difference-in-Differences with staggered adoption]
-- **Treatment:** [What varies]
-- **Control:** [Comparison group]
-- **Key identifying assumption:** [What must hold]
-- **Robustness checks:** [Pre-trends, placebo tests, etc.]
-
-## Data
-
-- **Primary dataset:** [Name, source, coverage]
-- **Key variables:** [Treatment, outcome, controls]
-- **Sample:** [Unit of observation, time period, N]
-
-## Expected Results
-
-[What the researcher expects to find and why]
-
-## Contribution
-
-[How this advances the literature — 2-3 sentences]
-
-## Open Questions
-
-[Issues raised during the interview that need further thought]
-```
-
-**Save to:** `quality_reports/research_spec_[sanitized_topic].md`
+Save to `quality_reports/specs/research_spec_[sanitized_topic].md` with: research question, motivation, hypothesis, empirical strategy (method, treatment, control, identifying assumption, robustness), data (primary dataset, key variables, sample), expected results, contribution, and open questions.
 
 ---
 
 ## Interview Style
 
-- **Be curious, not prescriptive.** Your job is to draw out the researcher's thinking, not impose your own ideas.
-- **Probe weak spots gently.** If the identification strategy sounds fragile, ask "What would a skeptic say about...?" rather than "This won't work because..."
+- **Be curious, not prescriptive.** Draw out the researcher's thinking.
+- **Probe weak spots gently.** "What would a skeptic say about...?" not "This won't work."
 - **Build on answers.** Each question should follow from the previous response.
-- **Know when to stop.** If the researcher has a clear vision after 4-5 exchanges, move to the specification. Don't over-interview.
+- **Know when to stop.** If the researcher has a clear vision after 4-5 exchanges, move to the specification.

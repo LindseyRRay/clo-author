@@ -1,6 +1,6 @@
 ---
 paths:
-  - "Paper/**/*.tex"
+  - "paper/**/*.tex"
   - "Talks/**/*.tex"
   - "scripts/**/*.R"
 ---

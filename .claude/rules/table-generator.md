@@ -1,8 +1,8 @@
 ---
 paths:
-  - "**/*.R"
+  - "src/**/*.py"
+  - "src/**/*.do"
   - "**/*.tex"
-  - "tables/**"
 ---
 
 # Table Standards
@@ -57,7 +57,7 @@ Treatment        & 0.045**  & 0.038*   & 0.052*** \\
 
 - **Column (1), (2), ...** headers in the first row after `\toprule`
 - **Dependent variable** stated in a spanning header or the first subheader row
-- **Variable names** left-aligned, human-readable (not raw R variable names)
+- **Variable names** left-aligned, human-readable (not raw variable names)
   - `Log wages` not `ln_wage_deflated`
   - `Female` not `sex_2`
   - `Years of education` not `educ_yrs`
@@ -82,52 +82,49 @@ For tables with multiple panels:
 - `\midrule` after each panel label
 - Small vertical space (`\\[0.5em]`) between panels
 
-## 6. Preferred R Packages
+## 6. Preferred Packages
 
-### Primary: `modelsummary`
+### Python: `pyfixest` (primary) or `statsmodels`
 
-```r
-library(modelsummary)
+```python
+import pyfixest as pf
 
-modelsummary(
-  models,
-  output   = "latex_tabular",  # bare tabular, no wrapper
-  stars    = c("*" = 0.10, "**" = 0.05, "***" = 0.01),
-  coef_rename = c(
-    "treatment"  = "Treatment",
-    "log_income" = "Log income"
-  ),
-  gof_map = c("nobs", "r.squared", "adj.r.squared"),
-  escape  = FALSE
+# Run regression
+fit = pf.feols("y ~ treatment + controls | fe1 + fe2", data=df)
+
+# Export LaTeX table
+pf.etable([fit1, fit2, fit3], type="tex",
+          coef_rename={"treatment": "Treatment", "log_income": "Log income"},
+          signif_code=[0.01, 0.05, 0.10])
+```
+
+For descriptive tables:
+
+```python
+import pandas as pd
+
+df.describe().to_latex(
+    buf="Output/Tables/sumstats_main_sample.tex",
+    float_format="%.3f",
+    caption="Summary Statistics"
 )
 ```
 
-### Alternative: `fixest::etable`
+### Stata: `esttab` / `estout`
 
-```r
-fixest::etable(
-  models,
-  tex      = TRUE,
-  style.tex = style.tex(
-    main     = "aer",
-    depvar.title = "",
-    fixef.title  = "",
-    yesNo    = c("Yes", "No")
-  ),
-  se.below = TRUE,
-  signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.10)
-)
+```stata
+eststo clear
+eststo: reg y treatment controls, cluster(state)
+eststo: reghdfe y treatment controls, absorb(fe1 fe2) cluster(state)
+
+esttab using "Output/Tables/reg_main_specification.tex", ///
+    replace booktabs se star(* 0.10 ** 0.05 *** 0.01) ///
+    nomtitle label
 ```
 
-### For summary / descriptive tables: `kableExtra`
+### Alternative (R): `modelsummary` or `fixest::etable`
 
-```r
-library(kableExtra)
-
-kbl(df, format = "latex", booktabs = TRUE, escape = FALSE,
-    align = c("l", rep("c", ncol(df) - 1))) |>
-  kable_styling(latex_options = "hold_position")
-```
+If using R scripts, prefer `modelsummary` for regression tables and `kableExtra` for descriptive tables.
 
 ## 7. Typography
 
@@ -138,20 +135,19 @@ kbl(df, format = "latex", booktabs = TRUE, escape = FALSE,
 
 ## 8. Export
 
-```r
+```python
 # Write .tex fragment (no \begin{table} wrapper -- added in main.tex)
-writeLines(tex_output, file.path("paper/tables", "reg_main_specification.tex"))
-writeLines(tex_output, file.path("results/tables", "reg_main_specification.tex"))
+with open("Output/Tables/reg_main_specification.tex", "w") as f:
+    f.write(tex_output)
 ```
 
 - Output **bare `tabular` environment** (no `\begin{table}` float)
 - The paper's `main.tex` wraps it with `\begin{table}`, `\caption{}`, and `\input{}`
-- Always write to both `paper/tables/` and `results/tables/`
 
 ## 9. File Naming
 
 ```
-tables/
+Output/Tables/
 ├── descriptive/
 │   ├── sumstats_main_sample.tex
 │   └── balance_treatment_control.tex
@@ -179,7 +175,5 @@ Pattern: `{table_type}_{content_description}.tex`
 | Notes embedded in table body | Notes go below via `\begin{tablenotes}` |
 | `\hline` | Use `\toprule` / `\midrule` / `\bottomrule` (booktabs) |
 | Vertical rules (`\|` in column spec) | Never used in economics journals |
-| `stargazer` package | Deprecated workflow; use `modelsummary` or `fixest::etable` |
 | Raw variable names in labels | Human-readable labels required |
-| `xtable` without booktabs | Produces non-journal-quality output |
-| `\begin{table}` in R output | R exports bare `tabular`; float wrapper lives in `main.tex` |
+| `\begin{table}` in script output | Scripts export bare `tabular`; float wrapper lives in `main.tex` |

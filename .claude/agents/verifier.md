@@ -25,7 +25,7 @@ Checks 1–10. Full AEA Data Editor compliance audit before journal submission.
 
 ### 1. LaTeX Compilation
 ```bash
-cd Paper && TEXINPUTS=../Preambles:$TEXINPUTS xelatex -interaction=nonstopmode main.tex 2>&1 | tail -20
+cd paper && TEXINPUTS=../preambles:$TEXINPUTS xelatex -interaction=nonstopmode main.tex 2>&1 | tail -20
 ```
 - Check exit code (0 = success)
 - Count `Overfull \\hbox` warnings
@@ -34,17 +34,21 @@ cd Paper && TEXINPUTS=../Preambles:$TEXINPUTS xelatex -interaction=nonstopmode m
 
 ### 2. Script Execution
 ```bash
-Rscript scripts/R/FILENAME.R 2>&1 | tail -20
+# Python
+python src/FILENAME.py 2>&1 | tail -20
+
+# Stata
+stata -b do src/FILENAME.do 2>&1 | tail -20
 ```
 - Check exit code
 - Verify output files created
 - Check file sizes > 0
-- Support R, Stata (`stata -b do`), Python, Julia
+- Support Python, Stata, R, Julia
 
 ### 3. File Integrity
 - Every `\input{}`, `\include{}` reference resolves to an existing file
-- Every referenced table in `Tables/` exists
-- Every referenced figure in `Figures/` exists
+- Every referenced table in `Output/Tables/` exists
+- Every referenced figure in `Output/Figures/` exists
 
 ### 4. Output Freshness
 - Timestamps of output files match latest script run
@@ -60,9 +64,9 @@ Rscript scripts/R/FILENAME.R 2>&1 | tail -20
 - No orphan scripts (scripts not called by master)
 
 ### 6. Dependency Verification
-- R: `renv.lock` or `sessionInfo()` output exists
-- Stata: version number and `ssc install` list documented
 - Python: `requirements.txt` or `pyproject.toml` exists
+- Stata: version number and `ssc install` list documented
+- R: `renv.lock` or package list documented
 - Non-standard packages documented with install instructions
 
 ### 7. Data Provenance

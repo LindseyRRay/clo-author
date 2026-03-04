@@ -1,9 +1,12 @@
 ---
 name: humanizer
-description: Strip AI writing patterns from text. Standalone access to the Writer agent's humanizer pass. Checks 24 patterns across 4 categories (structural, lexical, rhetorical, formatting) with academic adaptation. Use on any text that reads too "AI-generated".
-disable-model-invocation: true
+description: >-
+  Strips AI writing patterns from academic text. Standalone access to the Writer
+  agent's humanizer pass. Checks 24 patterns across 4 categories (structural,
+  lexical, rhetorical, formatting) with academic adaptation. Triggers on:
+  "humanize this", "de-AI this text", "strip AI patterns".
 argument-hint: "[file path to .tex, .md, or .txt file]"
-allowed-tools: ["Read", "Write", "Edit", "Grep", "Glob"]
+allowed-tools: ["Read", "Write", "Edit", "Grep", "Glob", "Bash", "Task"]
 ---
 
 # Humanizer
@@ -18,7 +21,7 @@ Strip AI writing patterns from academic text. This provides standalone access to
 
 ### Step 1: Read the File
 
-Read the target file from `$ARGUMENTS`. Support `.tex`, `.md`, `.txt`, and `.qmd` files.
+Read the target file from `$ARGUMENTS`. Support `.tex`, `.md`, and `.txt` files.
 
 ### Step 2: Scan for AI Patterns
 

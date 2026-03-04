@@ -1,9 +1,12 @@
 ---
 name: submit
-description: Final submission verification gate. Runs Verifier in submission mode (10 checks), confirms aggregate score >= 95 with all components >= 80, and generates submission checklist. Use when ready to submit to a journal.
-disable-model-invocation: true
+description: >-
+  Runs final submission verification gate. Dispatches Verifier in submission mode
+  (10 checks), confirms aggregate score >= 95 with all components >= 80, and
+  generates submission checklist. Triggers on: "submit the paper", "ready to
+  submit", "submission check", "final gate".
 argument-hint: "[journal name (optional)]"
-allowed-tools: ["Read", "Grep", "Glob", "Write", "Bash", "Task"]
+allowed-tools: ["Read", "Write", "Edit", "Grep", "Glob", "Bash", "Task"]
 ---
 
 # Submit
@@ -11,6 +14,11 @@ allowed-tools: ["Read", "Grep", "Glob", "Write", "Bash", "Task"]
 Final submission gate combining full verification, score enforcement, and submission checklist.
 
 **Input:** `$ARGUMENTS` — target journal name (optional, uses domain-profile.md default).
+
+**Paper:** !`test -f Paper/main.tex && echo "found" || echo "not found"`
+**Domain profile:** !`test -f .claude/rules/domain-profile.md && echo "found" || echo "not found"`
+**Latest score:** !`ls -t quality_reports/*excellence*.md 2>/dev/null | head -1`
+**Replication package:** !`test -d Replication && echo "found" || echo "not found"`
 
 ---
 

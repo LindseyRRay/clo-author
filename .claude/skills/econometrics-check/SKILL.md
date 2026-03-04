@@ -1,14 +1,26 @@
 ---
 name: econometrics-check
-description: Causal inference design audit. Dispatches the Econometrician agent in standalone mode for 4-phase review (claim, design validity, inference, polish). Covers DiD, IV, RDD, Synthetic Control, and Event Studies. Use when working on empirical papers, strategy memos, or R scripts with causal estimators.
-disable-model-invocation: true
-argument-hint: "[paper .tex, strategy memo, R script, or directory path]"
-allowed-tools: ["Read", "Grep", "Glob", "Write", "Task"]
+description: >-
+  Causal inference design audit dispatching the Econometrician agent in
+  standalone mode for 4-phase review (claim, design validity, inference, polish).
+  Covers DiD, IV, RDD, Synthetic Control, and Event Studies. Triggers on:
+  "econometrics check", "check identification", "audit the design",
+  "causal inference review".
+argument-hint: "[paper .tex, strategy memo, Python/Stata script, or directory path]"
+allowed-tools: ["Read", "Write", "Edit", "Grep", "Glob", "Bash", "Task"]
 ---
 
 # Econometrics Check
 
 Run a 4-phase causal inference audit on the target file(s) by dispatching the **Econometrician** agent in standalone mode.
+
+**Input:** `$ARGUMENTS` — file or directory to audit.
+
+**Paper:** !`find Paper/ -name "main.tex" 2>/dev/null && echo "found" || echo "not found"`
+**Scripts:** !`find src/ -name "*.py" -o -name "*.do" 2>/dev/null | head -5`
+**Strategy memo:** !`ls -t quality_reports/ 2>/dev/null | grep -m1 -E 'strategy|memo'`
+
+---
 
 ## Workflow
 
@@ -17,8 +29,8 @@ Run a 4-phase causal inference audit on the target file(s) by dispatching the **
 Determine target from `$ARGUMENTS`:
 - **`.tex` file:** Review paper for identification claims, assumption statements, estimation descriptions
 - **`strategy-memo-*.md`:** Review strategy memo BEFORE code is written (early design check)
-- **`.R` / `.do` / `.py` / `.jl` file:** Review script for code-theory alignment, package usage, SE computation
-- **Directory (e.g., `scripts/R/`):** Review all scripts, then synthesize
+- **`.py` / `.do` file:** Review script for code-theory alignment, package usage, SE computation
+- **Directory (e.g., `src/`):** Review all scripts, then synthesize
 - **No argument:** Review `Paper/main.tex` if it exists, else ask user
 
 ### Step 2: Context Gathering

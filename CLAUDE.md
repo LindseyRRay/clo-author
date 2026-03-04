@@ -31,41 +31,43 @@
 ├── Bibliography_base.bib        # Centralized bibliography
 ├── Paper/                       # Main LaTeX manuscript (source of truth)
 │   ├── main.tex                 # Primary paper file
-│   └── sections/                # Section-level .tex files
-├── Talks/                       # Derivative Beamer presentations
+│   └── online_appendix.tex      # Online appendix
+├── Slides/                      # Beamer presentations
 │   ├── job_market_talk.tex      # 45-60 min, full results
 │   ├── seminar_talk.tex         # 30-45 min, standard seminar
 │   ├── short_talk.tex           # 15 min, conference session
 │   └── lightning_talk.tex       # 5 min, spiel/elevator pitch
-├── Data/                        # Project data
-│   ├── raw/                     # Original untouched data (often gitignored)
-│   └── cleaned/                 # Processed datasets ready for analysis
-├── Output/                      # Intermediate results (logs, temp files)
-├── Figures/                     # Final figures (.pdf, .png) referenced in paper
-├── Tables/                      # Final tables (.tex) referenced in paper
-├── Supplementary/               # Online appendix and supplements
-├── Replication/                 # Replication package for deposit
+├── src/                         # Analysis code (R, Stata, Python, Julia)
 ├── Preambles/header.tex         # LaTeX headers / shared preamble
-├── scripts/                     # Analysis code (R, Stata, Python, Julia)
+├── templates/                   # Session log, quality report templates
 ├── quality_reports/             # Plans, session logs, reviews, scores
 ├── explorations/                # Research sandbox (see rules)
-├── templates/                   # Session log, quality report templates
-└── master_supporting_docs/      # Reference papers and data docs
+├── docs/                        # Data documentation, codebooks, code review log
+└── updates/                     # Progress updates for collaborators, lab notebooks
+
+[EMPIRICS_ROOT]/                 # May be external (e.g. Dropbox) — see note below
+├── Data/RawData/                # Raw data only. Never modified after initial placement.
+├── Data/WorkingData/            # Cleaned, merged, and manipulated datasets for analysis.
+├── Output/Figures/              # Generated figures
+├── Output/Tables/               # Generated tables
+└── Replication/                 # Replication package for deposit
 ```
+
+> **Note:** `[EMPIRICS_ROOT]` may be a separate folder (e.g. a Dropbox folder) rather than a sub-folder of the repo, to avoid versioning large datasets. Document the path and access instructions above. Use `DATA_PATH` from `config.py` to reference the empirics root so paths are consistent and easily updated. Figures and Tables use YYYY-MM-DD sub-folders organized by output date (e.g. `DATA_PATH / 'Output/Figures/2025-01-04'`).
 
 ---
 
 ## Commands
 
 ```bash
-# Paper compilation (3-pass, XeLaTeX only)
-cd Paper && TEXINPUTS=../Preambles:$TEXINPUTS xelatex -interaction=nonstopmode main.tex
+# paper compilation (3-pass, XeLaTeX only)
+cd paper && TEXINPUTS=../preambles:$TEXINPUTS xelatex -interaction=nonstopmode main.tex
 BIBINPUTS=..:$BIBINPUTS bibtex main
-TEXINPUTS=../Preambles:$TEXINPUTS xelatex -interaction=nonstopmode main.tex
-TEXINPUTS=../Preambles:$TEXINPUTS xelatex -interaction=nonstopmode main.tex
+TEXINPUTS=../preambles:$TEXINPUTS xelatex -interaction=nonstopmode main.tex
+TEXINPUTS=../preambles:$TEXINPUTS xelatex -interaction=nonstopmode main.tex
 
 # Talk compilation
-cd Talks && TEXINPUTS=../Preambles:$TEXINPUTS xelatex -interaction=nonstopmode talk.tex
+cd slides && TEXINPUTS=../preambles:$TEXINPUTS xelatex -interaction=nonstopmode talk.tex
 ```
 
 ---
@@ -95,7 +97,7 @@ See `scoring-protocol.md` for weighted aggregation formula.
 | `/data-analysis [dataset]` | Coder + Debugger: end-to-end analysis |
 | `/draft-paper [section]` | Writer: draft paper sections + humanizer pass |
 | `/econometrics-check [file]` | Econometrician: 4-phase causal inference audit |
-| `/review-r [file]` | Debugger: code quality review (standalone) |
+| `/review-code [file]` | Debugger: code quality review (standalone) |
 | `/proofread [file]` | Proofreader: 6-category manuscript review |
 | `/paper-excellence [file]` | Multi-agent parallel review + weighted score |
 | `/review-paper [file]` | 2 Referees + Editor: simulated peer review |
@@ -108,15 +110,11 @@ See `scoring-protocol.md` for weighted aggregation formula.
 | `/data-deposit` | Coder + Verifier: AEA replication package |
 | `/humanizer [file]` | Strip 24 AI writing patterns |
 | `/journal` | Research journal timeline |
-| `/compile-latex [file]` | 3-pass XeLaTeX + bibtex |
 | `/validate-bib` | Cross-reference citations |
 | `/commit [msg]` | Stage, commit, PR, merge |
 | `/research-ideation [topic]` | Research questions + strategies |
 | `/visual-audit [file]` | Slide layout audit |
 | `/learn` | Extract session discoveries into skills |
-| `/context-status` | Session health + context usage |
-| `/deploy` | Quarto render + GitHub Pages sync |
-
 ---
 
 <!-- CUSTOMIZE: Replace the example entries below with your own
@@ -135,6 +133,6 @@ See `scoring-protocol.md` for weighted aggregation formula.
 | Component | File | Status | Description |
 |-----------|------|--------|-------------|
 | Paper | `Paper/main.tex` | [draft/submitted/R&R] | [Brief description] |
-| Data | `scripts/R/` | [complete/in-progress] | [Analysis description] |
+| Data | `src/` | [complete/in-progress] | [Analysis description] |
 | Replication | `Replication/` | [not started/ready] | [Deposit status] |
-| Job Market Talk | `Talks/job_market_talk.tex` | -- | [Status] |
+| Job Market Talk | `Slides/job_market_talk.tex` | -- | [Status] |

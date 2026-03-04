@@ -1,9 +1,13 @@
 ---
 name: audit-replication
-description: Validate replication package by dispatching the Verifier agent in submission mode (checks 1-10). Runs master script, cross-references tables and figures against paper, verifies README completeness for AEA Data Editor compliance. Use before data deposit or journal submission.
-disable-model-invocation: true
-argument-hint: "[replication package directory OR 'here' for current project]"
-allowed-tools: ["Read", "Grep", "Glob", "Write", "Bash", "Task"]
+description: >-
+  Validates a replication package by dispatching the Verifier agent in submission
+  mode (checks 1-10). Runs master script, cross-references tables and figures
+  against paper, verifies README completeness for AEA Data Editor compliance.
+  Triggers on: "audit replication", "check the replication package",
+  "verify the deposit".
+argument-hint: "[directory path, or 'here' for replication/]"
+allowed-tools: ["Read", "Write", "Edit", "Grep", "Glob", "Bash", "Task"]
 ---
 
 # Audit Replication Package
@@ -12,22 +16,27 @@ Run end-to-end validation by dispatching the **Verifier** agent in **submission 
 
 **Input:** `$ARGUMENTS` — directory containing the replication package. Use `here` or no argument for the current project.
 
+**Today:** !`date +%Y-%m-%d`
+**Replication dir:** !`ls Replication/ 2>/dev/null | head -10`
+**Paper:** !`test -f Paper/main.tex && echo "found" || echo "not found"`
+
 ---
 
 ## Workflow
 
 ### Step 1: Locate Package
 
-- If `$ARGUMENTS` is a directory path: use it
-- If `$ARGUMENTS` is `here` or empty: use `Replication/` if it exists, otherwise project root
-- Verify the directory exists and contains scripts
+- If `$ARGUMENTS` is a directory path: set `PACKAGE_DIR` to that path
+- If `$ARGUMENTS` is `here` or empty: set `PACKAGE_DIR` to `Replication/` if it exists, otherwise project root
+- Verify `PACKAGE_DIR` exists and contains scripts
+- If the directory does not exist or contains no scripts, halt and ask the user to specify a valid path
 
 ### Step 2: Launch Verifier Agent (Submission Mode)
 
 Delegate to the `verifier` agent via Task tool:
 
 ```
-Prompt: Audit the replication package at [directory].
+Prompt: Audit the replication package at PACKAGE_DIR.
 Mode: Submission (all 10 checks).
 Paper location: Paper/main.tex (if exists).
 
@@ -39,27 +48,32 @@ Standard Checks (1-4):
 
 Submission Checks (5-10):
   5. Package inventory (scripts numbered, master script exists)
-  6. Dependency verification (renv.lock, sessionInfo, package versions)
+  6. Dependency verification (requirements.txt/environment.yml for Python, ado version headers for Stata)
   7. Data provenance (sources documented, no hardcoded paths)
   8. Execution verification (run master script end-to-end)
   9. Output cross-reference (every table/figure traced to script)
   10. README completeness (AEA format)
 
-Save report to quality_reports/replication_audit_[date].md
+Save report to quality_reports/replication_audit_YYYY-MM-DD.md
 ```
 
 ### Step 3: Handle Failures
 
-If execution errors are found (Check 8):
+**Execution failures (Check 8):**
 1. Display specific error with file and line number
 2. Suggest concrete fix
 3. Ask user if they want to fix and re-audit (max 3 iterations)
+
+**Non-execution failures (Checks 1-7, 9-10):**
+1. Present each failure with specific remediation steps
+2. Do not auto-fix — the user decides what to change
 
 ### Step 4: Present Results
 
 ```markdown
 # Replication Audit Report
-**Date:** [YYYY-MM-DD]
+**Date:** YYYY-MM-DD
+**Package:** PACKAGE_DIR
 **Mode:** Submission
 
 ## Check Results
@@ -90,5 +104,5 @@ If execution errors are found (Check 8):
 - **This skill runs code.** It needs Bash access to execute scripts for Check 8.
 - **Be patient with runtime.** Set appropriate timeouts for long-running packages.
 - **Don't modify the package during audit.** Read and run only.
-- **Specific errors.** "Script 03_robustness.R fails at line 47: object 'treatment_var' not found" beats "execution failed."
+- **Specific errors.** "Script 03_robustness.py fails at line 47: NameError: name 'treatment_var' is not defined" beats "execution failed."
 - **AEA Data Editor standards.** The target is full compliance — README format, documented versions, data provenance.

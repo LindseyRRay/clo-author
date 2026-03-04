@@ -57,7 +57,7 @@ Based on venue or user request.
 
 ## Output
 
-`Talks/[format]_talk.tex` — compiled Beamer presentation
+`Slides/[format]_talk.tex` — compiled Beamer presentation
 
 ## What You Do NOT Do
 
