@@ -168,6 +168,31 @@ Review all 28 active project skills one by one, using the skill improvement plug
 - In progress: continuing through remaining skills
 - Pending: commit all changes
 
+---
+
+## 2026-03-04 — Full audit + Python/Stata customization (continued session)
+
+### Completed
+- **All 26 skills reviewed and updated**: standardized `allowed-tools` to `["Read", "Write", "Edit", "Grep", "Glob", "Bash", "Task"]` across all skills (+ WebSearch/WebFetch for lit-review, find-data, target-journal, new-project)
+- **Agents rewritten for Python/Stata**: coder.md, debugger.md, verifier.md (full rewrites); econometrician.md (package-specific checks expanded to Python/Stata/R); strategist.md, storyteller.md (targeted fixes)
+- **Stale references cleaned**: /review-r → /review-code everywhere; removed /compile-latex, /context-status, /deploy references from all active files; fixed folder paths (Talks→Slides, Tables→Output/Tables, Figures→Output/Figures, scripts→src)
+- **Cross-reference files fixed**: README.md (counts: 26 skills, 22 rules, 8 hooks), WORKFLOW_QUICK_REF.md (added /new-project to tables, removed deleted skills), orchestrator.md, single-source-of-truth.md, exploration-fast-track.md, explorations/README.md
+- **Hook fixed**: verify-reminder.py — removed /compile-latex reference, removed .qmd and .R entries
+- **Skill renamed**: review-r/ directory → review-code/
+- **Global skill created**: `~/.claude/skills/write-spec/SKILL.md` — task specification helper available across all projects
+- **Committed and pushed**: `11b6a98` to LindseyRRay/clo-author
+
+### Decisions
+- `allowed-tools` expanded to full set per user request (was previously minimal per-skill)
+- Exploration folder structure uses `src/` not `R/` + `scripts/`
+- `journal` skill does NOT get WebSearch/WebFetch (caught batch script bug)
+- Historical session logs in quality_reports/ are append-only, never edited
+
+### Discussion
+- Walked through workflow activation for existing projects
+- Recommended symlink approach for sharing .claude/ across projects
+- Planning setup script to automate project bootstrapping
+
 
 ---
 **Context compaction (auto) at 22:48**
