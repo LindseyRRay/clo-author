@@ -212,3 +212,36 @@ Check git log and quality_reports/plans/ for current state.
 ---
 **Context compaction (auto) at 00:31**
 Check git log and quality_reports/plans/ for current state.
+
+---
+
+## 2026-03-04 — Setup script, cloudRE migration, latex-tables skill
+
+### Completed
+- **`setup-project.sh` created and committed** (`3c45860`): shell script to bootstrap existing projects with clo-author infrastructure (copies .claude/, CLAUDE.md, templates/, creates quality_reports/ dirs)
+- **cloudRE project migrated**: symlinked .claude/ from clo-author, created root CLAUDE.md with project-specific details (data paths, key variables, datasets), moved 3 existing plans to quality_reports/plans/, backed up old .claude/ to .claude.backup/
+- **Overleaf sync**: cloned Paper/ from Overleaf git remote into cloudRE (required git auth token, URL-encoded email with %40)
+- **README.md updated**: added "Using Clo-Author in Existing Projects" section documenting setup script, manual setup, symlink bug, and Overleaf sync instructions
+- **latex-tables skill reviewed and improved** (5 fixes):
+  1. Added `Task` to allowed-tools
+  2. Date format now defers to project CLAUDE.md (not hardcoded)
+  3. Fixed fragile `float_fmt[-2]` parsing
+  4. Added complete `export_regression_table()` with RegSpec dataclass
+  5. Added full Stata section: esttab event study example, two valid column styles (siunitx vs Stata-native `l`), `\def\sym` scoping, `\addlinespace`, post-processing helper
+  6. Updated verification checklist to accept both styles
+
+### Decisions
+- Copy .claude/ instead of symlink for cross-project use — Claude Code skill registry doesn't follow symlinks (known bug)
+- setup-project.sh uses symlink (created before bug discovery); README documents copy as recommended approach
+- Stata-native `l` columns accepted alongside siunitx `S` — match existing project style for consistency
+- Overleaf git auth requires token (passwords deprecated), email `@` must be URL-encoded as `%40`
+
+### Pending
+- Update setup-project.sh to copy instead of symlink (to match README guidance)
+- cloudRE .claude/ still symlinked — needs restructuring (symlink subdirs, copy skills) or full copy
+- Delete .claude.backup/ in cloudRE once confirmed working
+
+
+---
+**Context compaction (auto) at 13:41**
+Check git log and quality_reports/plans/ for current state.

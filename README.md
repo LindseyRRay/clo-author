@@ -127,13 +127,45 @@ I will also sometimes specify the date folder underwhich output should be placed
 
 ---
 
+## Using Clo-Author in Existing Projects
+
+You can add clo-author's infrastructure (agents, skills, rules, hooks) to any existing research project.
+
+### Option A: Setup Script (recommended)
+
+```bash
+./setup-project.sh /path/to/your-project "Project Name" "Institution"
+```
+
+This copies `.claude/`, `CLAUDE.md` (with placeholders filled in), and `templates/` into your project, and creates the `quality_reports/` directory structure.
+
+### Option B: Manual Setup
+
+1. Copy the `.claude/` directory into your project
+2. Copy `CLAUDE.md` and fill in the `[BRACKETED PLACEHOLDERS]`
+3. Copy `templates/`
+4. Create `quality_reports/plans/`, `quality_reports/session_logs/`, `quality_reports/specs/`, `quality_reports/strategy/`
+
+### Why Copy Instead of Symlink?
+
+You might be tempted to symlink `.claude/` so improvements propagate automatically. However, **Claude Code's skill registry does not follow symlinks** when scanning for `SKILL.md` files — skills will show "No skills found" and invocation fails with "Unknown skill." Copy the directory instead. To pick up updates from clo-author, re-run `setup-project.sh` or manually copy `.claude/` again.
+
+### After Setup
+
+1. **Fill in `CLAUDE.md`** — project name, institution, folder structure, data paths, current state
+2. **Fill in the domain profile** (`.claude/rules/domain-profile.md`) — your field's journals, data sources, identification strategies, conventions, and seminal references. Use `/interview-me` to populate it interactively.
+3. **Sync your paper from Overleaf** (optional) — clone your Overleaf project as `Paper/`:
+   ```bash
+   cd your-project
+   git clone https://YOUR_EMAIL%40domain.com:YOUR_TOKEN@git.overleaf.com/PROJECT_ID Paper/
+   ```
+   Generate a Git token at [Overleaf Account Settings](https://www.overleaf.com/user/settings) under **Git Integration**. URL-encode the `@` in your email as `%40`.
+
+---
+
 ## Adapting for Your Field
 
-1. **Fill in `CLAUDE.md`** — replace `[BRACKETED PLACEHOLDERS]` with your project details
-2. **Fill in the domain profile** (`.claude/rules/domain-profile.md`) — your field's journals, data sources, identification strategies, conventions, and seminal references. Use `/interview-me` to populate it interactively.
-3. **Configure your language** — Python is the default, with Stata often used for running regression.
-
-The Clo-Author is designed for applied econometrics, but the infrastructure (contractor mode, quality gates, adversarial review) works for any quantitative research field.
+The Clo-Author is designed for applied econometrics, but the infrastructure (contractor mode, quality gates, adversarial review) works for any quantitative research field. Python is the default language, with Stata often used for regressions.
 
 ---
 
