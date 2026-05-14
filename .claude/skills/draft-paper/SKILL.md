@@ -46,6 +46,10 @@ Delegate to the `writer` agent via Task tool. Include all context in the prompt:
 Prompt: Draft the [section] section for [paper].
 
 Context to read first:
+  - .claude/skills/draft-paper/style.md — notation protocol, section-length norms,
+    placeholder conventions, banned-pattern checklist
+  - .claude/skills/draft-paper/templates/[section].md — paragraph-by-paragraph scaffold
+  - ~/.claude/rules/writing-style.md — prose-craft rules (sentence flow, structure, tone)
   - Paper/ for existing draft
   - .claude/rules/domain-profile.md for field conventions
   - Bibliography_base.bib for available citations
@@ -53,12 +57,7 @@ Context to read first:
   - quality_reports/results_summary.md if it exists (from Coder)
   - Most recent spec in quality_reports/specs/ or plan in quality_reports/plans/
 
-Follow section standards:
-  - Introduction: contribution paragraph within first 2 pages, effect sizes stated
-  - Empirical strategy: estimating equation displayed and numbered, assumptions explicit
-  - Data: sample construction, key variables, summary statistics table reference
-  - Results: every estimate with units, magnitudes not just signs
-  - Conclusion: restate with effect size, limitations, implications
+Follow the section scaffold in templates/[section].md and the style.md norms.
 Apply notation protocol (Y_it, D_it, gamma_i, delta_t, epsilon_it).
 Apply anti-hedging rules (ban "interestingly", "it is worth noting", etc.).
 Run humanizer pass before finalizing.
@@ -66,27 +65,10 @@ Use %TBD: comments for missing results, %VERIFY: for unconfirmed citations.
 Save to Paper/sections/[section_name].tex
 ```
 
-The Writer follows these standards:
-
-#### Introduction (~1,000-1,500 words)
-- Hook → research question → what we do → what we find → contribution → road map
-- Contribution paragraph names specific papers being advanced
-- Effect sizes with magnitudes and units
-
-#### Empirical Strategy (~800-1,200 words)
-- Identification assumption stated formally
-- Estimating equation displayed and numbered
-- Threats to identification addressed
-
-#### Results (~800-1,500 words)
-- Main specification with interpretation
-- Effect sizes in economic terms
-- Heterogeneity and robustness
-
-#### Conclusion (~500-700 words)
-- Restate with effect size
-- Policy implications
-- Limitations and future work
+Section standards — notation protocol, length norms, and the banned-pattern
+checklist — live in `style.md`. Per-section paragraph-by-paragraph scaffolds live
+in `templates/[section].md`. The Writer reads both before drafting; they are not
+duplicated here.
 
 ### Step 3: Compile LaTeX
 

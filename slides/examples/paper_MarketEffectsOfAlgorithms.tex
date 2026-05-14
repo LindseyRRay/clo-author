@@ -1,0 +1,811 @@
+\documentclass[11pt]{article}
+
+\input{preambles/header}
+\input{preambles/notation}
+\pgfplotsset{compat=1.18}
+\hypersetup{
+  pdfauthor={Raymond},
+  pdftitle={The Market Effects of Algorithms},
+  pdfdisplaydoctitle=true,
+  pdfpagelayout=OneColumn,
+  pdfstartview=FitH,
+  pdfpagemode=UseOutlines,
+  pdfpagemode=UseNone,
+  bookmarksnumbered=false,
+  verbose=false,
+  colorlinks=true,
+  citecolor=blue,
+  linkcolor=blue,
+  urlcolor=blue
+}
+
+% this sets the paths for graphicsx to search for figures
+\graphicspath{{../Empirics/Output/}{./}}
+%\renewcommand{\ignore}[1]{ }
+
+\setcounter{tocdepth}{3}
+\setcounter{secnumdepth}{3}
+\clubpenalty = 10000
+\widowpenalty = 10000
+
+
+\setlength{\parskip}{0.2mm}
+
+\usepackage{pgfplotstable}
+
+\usepackage{geometry}
+\geometry{left=1in}
+\geometry{right=1 in}
+\geometry{top=1in}
+\geometry{bottom=1in}
+\linespread{1.4}
+
+
+\usepackage{caption}
+\captionsetup{labelformat=empty,labelsep=none}
+\newcommand{\LR}[1]{{\color{blue}{[LR: #1]}}}
+
+\begin{document}
+\thispagestyle{empty}
+
+
+\vspace{20pt}
+\begin{center}
+\textcolor{white}{fill}\\
+\vspace{20pt}
+
+
+\LARGE{The Market Effects of Algorithms$^{*}$}\\\mbox{ }
+\end{center}
+
+
+\begin{singlespace}
+\begin{center}
+\begin{tabular}{ccccccc}
+\large{Lindsey Raymond} \\
+\large{MIT} \\
+\end{tabular}
+\end{center}
+
+\end{singlespace}
+
+
+\begin{center}
+\vspace{.20in}
+\normalsize{\today}
+%\normalsize{July 2020}
+
+\vspace{10pt}
+%PRELIMINARY \& INCOMPLETE: Comments welcome
+First Draft: December 2023\\
+%Please see \href{https://www.lindseyrraymond.com/assets/MarketEffectsofAlgorithms_LRaymond.pdf}{here} for latest version
+\end{center}
+\vspace{10pt}
+
+
+\begin{abstract}
+\vspace{-11pt}
+\singlespacing
+\noindent
+
+ 
+While there is excitement about the potential for algorithms to optimize individual decision-making, changes in individual behavior will, almost inevitably, impact markets. Yet little is known about such effects. In this paper, I study how the availability of algorithmic prediction changes entry, allocation, and prices in the US single-family housing market, a key driver of household wealth. I identify a \textit{market-level} natural experiment that generates variation in the cost of using algorithms to value houses: digitization, the transition from physical to digital housing records. I show that digitization leads to entry by investors using algorithms, but does not push out investors using human judgment. Instead, human investors shift toward houses that are difficult to predict algorithmically. Algorithmic investors disproportionately purchase minority-owned homes, a segment of the market where humans may be biased. Digitization increases the average sale price of minority-owned homes by 5\% and reduces racial disparities in home prices by 45\%. Algorithmic investors, via competition, affect the prices paid by owner-occupiers and human investors for minority homes; such changes drive the majority of the reduction in racial disparities. The decrease in racial inequality underscores the potential for algorithms to mitigate human biases at the market level.
+%mean black hosue is 183052
+\end{abstract}
+
+% Algorithms do not seem to overpay for minority-owned homes, rather, humans seem to undervalue these houses.
+\indent \textbf{JEL Classifications}:  D22, D40, G41, H41, L11, L22, M13, O33 \\
+\indent \textbf{Keywords}: Digitization, Machine Learning, Artificial Intelligence, Technology Adoption, Housing, Discrimination, Algorithmic Fairness.
+
+\bigskip
+
+
+\hspace{-25pt}\rule[0.1ex]{0.33\textwidth}{0.2mm}\vspace{0.05in}\\\indent
+\begin{singlespace}
+\vspace{-25pt}
+\noindent \scriptsize{\mbox{  }\mbox{  }\mbox{  }\mbox{  }\mbox{ }$^{*}$Correspondence to lraymond@mit.edu. 
+I am especially grateful to Sendhil Mullainathan, Danielle Li, Erik Brynjolfsson, and Scott Stern for their invaluable feedback and advice. I thank Eric Budish, Mert Demirer, Brandon Enriquez, Bob Gibbons, Anh Nguyen, Manish Raghavan, Ashesh Rambachan, David Reshef, Daniel Rock, Frank Schilbach, Rob Seamans, Eric So, Evan Soltas, Bill Wheaton, Maggie Yellen, and various seminar participants for helpful comments and suggestions. I thank Max Feng for providing excellent research assistance and the Stanford Digital Economy Lab for financial support. The content is solely the responsibility of the author and does not necessarily represent the official views of Stanford University or the Massachusetts Institute of Technology.}
+\end{singlespace}
+
+
+\thispagestyle{empty}
+
+ \setcounter{page}{0}
+
+\clearpage
+
+\newpage
+
+%\footnote{Interest in comparing predictive models to human decision makers' choices has a long and interdisciplinary history \citep{dawes1971, dawesRobustBeautyImproper1979, dawes1989, dawesbook2001, camerer2019}. See \citet{oecd2023, whitehouse2022} for a recent summary. However, head-to-head comparisons between human- and machine-generated predictions require caution. Humans may have different preferences, payoffs or information sets \citep{mullainathanobermeyer2022, rambachanIdentifyingPredictionMistakes}.}
+
+
+% Intro should be max 4.5 pages
+
+Prediction plays a central role in many high-stakes decisions: Hiring depends on forecasting candidates' future performance; lending depends on risk of default; and investment relies on projections of returns. Recent advances in artificial intelligence (AI) and machine learning (ML) and the growing availability of digital data sparked interest in making such predictions algorithmically. A large and rapidly growing literature has begun to document when and how algorithms, formally specified, machine executable procedures, outperform human predictions. While algorithms have improved decision quality, their \textit{market-level} impacts remain less explored.
+
+If algorithms change individual decisions, their use could also impact market-level outcomes, such as prices, or even change the nature of competition. These broader market dynamics mean that even if algorithms improve decision quality, individuals could be worse off. Yet, studies that focus solely on individual decision quality cannot capture impacts beyond the individual or firm level. 
+
+
+I provide early evidence on market effects by studying how digitization and algorithmic prediction by investors shape prices and allocations in the U.S. residential housing market. While the application of data and algorithms is growing across many industries, the single-family housing market offers an especially compelling setting for three reasons. First, single-family homes are economically significant: Housing is the largest asset market and important driver of household wealth \citep{corelogic2023, derenoncourtwealth2022}. Second, prediction is central to investor decisions, who buy houses to resell or rent out, and whose choices depend on forecasts of rental income, appreciation, and maintenance costs. Third, a natural experiment in the housing market overcomes the identification challenges that have constrained empirical work on market-level questions. 
+
+% I do not want to hyphenate machine learnning
+The central identification challenge is that the adoption of algorithmic prediction is not random. To address this, I develop a novel empirical strategy to identify market-wide effects by exploiting a simple yet fundamental insight: Machine learning algorithms require machine-readable data. Therefore, variation in the accessibility of machine-readable training data creates variation in the cost of accurate algorithmic prediction. 
+%My empirical strategy compares housing markets where only human judgment is feasible to those where machine-readable data availability makes accurate algorithmic prediction less costly. %I use variation across housing markets where only human judgment is feasible to those where machine-readable data availability makes accurate algorithmic prediction less costly. 
+ In the United States, useful training data for algorithms may come from public records on the housing stock and transactions collected by county governments for routine administrative tasks. Driven by the Open Government movement in the early 2000s, counties in the four states I study, Georgia, North Carolina, South Carolina, and Tennessee, began to transition from physical records to electronic database systems. The staggered rollout of digitization created variation in the cost of accessing housing market data, and thus algorithmic prediction, across counties and over time, enabling comparison of prices and allocations before and after digitization and between digitized and not-yet-digitized counties. 
+
+
+I have three sets of findings. 
+
+%\LR{Check numbers}
+In my first set of results, I show that county digitization led to entry by algorithmic investors, investors augmented with algorithmic prediction methods. Single family houses are purchased by investors, who buy houses to rent out or resell, and owner-occupiers, who are individuals or households, purchasing houses to live in. Investors, which I identify in the data as corporate entities purchasing single-family homes to rent out, are manually classified into two groups based on their use of predictive technology. Algorithmic investors are those that either publicly disclose the use of algorithms or employ technical personnel capable of developing them. In contrast, human investors are firms with no evidence of algorithmic tools or relevant technical staff. County digitization leads to entry by algorithmic investors and a sharp and persistent increase in algorithmic investment, which is minimal before digitization. Post-digitization, algorithmic investor account for about 2 percent of all home sales and 20 percent of houses bought by investors, representing a sharp and substantial shift in market composition.
+
+
+% summ is_any_sfr2 if ys_countyd>0 = .0229342
+% xumm is_human_inv if ys_countyd>0  = .0943185
+%=.0229342/(.0943185+.0229342)
+
+These initial findings could be misleading if unobserved county-level changes, such as policy changes, drive both digitization timing and housing market activity. To address potential violations of the parallel trends assumption, I exploit bureaucratic constraints that generate house-level variation in each county. Using not-yet-digitized houses in the same county or neighborhood as a control group, I conduct falsification tests and triple-difference analyses within counties and Census block groups. I show that county digitization leads to algorithmic investment in digitized houses, but has little effect on similar not-yet-digitized properties nearby. Additional robustness checks show that the predictive power of data from one county in another county is limited, and that digitization itself does not significantly affect human investor behavior. I also provide evidence that the classification procedure captures relevant differences across investor types.
+%Due to budget limitations, counties digitized records in phases, creating house-level variation in digital availability. 
+
+
+% the setence "to explain variation isnt' correct"
+To understand how digitization and the subsequent entry by algorithmic investors might impact prices and allocations, I develop a conceptual framework that contrasts human and algorithmic prediction, building on the existing evidence on human and algorithmic decisions. Algorithmic investors rely on machine-executable procedures that identify statistical patterns in data. Humans, by contrast, can incorporate unobservable information not captured in datasets, such as the quality of bathroom tile work, a yard's sunlight exposure, and ambient neighborhood noise. Yet this advantage in information richness comes with a tradeoff: Human predictions may be susceptible to cognitive limitations or biases.
+%whereas algorithmic predictions are limited to observable features but are more systematic and less prone to error.
+%LR - improve this sentence 
+
+The conceptual framework yields two empirical implications. First, if human biases lead to the systematic undervaluation of certain homes, this could create an arbitrage opportunity for algorithmic investors. If algorithmic investors disproportionately target those properties to exploit the mispricing, their entry could lead to disproportionately larger price increases for these homes as the mispricing is corrected. 
+
+Second, the effectiveness of algorithmic prediction depends on the quality and comparability of administrative data collected. In houses where key features are missing, noisy, or hard to quantify, algorithmic models will perform poorly, giving human investors, who can rely on non-quantified information, a comparative advantage. As a result, human investors may shift toward these harder-to-predict segments, creating a market-wide reallocation driven by differences in predictive capabilities. This reallocation can influence prices even in areas where algorithmic investors are not active.
+
+% maybe move this paragraph later
+
+
+% biases lead to opportunities and are also places where this framework would predict where the entry by algo investors could lead to different decisions (valuation) and change prices. 
+In my second set of results, I examine if there is algorithmic arbitrage of human biases by focusing on a particular bias that could lead to systematic undervaluation in the housing market: the role of race. I focus on race because it is one of the most extensively studied and well-documented potential biases in the housing market \citep[e.g.,][]{elsterMinoritiesPropertyValues2022, perryDEVALUATIONASSETSBLACK, freddiemac2021, cutlerRiseDeclineAmerican1999, box-couillard_racial_2024}. In support of the possibility that racial bias might lead to undervaluation of some houses, I document the existence of a 5\% \textit{race penalty}: a residual difference in sale price between similar minority and White-owned homes in the same Census block group. The key empirical challenge, for both algorithmic investors and the econometrician, is to understand if the race penalty is an arbitrage opportunity created by human errors or reflects unobserved differences in quality between minority and White-owned homes. 
+
+
+%% quantity results 
+Consistent with the possibility that humans may undervalue minority-owned homes, algorithmic investors disproportionately buy such homes. Algorithmic investors’ share of transactions involving minority sellers is double their overall market share (4\% vs. 2\%). Moreover, house digitization is associated with a 50\% larger treatment effect on algorithmic investment for a minority-owned house than a comparable White-owned property in the same neighborhood. This disparity is not explained by differences in neighborhood composition. Together, these findings point to seller race as an important factor shaping algorithmic investment patterns.
+% , as the analysis compares properties within the same block group. In fact, algorithmic investors tend to operate in majority-White areas and avoid majority-minority neighborhoods.
+
+
+%% price results 
+With algorithmic entry and investment, particularly among minority homes, the average race penalty shrinks from 5.8\% before digitization to 3.2\% after, a 45 percent decline. In other words, after digitization observably similar houses sell closer to parity. This convergence occurs only in counties with algorithmic investment; digitization alone does not significantly change the race penalty in counties without such entry. One contributing factor is that algorithmic investors buy race-neutrally: on average, they do not exhibit a race penalty in the homes they purchase. Still, although algorithmic investors represent a disproportionate share of the market, their activity alone cannot fully account for the overall reduction in the race penalty.
+
+Importantly, human investors and owner-occupiers drive much of the reduction in market-level racial disparities. With digitization, the race penalty among owner-occupiers shrinks from 5.5\% to 3.3\%, and from 8.9\% to 1.9\% among purchases by human investors. An Oaxaca-style decomposition shows that most of the market-wide decline stems from a falling race penalty among owner-occupiers. Two mechanisms could explain this effect: competition and the influence of comparable sales. Algorithmic investors may raise prices through competitive bidding, even in transactions they do not win, and their purchases may boost listing prices for nearby comparable homes, indirectly benefiting minority sellers. To test these channels, I use house-level variation in digitization as a quasi-random measure of exposure to algorithmic investor competition. Reductions in the race penalty are concentrated among digitized homes, with limited spillovers, suggesting that competition is the primary force narrowing racial disparities. 
+%Because algorithmic investors rarely purchase not-yet-digitized properties, digitization serves as a strong first-stage predictor of algorithmic activity.
+This highlights a key market effect of algorithms: Through competition, algorithm activity can influence the behavior of home buyers not using algorithms. 
+
+%% images and resale margins
+Although one explanation for the increasing prices of minority homes might be human mistakes, another possibility is that algorithmic investors are simply overpaying for unobservably bad minority-owned houses. As emphasized in the conceptual framework, algorithms do not see all aspects of house quality available to humans, potentially leading to adverse selection. I assess these explanations using two complementary approaches. First, I examine whether unobserved differences in property appearance, such as interior condition or curb appeal, can explain the race penalty. I find that it persists even after controlling for deep learning–based image embeddings of house exteriors and interiors. Second, I test whether algorithmic investors earn lower returns on homes previously owned by minorities, which would be consistent with overpaying. I find no evidence that algorithmic investors, on average, earn lower margins on formerly minority-owned homes relative to comparable homes previously owned by White sellers. 
+ 
+%% price levels
+So far, my price analysis has focused on the race penalty, the within-neighborhood price gap between similar homes. I also estimate the effect of county digitization on average sale prices. County digitization raises prices by 5\% for minority-owned homes and 2\% for White-owned homes, with an overall increase of 3\%. Prices dip slightly in the first year, consistent with early algorithmic entrants exploiting limited competition, but increases become apparent after about three years. This 5\% price increase among incumbent minority homeowners is economically meaningful, equivalent to 38\% of median Black household wealth and 25\% of median Hispanic household wealth \citep{bhuttaDisparitiesWealthRace2020}.
+
+
+%These findings underscore that algorithmic entry affects not only the properties algorithms purchase directly but also reshapes pricing dynamics across the broader market, highlighting effects that firm-level analyses may overlook.
+
+%%paragraph on specialization results 
+%% estimate data quality at county level, then at a house elvel
+%A second implication of the framework is that algorithmic investment is limited by the availability and quality of structured data; constraints that vary across geographies and property types due to institutional differences in data collection and reporting. In market segments where key features are missing, noisy, or difficult to quantify, algorithmic models perform poorly, and human investors, who can rely on soft or localized information, have a comparative advantage. As a result, we should expect human investors to shift toward these harder-to-predict segments, a reallocation that may influence prices even in parts of the market where algorithms are not useful.
+
+% The first, at the county level, captures the breadth and completeness of housing characteristics in public records prior to digitization.  These measures serve as proxies for the feasibility of algorithmic prediction -- one at the aggregate level and one at the property level.   I find that digitization leads to greater algorithmic investment in counties and homes with higher data quality. In contrast,
+In my third set of results, I examine whether human investors reallocate toward parts of the market where data quality constrains algorithmic prediction, and the resulting impacts on prices. I build an extreme gradient boosted tree model that generates an ex-ante measure of property predictability that captures how well availability and informativeness of structured data predict sales price. While digitization does not change total human investment, human investors increase their activity in less predictable properties, consistent with specialization in the investor market.  Prices of these hard-to-predict houses also rises by 4 percent, even though algorithmic investment in is relatively limited.
+
+Together, these findings illustrate how markets can amplify the effects of algorithmic adoption. The results echo the spirit of \citet{becker1957}, where market competition disciplines and ultimately displaces discriminatory actors. The magnitude and patterns of these effects raise questions about how even low levels of algorithmic adoption could be reshaping other markets.
+%In this context, both the direct and indirect effects of competition from algorithmic investors contribute to a reduction in racial disparities in sale prices, influencing the behavior of human investors and owner-occupiers across the broader market. 
+
+% consolidate this section and make it clear what the contribution is
+This paper contributes to a growing empirical literature on the impacts of access to algorithmic recommendations, with a distinct focus on market-level effects. Comparing human decision-makers' choices with predictive models has a long history \citep{dawes1971, dawes1989, dawesbook2001}. Modern advances in ML, increased computing power, and data availability have renewed interest in these questions. I build on prior work that shows that algorithmic recommendations can lead to improvements ranging from better heart attack diagnosis to more accurately determining which defendants should get bail and or interview screening decisions.\footnote{For example, see \citet{autor2008, li_hiring_2025, Raghavan_2020, frankelSelectingApplicants2021, whitehouse2022, oecd2023} for applications in the labor market, \citet{einav2013, fuster2022, gillis_2019, dobbieetal, blattnerHowCostlyNoise2021} for consumer finance, \citet{mullainathanobermeyer2022, obermeyerPredictingFutureBig2016, kleinberg_inherent_2016, chouldechovaCaseStudyAlgorithmassisted2018, abaluckFixingMisallocationGuidelines2020, kleinberg2017, mullainathanPredictiveAlgorithmsAutomatic2023} for examples in the criminal justice system, health care, among other areas. See \citet{rambachanIdentifyingPredictionMistakes, mullainathanbail2017, kleinbergPredictionPolicyProblems2015b} for issues comparing human and machine predictions.} Other work shows that access to algorithms translates into improved productivity or efficiency.\footnote{See \citet{brynjolfsson_generative_2025} for the impacts of generative AI on productivity in customer service, \citet{harrisyellen2023} for the impact of the adoption of predictive maintenance on repair costs in a trucking company. See \citet{bubeck2023sparks, choiAIAssistanceLegal2023, peng2023check, noyExperimentalEvidenceProductivity2023} for additional effects of AI access on productivity, writing, and test taking capabilities.} However, not all studies find positive effects.\footnote{For instance, \citet{acemoglu2022} finds no detectable relationship between AI investments and firm performance, while \citet{babina2022} finds a positive relationship.}
+%Although algorithm adoption is growing, Surveys also find that while ML adoption is growing, total adoption remains modest \citep{acemoglu2022, zolas2020, calvino2023}. 
+
+While most research on algorithmic prediction focuses on individual decisions, a smaller body of work examines how ML-powered algorithms affect outcomes at the market level. \citet{calvanoAI, assad2023, calderwang2023, mackaybrownpricing} focus on the impact of ML-powered pricing algorithms on pricing and collusive behavior. Other studies focus on the impacts of automated algorithmic trading on the liquidity and pricing efficiency in financial markets \citep{hendershottDoesAlgorithmicTrading2011, chaboudRiseMachinesAlgorithmic2014, upsonMultipleMarketsAlgorithmic2017}. I extend this literature by examining how algorithmic prediction affects entry, prices, and allocation in the single-family housing market, an asset market with high transaction costs and longstanding equity concerns. 
+
+% broadly defined as outcomes that are systematically less favorable to individuals from a disadvantaged group and where there is no relevant difference between groups that justifies such harms \citep{leenicolturnerAlgorithmicBiasDetection}
+This paper also contributes the interdisciplinary literature on algorithmic bias.
+%\footnote{Although institutional discrimination has declined over time, audit studies, surveys, and empirical work continue to find evidence consistent with racial discrimination in the housing market. For example, see \citet{elsterMinoritiesPropertyValues2022, perryDEVALUATIONASSETSBLACK, perryBiasedAppraisalsDevaluation2021, bayerRacialEthnicPrice2017, kimRaceHomePrice2000, freddiemac2021, zhangExternalValidityHedonic2021, kermaniRacialDisparitiesHousing2021, lewisracialcomposition}. See \citet{cutlerRiseDeclineAmerican1999} for a summary of centralized discrimination.}
+Initially, researchers and policy makers hoped that the use of algorithms could help mitigate human biases. For example, \citet{kleinberg2018discrimination} show that reliance on algorithms to grant bail could simultaneously reduce crime, jail populations, and racial disparities. However, many examples show algorithms directing disproportionately fewer opportunities or resources to minorities.\footnote{See \citet{smithAlgorithmsBias2021} for a summary of empirical work on algorithmic bias. See \citet{rambachan2019bias}, \citet{Rambachanetal}, \citet{bakalar2021fairness}, \citet{kleinberg_inherent_2016} and \citet{cowgilltucker2019} for theoretical work.} This paper is early evidence of the indirect effects of algorithms on racial bias that work via market competition.
+
+%in the housing market. Racial disparities in house values contribute to the large and persistent racial wealth gap. 
+%Policy solutions typically focus on regulatory interventions, increasing the diversity of decision makers or training such as unconscious bias training \citep{derenoncourtwealth2022, brookingsblack, brookingshisp, actionStepsTake2022}.
+Lastly, the paper contributes to research on the effects of investors in the single-family housing market. Growing concern over rising housing prices has spurred proposed policies to restrict single-family home ownership in the US and Europe. For example, in December 2023, Democrats introduced legislation in the House and Senate to ban hedge fund ownership of single-family homes \citep{kaysenNewLegislationProposes2023, merkleyEndHedgeFund}. A growing interdisciplinary literature has examined investor impacts on housing markets.\footnote{\citet{fields2018a, fields2022a} examine how technology-driven calculative agency enabled the financialization of the single-family housing market. \citet{raymondCorporateLandlordsInstitutional2016, raymondForeclosureEvictionHousing2018, raymondGentrifyingAtlantaInvestor2021} analyze institutional investors in Georgia and their effects on housing insecurity. \citet{millsLargeScaleBuy2019} provides early empirical evidence on institutional investor activity; \citet{gurun2023} study the rise in institutional ownership and the effects of investor mergers on rent and neighborhood safety; \citet{buchak2022} examine iBuyer firms (e.g., Zillow, Offerpad, Redfin, and Opendoor) and their effects on market liquidity; and \citet{franckeBuytoLiveVsBuytoLet2023} evaluate a ban on large institutional housing buyers in the Netherlands.} This paper extends this work by providing new empirical evidence on how algorithm-augmented investors shape market outcomes and interact with public data, with implications for both housing access and public data governance.
+
+
+
+\section{The Economic Impacts of Algorithms}
+%% paragraph on behavioral biases
+One of the most robust findings in social science is that people routinely rely on mental shortcuts, or heuristics, to navigate complex and cognitively demanding decisions. While these strategies help manage complexity, they often lead to systematic errors in judgment \citep{tverskykahneman1974, halford_how_2005, shleifernoise}. Examples include confirmation bias, in which people selectively favor evidence that supports their existing beliefs; anchoring effects, where initial information disproportionately shapes later judgments; recency bias, where people over-weight recent events; and default effects, where people stick with pre-set options rather than actively choosing alternatives \citep{wason_failure_1960, ebbinghaus_memory_1913, tverskykahneman1974, Tversky_Kahneman_1982, optimaldefaults2003, thalerSMART2004}. People may also under-respond to new information, especially when it involves negative feedback \citep{mobiusupdating}. Beyond these general cognitive limitations, implicit biases based on race, gender, age, appearance, and language can consciously and unconsciously shape influence judgments \citep{Wistrich2017ImplicitBI, biddlebeauty, mobiusbeauty, DeprezSims2010AccentsIT, goldin2000orchestrating, greenwald_implicit_1995}. Decision quality may deteriorate due to fatigue, stress, and resource scarcity \citep{mani_poverty_2013, Levi2017DecisionFA, kaur_financial_2025}. Other work explores how human cognitive biases can shape markets \citep[e.g.][]{hirshleifer2015survey, shleifernoise, Salzman01012017, mullainathan2012}).  
+
+%% reserach into algorithms - early work summary
+Motivated by evidence on human mistakes, researchers began investigating whether algorithms could improve decision quality. Early work, summarized in \citet{dawesbook2001}, compared human experts to simple statistical models and concluded: ``expert judgments are rarely impressively accurate and virtually never better than a mechanical judgment rule.'' \citet{tetlock_expert_2005} studied political forecasters over several decades, found that human forecasting ability was low, and showed that even simple statistical models outperformed both expert and non-expert forecasters. However, the adoption of algorithms remained limited, constrained by both the modest capabilities of early statistical models and the scarcity of digitized data on human decisions.
+
+
+%Despite these findings, the early use of algorithmic decision aids was constrained by limited digitized data, limitations of existing statistical tools, and the fact that most decisions were made offline, making it difficult for computers to make real-time recommendations.
+%% reserach into algorithms - modern version
+The rapid adoption of algorithms and the renewed focus on their impacts were driven by two key forces: advances in AI and ML, and the increasing digitization of economic activity. As more economic activity moved online, organizations began generating large datasets on decision making as a byproduct of routine operations.\footnote{For example, the adoption of electronic medical records in healthcare and Applicant Tracking Systems in hiring led to the automatic collection of rich data on hiring and medical professionals decisions \citep{li_hiring_2025, donnelly_systematic_2022}. } Concurrently, breakthroughs in ML, a subfield of AI, improved model architectures and training methods, enabling algorithms to learn complex, high-dimensional patterns from data without relying on task-specific, rule-based programming \citep{peter2021modern}. ML-based algorithms now outperform human experts in cognitively demanding tasks that historically resisted automation, including medical diagnosis, strategic gameplay such as Go, and financial forecasting \citep{mckinneybreastcancer2020, silver_mastering_2016, barboza_machine_2017}. These modeling advances were coupled with improvement in training models on large datasets without overfitting, enabling substantial gains in accuracy simply by increasing data volume \citep{halevy2009}. Collectively, these performance gains have contributed to rapidly growing adoption, with 62 percent of IT professionals reporting significant or moderate increases in AI or ML investments \citep{comptia}.
+
+
+%Advances in artificial intelligence (AI) and machine learning (ML), alongside growing digitization, have fueled the widespread adoption of algorithmic tools and renewed interest in their impact.
+
+%%% Summary of work on decision quality 
+Researchers have begun to rigorously evaluate human and algorithmic performance in high-stakes decisions, revealing both substantial improvements over human judgment and challenges in human-AI collaboration. In a landmark study of bail decisions, \citet{kleinberg2017} demonstrate that machine learning algorithms can simultaneously improve accuracy and equity in the decision to grant bail. Their econometric approach grapples with two key challenges in the human-algorithm comparison: Humans may optimize different objectives than the algorithm (omitted-payoffs), and they may have access to additional information during in-person bail hearings (private information). %Building on this work, researchers have examined human versus algorithmic decision quality across domains such as hiring, healthcare, child protective services and criminal justice 
+In some contexts, algorithms can improve efficiency and equity of the decision process \citep[e.g.][]{li_hiring_2025, mullainathan_diagnosing_2022, rambachanIdentifyingPredictionMistakes, brynjolfsson_generative_2025, pmlr-v81-chouldechova18a, dobbiealgorecsbails2023, gruber_managing_2020}. In others, humans are overly skeptical of algorithmic recommendations (algorithm aversion) or too willing to adopt the AI recommendations \citep{vaccaro2024combinationshumansaiuseful, helanderHandbookHumanComputerInteraction2014, agarwalCombiningHumanExpertise, dietvorstAlgorithmAversionPeople2014, steyversThreeChallengesAIAssisted2024}. Other work has raised concerns about the potential for algorithmic bias to perpetuate or exacerbate discrimination in society \citep{rambachanalgobias2020, barocas-hardt-narayanan, chouldechovaroth2020}. 
+
+% single agent - isoalted decisison, no feedback look or strategic interactions, fixed environments
+% this paragraph sets up what is missing from earlier work and what I am going to focus on. Keep the focus on what YOU DO in the paper 
+%% REALLY IMPORTANT PARAGRAPH!
+Research on human and algorithmic decision quality has largely focused on settings where a single decision maker operates independently, such as a judge deciding whether to grant bail. Yet many prediction tasks occur in markets or other multi-agent settings, where one actor’s decisions influence others through prices, competition, or strategic interactions. For example, a firm might adopt an algorithm that identifies an overlooked talent pool, such as philosophy majors from Wesleyan University, as strong data analysts. If other firms follow, rising demand could drive up wages, affecting all firms seeking to hire these candidates. If algorithms change decisions, adoption could alter equilibrium outcomes.  On the other hand, if algorithm simply replicate human decisions, prices and allocations may remain unchanged. Yet there has been limited empirical work on these questions because of the difficulties in finding quasi-experimental variation. While single-agent studies offer valuable insights into individual decision quality, they are not designed to capture the equilibrium effects that can arise in markets.
+
+
+Evidence on the market effects of algorithms has largely focused on two areas: the risks of algorithmic homogeneity and strategic interactions in financial markets. In pricing, algorithms may inadvertently or intentionally learn to collude. \citet{calvanoAI} raise this possibility theoretically, and empirical evidence suggests it is more than hypothetical: in the German retail gasoline market, adoption of algorithmic pricing by duopolist gas stations increased average margins by 28 percent, with no comparable change among monopolists or in highly competitive areas \citep{assad2023}. Related work examines other risks when many firms rely on similar algorithms \citep{Kleinberg2021AlgorithmicMA, fish2024algorithmiccollusionlargelanguage, calderwang2023, mackaybrownpricing}. From financial markets, research shows that technological innovations can also reduce welfare. \citet{budishHighFrequencyTradingArms2015} find that faster trading algorithms triggered an arms race for speed, raising entry costs without improving efficiency, and other work suggests high-frequency trading can disadvantage non-algorithmic investors and impair market functioning, though some studies find positive effects \citep{jones_what_2013, menkveld_economics_2016, hendershottDoesAlgorithmicTrading2011}. This paper provides early evidence on digitization and algorithmic decision-making in the housing market, a large and economically significant asset class where firms employ their own proprietary algorithms.
+
+% Note that there is no reason to suppose ex-ante that algorithm adoption will alter market outcomes. If algorithmic predictions closely mirror those made by humans regarding property values, demand, or investment potential, prices and allocations may remain largely unchanged. However, if algorithmic predictions systematically differ from human judgments, due to differences in accuracy, statistical biases, or decision-making patterns, the adoption of algorithms could reshape prices and allocations.
+
+%Much of the earlier work focused on decisions in non-market contexts, such as sentencing decisions or medical diagnosis, but when predictions occur in markets, the switch to algorithmic prediction could have impacts beyond decision quality. The advent of algorithmic predictions could alter competitive dynamics or enable collusion across firms. Evidence from the German retail gasoline market shows that stations adopting algorithmic pricing increased their average margins by 28 percent, suggesting algorithmic coordination \citep{assad2023}.  Moreover, algorithmic improvements may not enhance overall welfare; in financial markets, \citet{budishHighFrequencyTradingArms2015} demonstrate how individual algorithmic trading advancements can spark an arms race that merely raises barriers to market participation without improving market efficiency. Beyond market dynamics, algorithmic adoption introduces organizational frictions, creates data management challenges, and can lead to correlated decision-making across firms \citep{saxenaharms2024, Kleinberg2021AlgorithmicMA, lepri2016}. Given these conflicting forces, the overall economic impact of widespread adoption of algorithmic prediction remains uncertain.
+
+
+
+\section{Setting: Algorithms in the Housing Market}
+%I provide background on real estate investment and human and algorithmic investors and elaborate on why real estate investment is fundamentally a prediction task. After setting out the prediction problem, I detail the human and algorithmic investors' approaches to prediction. I describe county real estate records, the timing of the digitization process, and explain why digital county records are significant for algorithmic valuation.  I then discuss the implications for racial disparities in the housing market.
+\subsection{The Single-Family Housing Market}
+% paragraph on why housing 
+I study the market effects of algorithms in Georgia, Tennessee, North Carolina and South Carolina for three reasons: housing is the largest asset market in the U.S., housing investment requires prediction, and a natural experiment enables causal inference. I study single family houses, detached residences intended for a single household, comprise 66 percent of all U.S. housing stock and 86 percent of the \$43 trillion in total residential real estate value \citep{corelogic2023, neal2020}.\footnote{Single-family homes are detached dwellings built to be occupied by one household on their own plot of land \citep{neal2020, freddiemac2018}.} They also represent 53 percent of the rental market nationally \citep{freddiemac2018}. In the four states I study, single-family homes make up 66 percent of occupied housing in urban areas and 72 percent in rural areas, and are the largest single segment of the rental market \citep{u.s.censusbureauS2504PhysicalHousing2021, censusB25, neal2020, freddiemac2018}. These homes play a central role in household wealth accumulation and intergenerational wealth transmission \citep{derenoncourtwealth2022}.
+
+
+
+%The rental properties they acquire play an essential role in the rental market; single-family homes represent the largest segment of rental housing (41 percent) and are particularly prevalent in less urban and less affluent areas \citep{censusB25, neal2020, freddiemac2018}. 
+\subsection{Housing Investment is a Prediction Problem}
+% setting with a prediction problem: paragraph on prediction 
+Two groups of buyers participate in the housing market: owner-occupiers and investors. Owner-occupiers purchase homes to live in, making a consumption decision. Investors, by contrast, buy properties to rent out or resell, and their decisions depend on complex forecasts of future income, property values, and associated costs such as repairs, upgrades, and maintenance. Although owner-occupiers account for most single-family home purchases, investors are influential marginal buyers whose behavior can significantly shape prices and market dynamics \citep{bayer_investors_2021}.
+
+% 
+ 
+%% emphasize the imprtance of proximity and localknowledge 
+%% short paragraph about human investment
+Traditionally, investment in single-family houses was dominated by local investors due to the importance of proximity and deep knowledge of neighborhood-level housing markets. Often referred to as ``mom-and-pop'' investors, these firms typically owned a small number of properties while often working in adjacent fields such as construction or as real estate agents, where they have particular insight into local housing market dynamics \citep{fields2022a}.\footnote{In the rental market, \citet{freddiemac2018} estimates that 15.5 million investors  own 1 to 10 properties, which make up 98\% of all single-family investors who rent property.} The informational advantage of these local players led to the widespread belief that such mom-and-pop investors would maintain permanent dominance in the single-family home sector \citep{fields2018a, americanhomes4rentFormS11}.
+
+% A single company could, in theory, employ a large staff to evaluate and acquire properties, but the costs of doing so without algorithms have been proven prohibitive. Redbrick Partners' experience in the early 2000's illustrates this challenge. Despite favorable market conditions and rapid housing appreciation, the firm acquired only 1,000 homes over four years, ultimately finding their human-centered approach unsustainable without technological solutions \citep{millsLargeScaleBuy2019}. These operational hurdles eventually led to the company's closure \citep{fields2018a}. Similarly, other firms have highlighted the enormous transactions costs of manually assessing scattered, structurally diverse single-family homes as a key barrier \citep{amherstsfr2016}.
+
+%% short paragraph on why ML might be useful in the housing market
+While local mom-and-pop investors gain an informational edge from physical proximity, other aspects of housing investment favor machine learning. Houses are complex, idiosyncratic assets with thousands of potentially relevant features that often interact in nonlinear ways. Investors must assess both the property’s physical condition, including its structural soundness, features, and layout, and broader market conditions such as supply and demand dynamics, economic trends, neighborhood characteristics, and indicators of future development or change. The volume and complexity of this information make it difficult for humans to process but well suited to machine learning \citep{kahneman_thinking_2011, athey_impact_2018}. For example, the value of an extra bedroom may depend on total square footage, while the effect of school quality may vary with neighborhood demographics. These challenges are amplified by the thinness and heterogeneity of housing markets. Whereas human investors see only a limited set of transactions, algorithms can learn from large datasets covering diverse homes and neighborhoods.
+
+
+%\LR{Add in examples of human and algorithmic investors}
+\subsection{Human and Algorithmic Investors}
+I classify investors into two categories based on their prediction technology: algorithmic and human. Algorithmic investors incorporate machine learning algorithms into their decision-making processes to determine which houses to buy and at what price. These algorithms are formally specified, machine-executable procedures that search across a wide space of candidate models, using historical data to optimize predictive performance \citep{mitchell2015}. By contrast, human investors rely on personal judgment and experience, often employing an acquisitions specialist to identify and evaluate properties. For example, Myers House Buyers, a prominent human investor in Georgia, staffs a team with diverse, non-technical backgrounds who emphasize their local roots and community ties. These acquisition specialists will attend open houses, speak with local business owners, and consider zoning or regulatory changes when evaluating properties.  
+
+
+%\footnote{Many algorithmic investors employ in-house real estate agents who execute the final offers to homeowners.}
+% footnote{According to its IPO prospectus, Invitation Homes analyzed approximately one million homes to assemble its portfolio of 50,000 properties.}
+Algorithmic investors, on the other hand, invest in data science teams that develop predictive models to screen and value properties. Their acquisitions teams, often located in cities like New York, San Francisco, or Austin, build these models and work with the generated recommendations. For instance, Amherst Residential reports that its proprietary platform, Amherst Explorer, automatically evaluates roughly 500 new listings per day across target markets, estimating rent, renovation costs, taxes, insurance, and other expenses to compute net operating income. Each morning, the acquisitions team receives a prioritized list of properties with projected returns, pre-screened by the algorithm \citep{amherstsfr2016}.\footnote{As Amherst describes: “Our data puts the dart on the dartboard, then our team puts it in the bullseye... As we evaluate and complete each transaction, machine learning enables us to incorporate live observations of our own portfolio into underwriting the next opportunity” \citep{kapoor_ai_2024}.}
+
+Although building these technology platforms is expensive and requires specialized teams of data scientists and software engineers, algorithmic investors emphasize their necessity: ``[w]ithout using technology to filter and deliver automated valuations... it would be extremely time-consuming and inefficient to review and bid on these properties.... The entire process uses a vast amount of data that is impossible to distill into actionable information without the use of technology'' \citep{amherstsfr2016, christopher2023}. 
+\LR{TO FILL IN }
+A detailed description of how these investors are identified in the data are in Section X and Appendix Section Y. 
+%While these algorithms process vast quantities of structured data, they may overlook nuanced local knowledge available to traditional investors with deep neighborhood expertise. I formalize this trade-off in Section~\ref{sec:conceptualframework} and describe how I identify human and algorithmic investors in the data in Section~\ref{sec:identifyinvestors}.
+
+
+% ML is useful in the housing market for the following reasons 
+
+%Most of the houses in the United States are single-family homes, and of the roughly 83 million single-family houses in the United States, 83\% are occupied by homeowners \citep{neal2020, freddiemac2018}. 
+
+%Although most strongly associated with home ownership, 17 percent or  14 million of these homes are occupied by renters. 
+
+
+% Census table for house type by urban/rural: https://data.census.gov/table/ACSST5Y2021.S2504?q=Physical+Characteristics&g=040XX01US13,37,45,47_040XX43US37,45,47_040XXA1US13_040XXA3US13&tp=false
+
+% Census table link for householders by race: https://data.census.gov/table/DECENNIALDHC2020.H6?g=040XX01US13,37,45,47_040XX43US13,37,45,47&d=DEC+Demographic+and+Housing+Characteristics
+
+% Share homeoners by race by state https://www.census.gov/library/visualizations/interactive/homeownership-by-race-and-ethnicity-of-householder.html
+
+ % Investing in real estate is a prediction problem where local and soft information is valuable. 
+
+
+%\footnote{A key metric in real estate for comparing properties is the capitalization rate, which is calculated as net income divided by asset value. Appendix Figure \ref{afig:caprate} shows an example of capitalization rate information provided for a multifamily property.} 
+
+
+
+
+%Small investors historically dominated the single-family housing market due to their extensive local knowledge. Their intimate knowledge of the market led to a widespread belief that these ``mom-and-pop'' investors would maintain permanent dominance in the single-family home sector \citep{fields2018a, americanhomes4rentFormS11, am2018}. This presumed advantage stems from their deep local expertise and the importance of non-quantifiable information: they understand neighborhood traffic patterns, can assess neighborhood amenities like parks, recognize emerging gentrification trends, and track the status of local businesses and industrial facilities. Moreover, these investors frequently bring relevant professional experience in construction and real estate, enabling them to accurately estimate renovation costs and timelines. 
+
+%They can physically walk through the house, drive around the neighborhood, and look for signs that other houses will be added to the market. Local investors can examine a house in detail and drive around the neighborhood looking for signs of unemployment, such as the number of cars in the driveway during the day. 
+%In addition to having an informational advantage in estimating revenue, the information available to the ``mom-and-pop'' entrepreneur helps them evaluate the cost side of the equation. These ``mom-and-pops'' also often had a background in construction and local real estate. The ability to walk through a home and accurately estimate the average annual cost of wear and tear, labor, time, and materials for each repair accurately requires experience and knowledge. 
+ %As a result, the In the rental market, \citet{freddiemac2018} estimates that there are 15.5 million investors who own 1 to 10 properties, which make up 98\% of all single-family investors who rent property.  
+
+
+ 
+\begin{comment}
+\subsubsection{Investing is a Challenging Cognitive Task}
+Although human investors have access to huge amounts of information about a particular property, synthesizing the qualitative and quantitative data into a precise valuation is challenging. For example, how would you weigh the relative  value of a one-car versus two-car garage or access to an attractive local park? Is it worth replacing outdated bathroom fixtures and cutting down overgrown trees? The complexity and mental load of complex decisions can exceed human cognitive capabilities, leading to oversimplification and reliance on heuristics. Human cognitive limitations can hinder accuracy. This tendency toward heuristic-based decision making is evident in other domains; for instance, \citet{mullainathanobermeyer2022} demonstrate how physicians often default to simplified diagnostic models that overemphasize obvious symptoms like chest pain when predicting heart attacks. Real estate investors face similar constraints. Unlike algorithmic approaches that can learn from vast datasets, individual investors are also constrained to learn from their relatively limited personal experience.
+
+
+Investing in houses is challenging, and human investors expend substantial effort to develop structured decision processes that minimize costly errors. The stakes are significant; Redfin estimates that investors lose money on one in seven homes \citep{housingInvestorsSell}. To mitigate cognitive biases and avoid over-reliance on intuition, investors commonly employ a ``buy box'' framework to focus on properties where they possess clear valuation advantages.\footnote{This is also an algorithm, but not a ML algorithm. For example, see \href{https://www.youtube.com/watch?v=_OE-yGImN0U}{New Investors Must Start with a Buy Box or they are wasting time and money}.}  A typical buy box might target specific parameters -- for instance, two or three-bedroom houses in select Fresno, California zip codes that appeal to middle-class buyers from diverse employment sectors. Complementing this approach, investors also often maintain exclusion criteria that \textit{eliminates} properties with high-risk characteristics. These might include houses requiring repairs to critical systems like electrical, roofing, or septic, all of which present challenging cost forecasting scenarios. These systematic approaches help investors avoid common psychological traps, such as pursuing properties that intuitively ``feel like a great deal'' or those with aesthetic appeal but hidden structural deficiencies.
+\end{comment}
+
+
+\section{Data}
+
+
+\subsubsection{Housing Transaction Data}\label{sec:data:summarystats}
+The empirical analysis relies on administrative property records covering arm’s-length transactions of single-family homes in 400 counties across Georgia, North Carolina, South Carolina, and Tennessee from 2009 through 2021.\footnote{Arm’s-length transactions are conducted at market prices between unrelated parties. Transactions between related parties, such as a wife transferring a home to her husband, are excluded because they may not reflect market value.} The unit of observation is a property transaction; parcels may appear multiple times if they transact repeatedly during the sample period.
+
+The primary data source consists of county-level recorder and assessor records. In the United States, property transactions are documented through two complementary offices. County recorders (or Registers of Deeds) maintain the legal documents associated with property transfers and encumbrances, including deeds and mortgage filings. These records provide transaction-level information such as sale price, transaction date, buyer and seller names, and legal entity type. County assessors maintain parcel-level records used for property taxation, which include structural and locational characteristics such as geographic coordinates, year built, architectural style, number of bedrooms and bathrooms, roof construction, lot size, number of structures, parking availability, and historical assessments of land and improvement values.
+
+I obtain harmonized versions of these public records from Attom Data Solutions, a national real estate data provider. I merge transaction-level recorder records to parcel-level assessor records using parcel identifiers to construct a property-level panel. \footnote{As of 2023, records for the counties in my sample have been digitized back to the early 2000s, enabling consistent historical coverage over the study period.} I restrict the sample to arm’s-length, single-parcel transfers by excluding multi-parcel transactions, foreclosure and other non-arm’s-length transactions identified using Attom’s standardized document-type codes. I also exclude transfers that take place at zero or nominal amounts (below \$1,000), which typically reflect non-market transfers such as intra-family transfers or legal restructurings. 
+
+Table \ref{tab:sumstat_houses} summarizes the 6.7 million transactions in the sample. With a sale price of \$207,248, the average home is 31 years old and has two bedrooms, two bathrooms, a garage, a parking space, and a fireplace. Reflecting regional construction norms in the Southeastern United States, most houses are single-story and lack basements. 
+
+I geocode each parcel to Census-defined tracts, block groups, and blocks using latitude and longitude coordinates and the Federal Communications Commission geocoding API. In the sample, Census tracts contain approximately 2,000 housing units on average, block groups 700 units, and Census blocks 30 units.\footnote{All geographic unit averages are based on the 2010 Decennial Census.} Because not all properties have geographic coordinates precise enough for reliable block-level assignment, I use the block group as the primary unit of geographic analysis.
+
+Block group demographic and neighborhood housing characteristics are drawn from the 2010 Decennial Census. Socioeconomic variables, including median household income, educational attainment, labor force participation, and unemployment, are constructed using five-year American Community Survey (ACS) estimates at the tract level. Column 1 of Appendix Table \ref{atab:balance_county_inv} reports average neighborhood characteristics for the typical transaction.
+
+The typical transaction takes place in a Census block group contains 978 housing units with an 87 percent housing occupancy rate. Based on self-reported race in the Decennial Census, 74 percent of residents identify as White and 21 percent identify as Black. At the tract level, the median rent-to-income ratio is 30 percent, 51 percent of adults aged 25 and older hold a bachelor’s degree or higher, and the unemployment rate averages 4.5 percent.
+
+I supplement the administrative records with county by year data from Zillow on average days on market from 2011 through 2017, reported based on listing activity observed on its platform. I merge these measures to the transaction data at the county-by-year level.\footnote{Zillow data are publicly available at \url{https://www.kaggle.com/datasets/zillow/zecon}.}
+%.\footnote{Many counties in the sample fall below the population threshold for one-year ACS estimates (65,000 people). Due to suppression of block group-level ACS data for confidentiality, I use tract-level estimates for socioeconomic characteristics.}
+
+
+
+\subsubsection{Classifying Investors}\label{sec:identifyinvestors}
+%The median home stays on the market for about three months. %
+% introduce owner occupiers versis investors 
+Houses in the sample are purchased either by owner-occupiers, who intend to reside in the property, or by investors, who purchase properties for rental or resale. To distinguish these types of buyers, I use the buyer name and mailing address fields recorded in deed filings. The recorder data report the full legal name of each party to the transaction as well as the mailing address provided at the time of recording.
+
+I classify investors using ATTOM’s standardized party-type classification, which distinguishes corporate legal entities from individual purchasers based on legal name structure and entity suffixes such as LLC, Inc., LP, Corp., and Trust. Transactions in which the buyer is recorded as a corporate entity are classified as investor purchases. Following prior work using administrative housing records, I use corporate ownership as a proxy for non-owner-occupied investment activity. I exclude transactions in which the buyer is identified as a government entity, financial institution, educational institution, religious organization, or other non-investment business entity such as homeowners associations, corporate relocation services, farms, builders, hotels, or vacation rental companies. The resulting measure captures private corporate ownership of residential properties for investment purposes. Transactions in which the buyer is recorded as an individual are classified as owner-occupier purchases. Across the sample, owner-occupiers account for 89 percent of transaction volume.
+
+
+% now within investors, I want to classify whether the investors is algorithmic or non-algorithmic. 
+I distinguish between investors that employ automated, data-driven property acquisition systems and those that do not. I classify an investor as algorithmic when the consolidated ultimate owner corresponds to a firm that employs workers in software engineering, data science, machine learning, or related technical roles consistent with automated property acquisition strategies.
+
+Much of the activity I was studying took place in early 2010s, birth of ML, rely on in-house expertise. 
+
+Because investors frequently acquire properties through multiple legally distinct corporate entities, a key challenge is identifying the ultimate firm responsible for acquisition decisions. Treating each LLC as a separate investor would fragment ownership and obscure acquisition strategies. I merge the transaction data with ATTOM’s Transparent Owner dataset, which consolidates affiliated entities to a common ultimate owner using nationwide business registration records and observed ownership linkages.
+
+I then match ultimate owner names to firms in the Revelio Labs dataset using firm names and manual validation. Revelio provides firm-level employment records with detailed occupational classifications based on LinkedIn profile data. Using these data, I identify firms with employment in technical occupations indicative of automated, data-driven acquisition systems. Investors that meet this criterion are classified as algorithmic; all other investors are classified as non-algorithmic.
+
+I classify investors as algorithmic when the matched firm exhibits employment in software engineering, data science, machine learning, or related technical occupations consistent with automated acquisition strategies. All remaining investors are classified as non-algorithmic. Classification is done once at the firm level. 
+
+\LR{Add in where this robustness takes place}
+The empirical analysis is conducted at the transaction level. To the extent that entity resolution or firm matching is imperfect, any resulting misclassifications would attenuate estimated differences between algorithmic and non-algorithmic investors. In Appendix X, I provide additional detail on the classification procedure, including entity consolidation statistics, match rates to the Revelio dataset, the rule used to define technical employment. I also shoe my results are not driven by any single firm, by iteratively dropping algo and non-algo investors, show results hold when controlling for investor size or restricting to matched firms.  
+
+
+%A key measurement challenge is that investors frequently acquire properties through multiple legally distinct corporate entities. Counting each LLC as a separate owner would therefore overstate the number of distinct investors and understate portfolio concentration. To address this issue, I merge the transaction data with Attom’s Transparent Owner resolution graph, which standardizes entity names and links subsidiary entities to their ultimate parent owners. The graph consolidates ownership across related entities by combining business registration records, subsidiary entity lists observed co-ownership patterns across properties in nationwide deed data, and curated records of large real estate portfolio owners. This process maps multiple corporate entities to a common ultimate owner when they are affiliated. Using a hand-validated dataset where ultimate owner was known, the entity disambiguation correctly identified the ultimate owner in 70\% of cases.
+
+
+
+
+
+
+- Mispellings in investor names, want to aggregate to one focal firm. Investors may use different subsidiaries. 
+
+- First, entity resolution in the dataset. Cite prior work. Describe entity resolution in the dataset. 
+- Merge to Attom's transparent ownership database. Description of the dataset, how it works. Evidence on accuracy. 
+- Isolates X number of unique investors. 
+
+- Identify the type of investors. Algorithmic or human?
+- Name match X parent firms to Revelio. Describe Revelio dataset. Exact match based on firm name/identity. Hand verify sample using linkedin url - rcid. Match X percent of firms with > 1 purchase. 
+- Download resumes of invididuals employed at start of firm. 
+- Classify as algo if X and human if Y. 
+- Classify once, but in robustness, show that the evolution does not evovle substantially. 
+- For those that don't match, may be small LLCs or partnerships used by small investors. To verify that, utilize the fact that actual deed of transfer has a witness signature (cite something) that is the onwer manager. Hand collect these from photos of the deeds for X of LLCs that do not match. Download IP from revelio for individual associated with LLC, with state of residence that matches (revelio has state). X percent match. Typical investor has X background. Classify those that do not match as human/1 transaction. 
+
+Attom also classifies invesetors as mom + pop/regional based on all of its data. can i use that as validation. 
+
+Note that not all institutional investors are coded as alorithmic. E.g blackstone, which buys small nubmer of houses, modal job ttitle is acquisitions specialist, no tech skills. Very different thatn amherst residential, which is coded as algorithmic. 
+
+<summary stats on the investor firms from revelio>. 
+
+Robustness to dropping individual algo/human investors and seeing if the results change. Cite this section. Also see if workforce composition changes over time, not really. 
+
+
+
+To measure the transaction share of algorithmic investors, I identify real estate investors and classify them as algorithmic or human. Because corporate structures provide legal and tax advantages, corporate ownership is a reliable proxy for investment activity. Following prior work, I define investors as corporate entities that purchase residential properties for rental or resale purposes \citep{RedfinInvestorHomePurchases, millsLargeScaleBuy2019}. I consolidate related subsidiaries by fuzzy matching on name and using the geographic proximity of corporate mailing addresses. Then, I exclude known non-investor corporate entities, such as government agencies, financial institutions acquiring properties through foreclosure, religious or nonprofit organizations, timeshare operators, homeowner associations, corporate relocation services, farms, builders, hotels, and vacation rental companies.
+
+I classify investors as algorithmic-augmented or human based on observable features of their acquisition strategies and workforce. Each corporate entity is manually classified using business registrations, public filings, media coverage, company websites, interviews, and LinkedIn profiles. Firms are classified as algorithmic if they explicitly disclose using ``automated acquisition engines'' or ``predictive valuation models,'' or if they employ a dedicated data science or machine learning team focused on acquisitions. Because the use of machine learning in real estate investing required specialized expertise in the early 2010s, workforce composition provides a valuable complement to acquisition strategy disclosures. Firms without evidence of such technologies or technical staff are classified as human-led. Classifications are made at the firm level and remain fixed over time, as no firms in the sample switch between human-led and algorithmic strategies during the study period.
+
+ 
+Using this procedure, I identify 35 algorithmic investors responsible for around 122,000 home purchases in the sample. The largest include Amherst Residential, Invitation Homes, and Progress Residential. Table \ref{tab:sumstat_houses} shows that, relative to human investors, algorithmic investors tend to purchase slightly more expensive homes (\$229,000 vs. \$223,000), with more bedrooms (2.7 vs. 2.2) and newer construction (average age 22 vs. 42 years). Appendix Table \ref{atab:balance_county_inv} shows Algorithmic investors buy in areas with higher educational attainment (70\% vs. 51\% with a BA or higher), higher occupancy rates (92\% vs. 84\%), and lower poverty rates (8\% vs. 15\%). Appendix Figure~\ref{afig:mapsactivity} illustrates that algorithmic investors operate in 55\% of sample counties, while human investors are active in all counties.
+
+\subsubsection{Assessing the Investor Classification with Geographic Proximity}
+The investor classification strategy raises two concerns. First, could some investors classified as human actually be using machine learning technology? Second, might algorithmic investors overstate their reliance on algorithms? To assess classification validity, I draw on an observable difference between human and machine prediction: human investors depend on local knowledge and typically need to invest near their headquarters to physically evaluate properties, whereas algorithmic investors rely on structured data and predictive models, enabling them to assess properties across geographically dispersed markets without physical proximity \citep{fields2018a}. Geographic differences in acquisition patterns between the two groups therefore provide a test of whether the classification captures distinct investment strategies.
+
+Appendix Table \ref{atab:investor_buying_chars} summarizes the geographic distribution of investment activity by classified investor type. Only 3\% of algorithmic purchases occur in the same zip code as the firm’s headquarters, compared to 35\% for human investors. Similarly, 80\% of human investor purchases are in-state, versus just 21\% for algorithmic investors. Geographic scope also differs markedly: Human investors are active in an average of 1.5 zip codes per firm, while algorithmic investors operate across 86. If algorithmic investors relied primarily on manual sourcing by local teams, their activity would likely be more geographically concentrated. Likewise, if many human-led firms were quietly using algorithms, the differences in geographic reach and scale would be smaller. 
+
+
+\subsubsection{Race and Ethnicity}\label{sec:data:race}
+
+I impute race and ethnicity using Bayesian Improved Surname Geocoding (BISG), which combines surname-based probabilities from Census data with the demographic composition of an individual's census block group using Bayes' rule \citep{elliottUsingCensusBureau2009}. BISG is widely used in health research and fair lending analysis, with extensive validation showing strong predictive performance: the Consumer Financial Protection Bureau reports area-under-the-curve statistics exceeding 0.94 for White, Hispanic, Black and Asian race/ethnicities \citep{consumer_financial_protection_bureau_using_2014}. 
+
+I implement BISG using the CFPB's publicly available software package with 2010 Census surname and demographic data \citep{cfpbproxy-methodology_2025}. The algorithm generates probabilities for six mutually exclusive categories: Hispanic, non-Hispanic White, Black, Asian/Pacific Islander, American Indian/Alaska Native, and multiracial. Due to small cell sizes, I combine Asian/Pacific Islander and American Indian/Alaska Native into one group. I successfully impute race/ethnicity for 92\% of unique census block group--surname combinations in my data and assign individuals to the race/ethnicity category with the highest probability. 
+
+I validate the correlation between BISG-imputed and self reported race by exploiting publicly available voter registration records from the North Carolina State Board of Elections. North Carolina, one of the four states in my sample, provides public access to names of active, registered, denied and inactive voters by county, along with self-reported race/ethnicity and gender.\footnote{Data are available at \url{https://vt.ncsbe.gov/RegLkup/}}. I construct a stratified validation sample of 604 individuals purchasing housing in North Carolina, deliberately oversampling minority categories to ensure sufficient observations for group-specific performance metrics. BISG achieves a Cohen's $\kappa$ of 0.753, indicating substantial agreement with self-reported race and approaching the threshold for near-perfect agreement \citep{landis_measurement_1977, mchugh_interrater_2012}. Details of the validation procedure are in Appendix \ref{asec:inferringrace}. I also show my results are robust to using an alternative deep learning classifier and using the race probabilities instead of categories \LR{CITE APPENDIX TABLES}. Additional details on the BISG methodology, validation procedure, voter registration data and alternative classifiers are in Appendix \ref{asec:inferringrace}.
+
+\subsubsection{Additional Data}
+- datafiniti 
+- avreage days on teh market 
+- 
+
+
+% tell me why what you did was hard
+\section{Empirical Strategy}
+%The third reason to focus on the housing market is the presence of a natural experiment that enables causal inference. 
+The main identification challenge is separating outcomes such as price increases that occur because algorithmic investors target markets with rising prices from price increases caused by algorithmic entry. Methods used to study algorithmic effects on individual decisions do not directly translate to measuring market-level impacts, which require a different empirical strategy.
+
+% describe ideal experiment
+The ideal experiment would randomize counties into  treatment and control groups. In treatment counties, machine learning algorithms \textit{could} be used to assess the value of houses, while in control counties, valuations would rely solely on human judgment. I would then compare market structure, prices, and allocations across the two groups. Such a comparison would identify the causal effect of algorithmic investors on market-level outcomes.
+
+
+Designing an ideal experiment to measure market effects raises three challenges. First, causal identification must occur at the market level because the entry of algorithmic investors can change the behavior of owner-occupiers and human investors. These second-order effects are potentially central to market settings and especially important to capture. However, since randomizing counties is logistically infeasible, the empirical strategy must rely on a source of quasi-experimental variation in algorithm use. Second, this variation must also occur at the market level rather than the firm or individual level to avoid confounding from firm-specific factors such as differences in scale, capital, or strategy. Third, unlike domains where a single centralized algorithm guides decision-making, housing market firms use distinct proprietary models. This makes the treatment decentralized, so there is no single system to observe or ``switch on'', so the treatment must plausibly affect the ability to use any machine learning algorithm. The decentralized nature of algorithms mean the strategy requires a way to identify which firms actually rely on algorithmic valuation.
+
+
+% emphasize the input cost shock 
+% This is what I did 
+
+\subsection{Empirical Strategy: Digitization Creates Variation in the Cost of Accurate Algorithmic Prediction}
+My empirical strategy rests on a simple observation: Machine learning algorithms depend on machine-readable training data. Differences in the cost of accessing relevant training data translate into differences in the cost of producing accurate algorithmic predictions.
+
+In the housing market, potentially useful training data for predictive models are maintained by county governments, which by law collect detailed property records for administrative use. Counties collect two key types of public records: legal documents related to property transactions and titles, often managed by the recorder’s office, and detailed property characteristics and assessments for tax purposes, often the responsibility of the assessor’s office.\footnote{These records often date back to the county’s founding, in some cases as early as the 1600s.} Originally created to support core government functions such as tax collection, land-use planning, and property rights enforcement, these datasets are also widely used by engineers, lawyers, and urban planners. While similar records exist nationwide, their content and coverage vary widely, and the four states in my sample have some of the best quality records in the United States \citep{nolte_studying_2021}.\footnote{For instance, in ``non-disclosure'' states such as Alaska, Texas, and Utah, sale prices are not publicly recorded \citep{berrens2004}. Even in states that do record prices, data quality can be inconsistent and incomplete.}
+
+By digitizing physical documents into structured online databases, counties reduced the cost of accessing public records.  The Open Government movement of the early 2000s accelerated digitization. This effort was part of a broader agenda to promote transparency and accessibility in government, assisted by falling costs of digital storage and formalized by federal initiatives such as the 2009 Open Government Directive \citep{gray2011beyondao, whitehouse2009}.\footnote{These efforts culminated in the 2007 Open Government Data Principles and were formally codified in the 2009 Open Government Directive \citep{schudson2020, gray2011beyondao, whitehouse2009, kavanaugh2010}} Besides making government more transparent, digitization saved the increasing cost of maintaining physical records. 
+%Prior to digitization, accessing these records typically required an in-person visit to a county office; afterward, the same information could be downloaded electronically. 
+
+%% relevance paragraph 
+Although county records appear to be a valuable data source, algorithmic investors may rely on alternative datasets and find these records redundant. To test this, the research design is inspired by a regression discontinuity around digitization: digitization represents a sharp drop in the cost of accessing training data, while other factors should smoothly. This structure allows me to examine, in the first set of results, whether algorithmic investment increases in response to the availability of digitized records.
+
+
+
+\subsubsection{Digitization Data and Rollout}\label{sec:data:digitrollout}
+Panel A of Figure \ref{fig:countydigit_balance} shows the timing of digitization for 400 counties in North Carolina, South Carolina, Tennessee, and Georgia. The year of digitization is defined as the first year county recorder records became electronically accessible. I manually collected these dates from two complementary sources: county recorders’ offices and the Internet Archive.\footnote{The highly manual nature of this data collection is one reason the sample is limited to four states.} The primary source was direct interviews with county officials. To validate and supplement these interviews, I used historical snapshots of county websites from the Internet Archive to identify when records were first accessible remotely. While I measure digitization timing using transaction records, counties typically digitized and published property attribute data at the same time.
+
+While state-level coordination generally led to sharp increases in digitization within each state, legal, technical, and financial barriers shaped specific completion times at the county level. Counties first had to secure legal authorization to maintain digital records, develop compatible software systems for hosting and managing these records online, and scan thousands of physical documents. 
+%This sharp transition is crucial for my empirical strategy, as it creates discrete changes in algorithm availability while other unobservables should evolve smoothly.
+
+Panel B of Figure \ref{fig:countydigit_balance} examines whether baseline county characteristics predict early county digitization, controlling for state-fixed effects. Across a range of characteristics, including county size, educational attainment, housing occupancy and vacancy rates, and socioeconomic indicators, the coefficients are small and statistically insignificant. Even for county population, which shows one of the largest correlations with early digitization, the magnitude is modest: a one standard deviation increase in population is associated with only a 4.5 percentage point (15\%) higher likelihood of digitizing early. %Other characteristics, such as educational attainment, poverty rates, labor force participation, and unemployment, show no strong relationships. 
+These results show that, conditional on state characteristics, early digitization was largely uncorrelated with observable county attributes, consistent with idiosyncratic bureaucratic and legal processing driving the rollout. 
+% =.045/.47*(1-.47) or =.045/.3 15\% increase 
+
+
+
+
+% \paragraph{Gender classification using Ethnicolr.}
+% I classify gender using a name-based classifier from the Ethnicolr package \citep{sood2018predicting}. Unlike race, gender is strongly correlated with first names and does not depend on geographic context, making name-based classification particularly effective in this setting.
+
+% \paragraph{Validation of gender classification.}
+% Using the same voter registration records, I validate name-based gender classification against self-reported gender. Table \ref{atab:racegender_validation} shows that gender classification achieves a Cohen's $\kappa$ of 0.849, indicating near-perfect agreement. Precision and recall exceed 0.92 for both males and females, with slightly stronger performance for males. These results suggest that name-based gender imputation introduces minimal measurement error.
+
+
+\subsubsection{Dynamic Differences-in-Differences}\label{sec:diffindiff}
+To estimate the causal impact of digitization in county $c$ and year $t$, I use a dynamic difference-in-differences specification with staggered timing:
+
+
+\begin{equation} \label{eq:es_main}
+y_{ct} = \delta_{t} + \alpha_{c} + \sum_{j \ne -1} \beta_{j} \mathds{1}[\tau_{ct} = j] + X_{ct}'\gamma + \epsilon_{ct}
+\end{equation}
+where $\tau_{ct} = t- E_c$ denotes event time relative the year of county digitization $E_c$. To assess whether digitization is associated with changes in algorithmic investment, the first outcome is the \textit{transaction market share} of algorithmic investors. The algorithmic investor share is defined as $y_{ct} =\frac{q^{algo}_{ct}}{q_{ct}}$, where $q^{algo}_{ct}$ is the number of houses purchased by algorithmic investors in county $c$ and year $t$, and $q_{ct}$ is the total number of home sales. The coefficients $\beta_j$ capture the average change in algorithmic investment in the $j$th year relative to the year before digitization. 
+
+In my main specification, I include county-fixed effects ($\alpha_{c}$) to control for time-invariant county characteristics, such as proximity to major cities or natural amenities, and year-fixed effects ($\delta_{t}$) to account for time-varying shocks common across counties, such as changes in interest rates or broader macroeconomic conditions.  All regressions are weighted by the number of transactions in each county-year, with standard errors clustered at the county level. The comparison group consists of counties that had not yet digitized by year $t$, with counties that digitize after 2017 serving as the last-treated units. All counties eventually digitize, and digitization is an absorbing state; once a county digitizes, it remains treated in all subsequent years.
+
+I also incorporate a vector of pre-treatment time-varying socioeconomic and demographic county-level covariates, ($X_{ct}$), from the American Community Survey that may influence both digitization timing and investment patterns. For example, counties with faster-growing populations could tend to digitize earlier and be more attractive to investors. However, as shown in Table~\ref{tab:es_main}, adding in additional controls does not materially change the estimated treatment effects. 
+
+I also estimate these regression specifications using a range of robust difference-in-difference estimators. I use \citet{dechaisemartin2024} as my primary estimator, and examine robustness to alternative estimators from \citet{sun_estimating_2020}, \citet{borusyak2022revisiting}, \citet{callaway_2021}, and traditional two-way fixed effects ordinary least squares (OLS). These robust methods avoid problematic comparisons between already-treated and just-treated counties. In general, the robust estimators produce qualitatively similar, and often slightly larger, estimates than OLS.
+
+
+% While there are some differences in how the robust estimators handle time-varying covariates, the \citet{dechaisemartin2024} estimator flexibly residualizes outcome changes based on pre-treatment covariate trends, effectively capturing time trends interacted with pre-treatment covariates, while avoiding potential bias from including post-treatment covariates.
+
+I also estimate a pooled difference-in-difference specification: 
+
+\begin{equation} \label{eq:didpooled}
+y_{ct} = \delta_{t} + \alpha_{c} + \beta D_{ct} + X_{ct}'\gamma + \epsilon_{ct}
+\end{equation}
+where $D_{ct}=\mathds{1}[t \ge E_c]$ is an indicator equal to one if county $c$ has digitized by year $t$, and zero otherwise.
+%% only include < ltyear2 (2018)
+
+Identification relies on three key assumptions: no anticipation, no spillovers, and parallel trends. First, market participants should not change behavior in anticipation of digitization. Second, digitization in one county should not affect outcomes in not-yet-digitized counties. Third, in the absence of digitization, treated and control counties would have followed similar trajectories. I evaluate these assumptions in Section~\ref{sec:diffrobustness}.
+
+
+%As shown in Table \ref{tab:balance_county_digit}, early- and late-digitizing counties have similar levels of average income, median rent, demographics, poverty, and employment statistics. However, early digitizing counties are larger and have a one percentage point higher share of Hispanic residents, which we will account for with county-fixed effects. I perform additional robustness testing in Section \ref{sec:triplediff}.
+
+%Information on property records comes from the county governments. I use detailed property-level house characteristics and sales information from ATTOM Data and Zillow. I also rely on aggregated rental and listing data from Zillow and demographic and socioeconomic data from the US Census.
+
+
+
+
+
+
+\section{Digitization Leads to Algorithmic Investment}
+
+\subsection{County Digitization and Algorithmic Investor Entry}
+Digitization is associated with a discrete and sustained increase in algorithmic investment. Panel A of Figure~\ref{fig:raw_nhouses} plots the county-year share of home purchases by algorithmic investors relative to the year of digitization. Algorithmic activity is negligible prior to digitization. In the year of digitization, their purchase share increases sharply to approximately 1\% of all homes sold and reaches about 2\% within three years. This increase is economically meaningful: a 2\% share of total transactions corresponds to 20\% of all investor purchases.\footnote{The average investor share post-digitization is 11.7\%, with algorithmic investors accounting for 2.3\%.} The sharp discontinuity in entry coinciding with digitization is consistent with algorithmic investors responding to reduced data access costs, rather than to unobserved factors that would be expected to evolve smoothly around the time of digitization.
+% summ is_any_sfr2 if ys_countyd>0 = .0229342
+% xumm is_human_inv if ys_countyd>0  = .0943185
+%=.0229342/(.0943185+.0229342
+
+% Digitization leads to entry by algorithmic investors and a statistically and economically significant increase in algorithmic investment: 
+Panel B of Figure~\ref{fig:raw_nhouses} presents the corresponding event study estimates, which closely mirror the patterns in the raw data. The algorithmic share of transactions increases by about one percentage point in the year of digitization and stabilizes at roughly two percentage points thereafter, compared with a pre-treatment share near zero. Table~\ref{tab:es_main} reports the full set of event-time coefficients, using \citet{dechaisemartin2024} to estimate Equation~\ref{eq:es_main}. Column (1) includes county and year fixed effects and county population. Column (2) adds demographic characteristics: racial composition (shares White, Black, and Hispanic), average family size, share of children, and share of adults with a bachelor’s degree or higher. Column (3) adds socioeconomic variables: unemployment rate, labor force participation, median household income, poverty rate, and share of residents receiving disability benefits. Column (4) further includes median rent, share of owner-occupied homes, and share of vacant homes listed for sale. Estimated treatment effects are quantitatively similar across all specifications.
+
+
+Appendix Table \ref{atab:es_main_activity} examines the extensive margin, estimating the effect of digitization on algorithmic investor activity. Activity is defined as an indicator for whether any algorithmic investor purchases more than 10 houses in a county-year, which helps avoid capturing classification error. Column (1) shows that digitization is associated with a 30 percentage point increase in activity in the year of digitization, rising to about 53 percentage points three years later, from a baseline of near zero. Results in Columns (2)--(4), which include additional controls, are quantitatively similar.
+
+
+The estimated effect of digitization on algorithmic investment is similar across alternative difference-in-differences estimators. Appendix Figure~\ref{afig:es_lnq_alts} presents event study estimates from  \citet{borusyak2022revisiting}, \citet{sun_estimating_2020}, and \citet{callaway_2021}, alongside the traditional two-way fixed effects model. Appendix Table~\ref{atab:dd_main_robust} reports the corresponding average treatment effects on the treated (ATT), aggregated across treatment cohorts. All methods show that digitization produces large, sustained increases in algorithmic investment, raising the share of homes purchased by algorithmic investors by about 2 percentage points. 
+
+
+\subsection{Robustness}
+
+\subsubsection{Exploiting Within-County, House-Level Digitization} \label{sec:diffrobustness}
+Although county digitization timing is uncorrelated with observable characteristics, unobserved county-level shocks could influence both digitization and investment. For example, if a county digitizes as part of a broader modernization effort following a major manufacturing investment, and that investment also attracts algorithmic buyers, then increases in algorithmic activity may reflect underlying economic growth rather than a causal effect of digitization.  To address this, I exploit bureaucratic frictions in house record digitization to separate the causal effect of data availability from broader county-level trends or shocks. Because scanning thousands of records took time, counties typically digitized properties in batches, so some homes were added to the electronic database earlier than others. This process generated variation in data accessibility for otherwise similar homes within the same county: for digitized properties, information such as bedroom count and prior sale price was readily available online, whereas for not-yet-digitized properties, obtaining the same information often required an in-person visit.
+
+
+%As mentioned in Section \ref{sec:digit_details}, due to the cost and time-consuming process of converting paper or microfilm records to digital format, counties often digitize a fraction of housing records and reserve the remainder for the future. Typically, counties organize digitization efforts by the year of the last sale, incrementally adding historical data. Algorithms require a digital representation, or a ``vector representation,'' of house characteristics to predict value. Information for houses not yet digitized, on the other hand, must be collected manually, making algorithmic valuation of non-digitized houses more costly. 
+\subsubsection{The Rollout of House Digitization} \label{sec:rollouthouse}
+The timing of house-level digitization appears uncorrelated with observable house or neighborhood characteristics. Appendix Figure~\ref{afig:housedigit_balance} tests whether baseline characteristics predict early digitization, controlling for county fixed effects. Across a range of house-level variables such as sale price, age and indicators of financial distress and neighborhood characteristics, coefficients are small and statistically insignificant. The strongest predictor, house age, implies that a one standard deviation increase is associated with a 3 percentage point increase in the likelihood of early digitization within a county.
+
+
+\subsubsection{Triple Difference Analysis and Falsification Tests}\label{sec:triplediff}
+I estimate a triple-difference specification comparing digitized and not-yet-digitized houses within the same county, before and after county digitization:
+
+\begin{align}
+y_{dct} 
+&= \alpha_c + \delta_t 
++ \sum_{j \ne -1}^{J} \left[ \beta^{\text{Digit}}_j \cdot \mathds{1}[d = 1] + \beta^{\text{NoDigit}}_j \cdot \mathds{1}[d = 0] \right] \cdot \mathds{1}[\tau_{ct} = j] 
++ X_{ct}'\gamma + \varepsilon_{dct}
+\label{eq:triple_diff}
+\end{align}
+
+The dependent variable \( y_{dct} \) is the share of homes in digitization group \( d \in \{0,1\} \), county \( c \), and year \( t \) that were purchased by algorithmic investors. The coefficients \( \beta^{\text{Digit}}_j \) capture the changes in algorithmic investment for digitized homes in event time \( j \) relative to the year prior to digitization, while \( \beta^{\text{NoDigit}}_j \) measure effects for homes that have not yet been digitized, serving as a falsification test. 
+%The regression  includes county fixed effects \( \alpha_c \), year fixed effects \( \delta_t \), and time-varying county controls \( X_{ct} \) for pre-digitization county population. All regressions are estimated using the robust estimator of \citet{dechaisemartin2024}, weighted by county-year transaction volume, and with standard errors clustered at the county level.
+
+
+To address the possibility of more localized unobserved shocks, I conduct a second falsification test that compares investment across digitized and not-yet-digitized homes within neighborhoods:
+
+\begin{equation} \label{eq:fs_triple_diff_falsification}
+y_{icbt} 
+= \alpha_b + \delta_t  
++ \beta^{\text{Digit}}  D_{ct}  D^{\text{house}}_{it}
++ \beta^{\text{NoDigit}} D_{ct} \left(1 - D^{\text{house}}_{it} \right)
++ X_{ibt}'\gamma + \varepsilon_{icbt}
+\end{equation}
+$y_{icbt}$ is an indicator equal to $1$ if house $i$ in county $c$ in census block group $b$ and year $t$ was purchased by an algorithmic investor. $X_{ibct}$ is a vector of pre-determined house characteristics and includes neighborhood ($\alpha_b$) and year fixed effects ($\delta_t$). The regression is estimated with OLS, and standard errors are clustered at the neighborhood. 
+
+Table~\ref{tab:triple_diff_falsification} reports the results. County digitization leads to algorithmic investment in digitized houses but not in nearby not-yet-digitized houses.  The coefficients on \textit{County Digitized} $\times$ \textit{Not-Yet-Digitized House} are statistically indistinguishable from zero in Columns 1--3. The 95\% confidence intervals rule out increases larger than 0.14 percentage points. In contrast, \textit{County Digitized} $\times$ \textit{Digitized House} implies county digitization leads to a 1.2 percentage point average increase in algorithmic investment in digitized houses.
+% 95 percent CIs
+% [-0.003982, 0.000722], [-0.0032244. 0.0002644], [-0.0005276, 0.0013736]
+
+\subsubsection{Additional Verification of Investor Classification Using House--Level Digitization}\label{sec:additionalclassification}
+Table~\ref{tab:triple_diff_falsification} also supports the validity of the investor classification procedure. First, algorithmic investors respond strongly to the availability of digitized data, even when comparing nearby homes, consistent with reliance on data-driven models rather than manual human strategies. Columns 4–6 of Table~\ref{tab:triple_diff_falsification} present a falsification test: since county digitization should not increase human investment. Indeed, county digitization has no effect or small negative effects on human investment.
+
+Additional support comes from the house-level analysis in Appendix Table~\ref{atab:housedigit_fs_byrace}. This specification replaces county-level digitization indicators with a measure of whether a given home is digitized, conditioning on block group-by-year fixed effects. Column (1) shows that digitized homes are 1.5 percentage points more likely to be purchased by an algorithmic investor than by a human investor or owner-occupier, a statistically significant 83\% increase. Column (2) confirms that this effect is specific to algorithmic investors by restricting the sample to investor transactions. Column (4) presents a falsification test, again finding no effect for human investor purchases.
+
+
+\subsubsection{Simulation Evidence on Cross-Country Prediction Accuracy}\label{sec:robustness:sutva}
+A key assumption is the Stable Unit Treatment Value Assumption (SUTVA), which requires that digitization in one county does not affect outcomes in counties that have not yet digitized. This assumption could be violated if models trained on digitized records in County A accurately predict in County B, allowing algorithmic investors to enter County B before it digitizes.
+
+To assess the plausibility of such cross-county spillovers, I simulate the transferability of house price prediction models across counties. For each of 400 counties, I use pre-digitization transactions to train a gradient-boosted tree model on the natural log of sale price, then evaluate its performance both within the training county and in a randomly selected different county. I run this simulation repeated 100 times per county.
+
+Appendix Figure~\ref{afig:outofsample_countydatasim} shows that out-of-county prediction performance deteriorates substantially. In dollar terms, within-county models yield an average prediction error of about \$20,000 (10\% of sale price), while out-of-county errors rise to nearly \$80,000 (39\% of sale price), with a right-skewed distribution where some out-of-county accuracy is substantially worse. These simulation results suggests that the institutional differences across counties mean that digitized data in one country does not generalize well.
+
+%These findings suggest that house price models are highly localized and that digitized data from one county has limited predictive value for another. This supports the SUTVA assumption: digitization appears to impact only the county in which it occurs, and is unlikely to produce algorithmic activity in not-yet-digitized counties via spillovers.
+
+\subsubsection{Effects of Digitization on Human Investors}\label{sec:robustness:humaninvs}
+
+Digitization could impact more than algorithmic investment by lowering search costs, improving transparency, or shaping decisions by human investors. To see if there is evidence of this, I examine the impact of county digitization on human investor activity, average sale price, transaction volume, median days on market, and the sale-to-list price ratio. Panel A of Appendix Table~\ref{atab:county_falsification} reports OLS difference-in-differences estimates for the 45\% of counties where algorithmic investors never enter. 
+
+However, algorithmic investors may avoid weaker housing markets, potentially biasing these OLS estimates. To address this, Panel B of Appendix Table~\ref{atab:county_falsification} presents 2SLS estimates that instrument for algorithmic entry using pre-digitization data quality: the share of assessor records with complete information on bedrooms, bathrooms, stories, and building count. This variable proxies for the usefulness of digitized data to algorithmic models and reflects long-standing differences in local record-keeping that are plausibly exogenous to market quality. Appendix Section~\ref{asec:instrumentingentry} provides additional discussion.
+
+Results from both OLS and 2SLS show no detectable effect of digitization on market outcomes in counties without algorithmic entry. This interpretation is consistent with qualitative evidence from interviews and disclosures, which indicate that human investors do not rely heavily on digitized records when making decisions.
+
+
+\section{Prices and Allocation Results} \label{sec:mainresults}
+\subsection{Conceptual Framework} \label{sec:conceptualframework}
+
+This section outlines a conceptual framework, informed by prior work on human and algorithmic decision making \citep[e.g.][]{mullainathan_diagnosing_2022, kleinberg2017, rambachanIdentifyingPredictionMistakes, li_hiring_2025}, to frame how the shift from human to algorithmic prediction may affect prices and allocations in the housing market.
+
+
+\subsubsection{Setup}
+Suppose each house can be represented by a vector of characteristics $(x,z)$ , which include observable characteristics $x \in \mathbb{R}^d$ (e.g., square footage, bedrooms, neighborhood demographics) and $z \in \mathbb{R}^k$ captures unobservable or hard-to-quantify attributes (e.g., interior finishes, ambient noise, odor from a nearby farm). Each house has some underlying common value, denoted by $Y$, where $ Y = f(x, z) + \varepsilon\ $, $f(x, z)$ is the underlying true optimal prediction function based on $(x,z)$ that relates house characteristics to value, and $\varepsilon$ is a mean-zero error term independent of $(x,z)$ capturing idiosyncratic variation. \footnote{Optimal prediction does not imply perfect accuracy; some prediction error is due to irreducible error \citep{hastie2009elements}.}
+% $f$ represents the optimal prediction of the house conditional on $(x,z)$.
+
+
+\subsubsection{Human Prediction}
+Humans often have access to a rich set of information about a house, including the observable characteristics \(x\) (e.g., number of bedrooms) as well as hard-to-quantify or unobservable attributes captured in \(z\), such as noise level in the yard. However, using all this information requires cognitive effort: When valuing a property, individuals must weigh and compare the many differences across houses. For example, how should recent kitchen renovations be weighed against the need for a new roof? Prior research suggests that humans frequently rely on heuristics when making such complex decisions. For example, \citet{mullainathanobermeyer2022} show that physicians often default to simplified diagnostic rules that overweight salient features, such as chest pain, when predicting heart attacks.
+
+To capture both the richness of human-perceived information and the possibility of human cognitive limitations, I model the human prediction function $h(x, z)$ as:
+\[
+h(x, z) = f(x, z) + \Delta(x, z),
+\]
+ where \(\Delta(x, z)\) is a statistical bias term that captures systematic deviations in human predictions from the optimal benchmark. These may arise from cognitive limitations, reliance on heuristics, or behavioral biases, and may vary with with property characteristics or other contextual factors. For instance, buyers may overvalue amenities like pools in warm weather but undervalue them in colder climates \citep{busse2012}.\footnote{ While these human errors may vary across houses, I will write $ \Delta(x, z)$ as $\Delta$ for notational simplicity.}
+
+    
+\subsubsection{Algorithmic Prediction}
+In contrast, algorithmic prediction relies on supervised learning models that are trained on historical data to minimize a predefined loss function, such as mean squared error. The algorithmic prediction function  $m(x)$ can be written as:
+\[
+m(x) = \mathbb{E}[f(x, z) \mid x],
+\]
+which represents the best approximation of the true value function conditional on the observable covariates \(x\). Unlike humans, algorithms are not subject to behavioral biases, such as assigning different values to a house based on the weather at the time of viewing. However, algorithms are limited by the data on which they are trained and cannot access the unobserved characteristics in \(z\).
+
+
+\subsubsection{Comparing Human and Algorithmic Predictions}
+For any house $(x,z)$, the difference between human and algorithmic prediction can be written as:
+\begin{equation} \label{eq:tradeoff}
+    \underbrace{m(x) - h_i(x,z)}_{\text{algo-human difference}} = \underbrace{E[f(x,z)|x] - f(x,z)}_{\text{ information gap}} - \underbrace{\Delta}_{\text{human error}}
+\end{equation}
+
+Equation~\eqref{eq:tradeoff} shows that disagreement between human and algorithmic predictions arises from two sources: 1) an information gap, reflecting that algorithms cannot observe all the house characteristics available to humans and 2) the human error term that captures how human cognitive limitations  may cause human predictions to diverge from the optimal benchmark. The decomposition highlights a tradeoff. If the unobserved information $z$ is important to estimating $Y$, humans may outperform. However, if there are houses where human judgment introduces systematic and substantial mistakes, algorithms may have an advantage.  
+
+Modeling this as a tradeoff is motivated by the empirical finding that digitization affects algorithmic investor entry. If humans had an information advantage and made no systematic errors, human prediction would always outperform algorithms, and algorithmic investors would not enter the market. Conversely, if human prediction were cognitively constrained and lacked any informational advantage, algorithms would always outperform humans, and digitization would drive human investors out entirely. Instead, digitization leads algorithmic investors to account for about 20 percent of the investor market while human investors remain active, suggesting that the relative advantage of human and algorithmic prediction varies.
+
+
+\subsubsection{Empirical Implications}
+% setup what this paper does differently 
+%The conceptual framework highlights how human and algorithmic prediction differ in both the information they rely on and the processes through which predictions are formed, cognitive and heuristic in the case of humans, statistical and data-driven in the case of algorithms. While prior work has primarily examined how this shift affects individual prediction accuracy, this paper focuses on how it may influence market-level outcomes such as prices and allocations.
+
+
+%% price and quantity prediction for undervalued housese
+This conceptual framework highlights two ways the shift from human to algorithmic prediction might impact prices and allocations. The first implication concerns houses subject to systematic human errors. If a set of houses were consistently undervalued by humans mistakes these properties could offer an arbitrage opportunity for algorithmic investors, whose predictions are not subject to the same distortions.\footnote{This implication is consistent in spirit with the \citet{becker1957} model of taste-based discrimination.} Algorithmic entry should lead to a narrowing of the relative price gap between systematically undervalued houses and comparable properties. Also, algorithmic investors should be disproportionately more likely to purchase these undervalued homes. These predictions differ from the effects of a standard demand shock, which would raise the price of all homes uniformly, rather than narrowing the relative price gap. I explore these implications in the context of racial bias in Section \ref{sec:racepenalty}. 
+
+
+%%% price and quantity prediction based on z
+The second implication for market prices and allocations concerns the informational gap between humans and algorithms. In the U.S. housing market, the features in $x$ are shaped by county-level decisions about data collection and reporting, as well as the characteristics of the existing housing stock. These baseline differences create heterogeneity in the relative advantage of algorithmic versus human prediction across properties. Consequently, the effects of digitization on investment should depend on how well the available data capture the key determinants of housing value. Houses with high-quality, informative data should see larger increases in algorithmic investment after digitization. In contrast, when available data are sparse or uninformative, digitization may have limited effects or even shift human investment toward properties where their informational advantage is greater.\footnote{This pattern is consistent with the predictions of a Roy model, in which individuals sort into sectors where their comparative advantage yields the highest returns \citep{roy1951}.} I examine the price and quantity implications of this specialization in Section~\ref{sec:specialization}.
+
+
+\subsection{The Race Penalty}\label{sec:racepenalty}
+\subsubsection{Background on the Race Penalty}
+Persistent racial and ethnic disparities have been well documented in the U.S. housing market. Homes in majority-Black neighborhoods are valued significantly lower than comparable homes in predominantly White areas \citep{harris1999, perryDEVALUATIONASSETSBLACK, elsterMinoritiesPropertyValues2022}.\footnote{Proposed mechanisms include preferences for living near similar people, differences in local amenities, risk premiums, and structural barriers such as redlining and discriminatory lending \citep{lewisracialcomposition, caseyRaceEthnicitySocioeconomic, tessumairpollution2021, cutlerRiseDeclineAmerican1999}.} These gaps persist even when comparing two similar houses in the same neighborhood. Repeat-sales evidence shows that Black sellers earn lower annualized returns, receive less in distressed sales, and obtain lower appraisals, even after adjusting for home and neighborhood characteristics \citep{drukker2024racial, kermaniRacialDisparitiesHousing2021, freddiemac2021, perryBiasedAppraisalsDevaluation2021}.\footnote{On the buyer side, \citet{box-couillard_racial_2024} and \citet{bayerRacialEthnicPrice2017} find that minority buyers often pay a premium when purchasing from White sellers, even for the same property.} Audit studies also suggest that race can influence valuation, even absent overt discrimination. For instance, appraisers seem to select different sets of comparable homes depending on the actual or perceived race of the homeowner \citep{lilienjakeFaultyFoundationsMysteryShopper, howell_appraised_2022}.\footnote{Research on implicit bias in housing valuation has coincided with media coverage and legal cases, including reports of minority homeowners “whitewashing” their homes to obtain higher appraisals \citep{kamindebraHomeAppraisedBlack2023, howell2018NeighborhoodsRA}.} This body of evidence suggests that race shapes how information is used in human valuation, making it a natural lens for examining how the shift from human to algorithmic prediction may alter pricing dynamics.
+
+%Explanations for these findings range from over weighting the race of the homeowner during valuation, that minority sellers may set lower initial listing prices because of liquidity constraints, or that racial steering occurs during the housing search process \citep{lilienjakeFaultyFoundationsMysteryShopper, howell2018NeighborhoodsRA, steering2023}.
+\subsubsection{Evidence on the Race Penalty}
+Motivated by this prior work, I document the existence of a race penalty prior to county digitization. To account for unobservable differences in amenities or risk premiums across neighborhoods, I restrict the analysis to \textit{within-neighborhood} comparisons, comparing two observably similar houses in the same census block group.
+
+I estimate the \textbf{race penalty}  using a hedonic regression in Equation \ref{eq:racepenalty}: 
+
+\begin{equation} \label{eq:racepenalty}
+\ln(p_{ibt}) = 
+\beta_M \text{Minority}_{it} + \mathbf{X}_{ibt}'\boldsymbol{\gamma} + \lambda_{bt} + \varepsilon_{ibt}
+\end{equation}
+
+where $\ln(p_{ibt})$ is the natural logarithm of sales price of house $i$ in block group $b$ and year $t$. $\text{Minority}_{it}$ equals 1 if the seller for house $i$ is Black or Hispanic in year $t$, and 0 otherwise. The vector $\mathbf{X}_{ibt}$ includes observable housing characteristics, such as square footage, number of bedrooms, age, number of bathrooms, lot size, number of stories, and building type, and block group-by-year fixed effects absorb time-varying local housing market conditions.\footnote{The full list of observable characteristics in $\mathbf{X}_{ibt}$ is available in Appendix Section \ref{asec:housechars}.} The race penalty, $\beta_M$, captures the average sales price gap between minority and White homeowners, conditional on observed home characteristics and local price trends. 
+%Importantly, this coefficient should be intepreted with caution; these price gaps could reflect disparities associated with race, or unobserved characteristics correlated with minority ownership.
+% Census tracts average 4,517 people and 2,006 housing units, Census block groups average 1,610 people and 716 housing units
+
+Seller race is inferred from first and last names combined with geographic location, using two approaches: Bayesian Improved Surname Geocoding (BISG) and a machine learning method (\texttt{Ethnicolr}), both described in Appendix Section~\ref{asec:inferringrace}. The two approaches yield similar results; I use Ethnicolr in the main specification, as it produces slightly more conservative estimates of the race penalty.
+
+
+Table~\ref{tab:racepenalty_by_geo_ethnicolr} shows that, prior to digitization, minority-owned homes sell for less than observably similar homes owned by White sellers. Within the same Census tract (about 2,000 households), the estimated race penalty is 7 log points. The gap narrows to 5.8 log points at the Census block group level (about 700 households). Although the full sample cannot be geocoded to the block level, I calculate the penalty for the subsample with block-level matches (about 30 households), finding a gap of 2.9 log points. The gap is statistically significant at all geographic levels and economically meaningful; A 5.8 log point gap corresponds to \$11,958 and a 2.9 log point gap corresponds to \$6,010.  Appendix Table~\ref{atab:racepenalty_by_geo_bisg} reports similar magnitudes and patterns when seller race is inferred using BISG.
+
+The conceptual framework suggests two possible explanations for the observed price disparity. First, the gap may reflect unobserved housing characteristics such as interior condition, noise, or yard maintenance that are visible to human buyers but not captured in the data and are correlated with minority ownership. Second, the disparity could result from biases correlated with the seller’s race. Because the homeowner’s race changes upon sale, any race-related price discount implies a temporary mispricing rather than a persistent difference in house quality. To distinguish between these explanations, I analyze how digitization affects the magnitude of the race penalty.
+
+\subsection{The Impact of Digitization on Racial Disparities} \label{sec:digitonracepenalty}
+County digitization reduces the race penalty by nearly half. In the preferred specification (Column 2 of Table~\ref{tab:racepenalty_by_geo_ethnicolr}), which includes Census block group fixed effects, the gap narrows by 2.6 log points, from 5.8 to 3.2 log points, equivalent to a reduction of 45\%. The coefficient on ``Minority Seller $\times$ County Digitization'' measures this differential effect on sale prices received by minority homeowners.\footnote{Because geography-by-year fixed effects absorb the average effect of digitization, this interaction term identifies how digitization changes the relative outcomes for minority sellers.} Across all specifications, the positive and statistically significant coefficients imply a narrowing of roughly 40 percent. Panel A of Figure~\ref{fig:racepenalty_subsampleanalysis} plots the average race penalty before and after digitization. 
+
+Appendix Figure~\ref{afig:residprice} provides a nonparametric illustration of the convergence in residualized sale prices. Panel A plots the distributions for White and minority sellers prior to digitization. A Kolmogorov–Smirnov (K–S) test rejects the null hypothesis that the distributions are the same, with a D-statistic of 0.048. Panel B shows the distributions after digitization, where the K–S D-statistic falls to 0.031, indicating greater similarity between minority and White sellers. 
+
+One possible explanation for the observed price convergence is that digitization reduces informational frictions, such as by improving transparency around home values, which in turn narrows the race penalty. Panel B of Figure~\ref{fig:racepenalty_subsampleanalysis} shows that the race penalty declines significantly only in counties where algorithmic investors enter after digitization ($p < 0.001$), while the change is smaller and statistically insignificant in counties without such entry ($p = 0.328$).\footnote{Appendix Table~\ref{atab:racepenalty_coeff_tests} reports coefficient test results.} This pattern suggests that digitization alone is not sufficient to reduce racial disparities; rather, the reduction appears linked to algorithmic investment.
+
+%A potential concern is that algorithmic investors may enter counties where racial price gaps are already shrinking. To address this, I exploit within-county variation in the timing of house-level digitization, which provides a quasi-exogenous source of variation in algorithmic investment. \footnote{House digitization serves as a strong first-stage predictor of algorithmic purchase, even conditional on neighborhood-by-year fixed effects (Appendix Table~\ref{atab:housedigit_fs_byrace}, Columns 1–2).} The coefficient on  $\text{Minority Homeowner}=1$ $\times$ $\text{County Digitized}=1$ $\times$ $\text{House Digitized}=1$  in Columns 1--3 of Table \ref{tab:racepenalty_mechanism} captures the captures the differential effect of digitization on minority-owned homes relative to comparable White-owned homes. Across all specifications, digitization has a strong and positive differential effect, narrowing the race penalty consistently across all three geographic levels. These patterns suggests that county digitization alone is not sufficient to reduce racial disparities; rather, the effect appears tied to algorithmic investor activity.
+
+
+\subsection{Mechanism for Reduction in Racial Disparities}
+\subsubsection{Direct Effects of Algorithmic Investors}
+Algorithmic investors reduce race-based pricing disparities through both their pricing behavior and their selection of properties. Panel C of Figure~\ref{fig:racepenalty_subsampleanalysis} shows that, among homes purchased by algorithmic investors, who enter only after county digitization, the race penalty is statistically indistinguishable from zero. In other words, algorithmic investors pay similar prices for observably similar homes regardless of the seller’s race. 
+%This race-neutral pricing is consistent with the conceptual framework, in which algorithmic predictions rely solely on observable features and are not influenced by the cognitive biases that may affect human decision makers.
+%% consistent with prediction from the conceptual model 
+
+Second, algorithmic investors purchase disproportionately from minority homeowners. In counties where they are active, algorithmic investors account for about 4\% of sales by minority homeowners, roughly twice their overall transaction share. These purchases are not limited to racially segregated areas; the average algorithmic investment occurs in a majority White Census tract, indicating that the pattern is not simply driven by neighborhood racial composition. The effects of digitization on algorithmic investment are also stronger for minority-owned properties. Column 3 of Appendix Table~\ref{atab:housedigit_fs_byrace} shows that digitization leads to a 53\% larger increase in algorithmic purchases for homes owned by minority sellers relative to observably similar homes owned by White sellers in the same Census block group. These quantity patterns are consistent with the conceptual prediction that algorithmic investors, facing an arbitrage opportunity, would target undervalued homes. However, algorithmic investors represent a small share of overall transactions, so these price and quantity effects alone cannot account for the 45\% reduction in the race penalty.
+
+%share of the surrounding Census tract is 55\%, suggesting that the pattern is not simply driven by neighborhood composition.
+
+%Moreover, the effect of digitization on algorithmic investment are stronger for minority-owned houses. Column 3 of Appendix Table~\ref{atab:housedigit_fs_byrace} shows the heterogenous effect of house digitization on algorithmic investment by race of the homeowner. The treatment effect is 53\% larger for minority-owned homes than for observably similar White-owned homes in the same Census block group. Exploiting the quasi-exogenous variation in house digitization tests if the disproportionate effects are due to unobserved differences in property quality of sales processed correlated with minority ownership. 
+
+\subsubsection{Indirect Effects of Algorithmic Investors on Racial Disparities}
+The housing market is thin, highly intermediated, and subject to binding short-run supply constraints, making it susceptible to spillovers from demand shocks. Prior research shows that even indirect shocks can propagate through local markets via buyer behavior, visual appeal, or nearby foreclosures.\footnote{For example, \citet{aiello_when_2022} show that wealth shocks to homebuyers affect the price of their next purchase and spread through markets. \citet{glaeser_computer_2018} find that a one–log-point increase in the visual appeal of neighboring homes raises a property’s value by 0.4 log points. \citet{cohen2016sales} document that foreclosures reduce nearby home values by about 2\%.} If algorithmic investors influence the behavior of other buyers, they could generate market-wide effects that extend beyond their own transactions.
+
+The race penalty shrinks among human investors and owner occupiers in markets where algorithmic investors are active. Panel C of Figure~\ref{fig:racepenalty_subsampleanalysis} shows that, following county digitization, the race penalty declines by about 50 percent for owner-occupiers ($p < 0.0001$) and by 80 percent for human investors ($p = 0.044$).\footnote{See Appendix Table~\ref{atab:racepenalty_coeff_tests}.} Panel D confirms that this pattern is limited to counties with algorithmic investor entry. In counties that digitize but do not attract algorithmic investors, the racial price gap shows no statistically significant change. These results suggest that algorithmic entry shifts market dynamics in ways that raise the prices paid by other buyers for minority-owned homes.
+
+
+Two mechanisms could explain how algorithmic activity reduces the racial penalty among other buyers. First, competition: Even when algorithmic investors do not win a transaction, their bids, or the expectation of their bids, may pressure others to raise their offers. This competitive effect would directly raise sale prices of digitized, minority-owned homes exposed to algorithmic investor competition. Second, spillovers through price anchoring: Algorithmic purchases may affect the reference points used to set prices. Buyers, agents, and appraisers rely heavily on comparable recent transactions, so higher prices paid by algorithms could lift valuations for similar nearby homes, even if those homes are not themselves targeted by algorithmic investors.\footnote{This could occur through behavioral anchoring or institutional mechanisms such as appraisal standards.}
+
+To separate these channels, I use the staggered rollout of digitization at both the house and county level to estimate a triple-difference regression among human investors and owner occupiers purchases. Algorithmic investors concentrate their activity in digitized homes within digitized counties and rarely buy not-yet-digitized homes. Asa result, house digitization creates quasi-random variation in exposure to algorithmic bidding across houses within counties and years.\footnote{This interpretation assumes that the absence of algorithmic investment in non-digitized homes reflects lower exposure to algorithmic bids, conditional on year, house type, and neighborhood.} My regressions specification interacts minority seller status with house-level and county-level digitization, comparing changes in the racial price gap for digitized versus non-digitized homes before and after county digitization. A larger decline in the race penalty for digitized homes would indicate competition as the primary channel, while a stronger effect for non-digitized homes would point to price anchoring. Appendix~\ref{asec:triplediff_racepenalty} provides additional details on the specification.
+
+%% note that both of these coefficients are measured relative ot the base category, which is non-D counties, non-D houses, white sellers
+
+%% drop column 1 from this table 
+Direct exposure to algorithmic bidding narrows the racial price gap by nearly half in human investors and owner occupiers transactions. Column (1) of Appendix Table~\ref{atab:racepenalty_mechanism} shows that the coefficient on \textit{County Digitized} $\times$ \textit{Digitized House} $\times$ \textit{Minority Seller} is large and statistically significant among owner-occupier and human investor purchases. In contrast, the coefficient on \textit{County Digitized} $\times$ \textit{Digitized House}, which captures spillover effects for non-digitized homes that are harder for algorithmic investors to target, is small and statistically insignificant. This indicates that algorithmic presence alone does not improve outcomes for minority sellers unless their properties are directly targeted.
+
+Columns (2) and (3) show similar patterns in subsamples of owner-occupiers and human investors. For owner-occupiers, the narrowing of the race penalty is concentrated in digitized homes, consistent with competition as the primary channel. For human investors, the point estimate on the spillover coefficient is larger than the competition effect, although statistically insignificant, suggesting that price anchoring may play a greater role for this group. Overall, these results show that algorithmic investors influence not only the prices they pay but also the broader competitive environment, meaning their market impact cannot be inferred from transaction share alone.
+
+
+\subsubsection{Decomposition of Race Penalty}
+Most of the decline in the race penalty is explained by changes within buyer types rather than compositional changes. Figure~\ref{fig:racepenalty_decomp} shows that 98\% of the reduction is attributable to within-buyer effects, based on an Oaxaca-style decomposition that separates changes in buyer composition from changes in the average race penalty within buyer types.\footnote{Appendix Section~\ref{asec:oaxaca_decom} provides the full derivation.} Algorithmic buyers, who enter only after digitization and exhibit no racial price gap, contribute little to the overall reduction (``the new buyer effect''). Human investors show the largest decline in their own race penalty, but owner-occupiers account for about 80\% of the total drop because they are the bulk of overall transaction volume. Taken together, these results suggest that competitive effects among owner-occupiers explain most of the overall reduction in the race penalty.
+
+%% why might the activity of algo firms impact those of non-aglo firms. 
+\subsection{Adverse Selection or Human Error?}
+
+
+%To investigate this, I use two complementary approaches. First, I apply a deep learning model to analyze images of homes and control for visual characteristics not captured in assessor data. Second, I compare the realized returns of algorithmic investors on homes purchased from Minority versus White sellers to test whether they overpay for Minority-owned homes.
+
+\subsubsection{Deep Learning Image Analysis} \label{sec:deeplearn}
+To assess whether the decline in the race penalty reflects overpayment by algorithmic investors or improved market efficiency, I first test whether controlling for additional information on home quality from interior and exterior images can explain the gap. If homes sold by minority owners are on average less well-maintained due to wealth or liquidity constraints \citep{harris1999}, and this is not captured in structured data, these omitted factors could partly account for the observed price gap.
+%I construct controls for physical condition and curb appeal, which can vary substantially even within the same neighborhood and are not captured in structured data \citep{pintoAEIHousingCenter2021, harris1999, choiExplainingBlackWhiteHomeownership2019}. 
+
+
+I match home listings to scraped Zillow images for properties currently listed for sale, yielding 35,000 transactions with matched photos. Appendix Figure~\ref{afig:scrapedimages} provides examples, and Appendix Table~\ref{atab:summary_stats_houseswithimages} compares characteristics of the full and image-matched samples. Visual features are extracted using a Vision Transformer model pre-trained on ImageNet-21k \citep{dosovitskiy2020, rw2019timm}, which generates embedding vectors capturing latent aspects of house appearance. These embeddings are included as controls in the race gap regressions to test whether differences in interior or exterior condition account for the race penalty. Appendix Section~\ref{asec:images} details the image processing pipeline.
+
+Appendix Table~\ref{atab:racepenalty_images} reports the results. Columns 1–2 show baseline estimates of the race penalty for the image-matched sample under different geographic fixed effects. Adding exterior image embeddings (Columns 3--4) modestly reduces the gap from 5.9 to 5.1 log points in the block-group-by-year specification, but a substantial disparity remains. Adding interior embeddings (Columns 5--6) produces little further change. The persistence of the race gap after controlling for both exterior and interior visual features suggests that differences in appearance and condition cannot fully account for the observed disparities in sale price.
+
+
+%The matched homes have slightly lower sale prices on average (\$175,000 vs. \$207,000), but are otherwise similar across observable characteristics.
+
+
+%Subsequently, I use these embedding vectors in a regression model to account for other facets of a house's aesthetic quality in estimating the race gap.
+
+\subsubsection{Margin Analysis} \label{sec:margin_analysis}
+
+Visual features capture only one dimension of unobserved home quality and are available for only a subset of the sample. To complement this approach, I examine gross margins to test whether algorithmic investors systematically overpay for homes sold by minority owners. If so, their average returns on these purchases should be lower.
+
+I use two proxies for gross margin. The first is the resale margin, defined as the difference between the natural log of resale price and original purchase price. This measure captures realized returns but is available only for properties that were resold. The second is the assessment margin, defined as the difference between the natural log of the next available tax assessor valuation and the purchase price. This measure covers all properties, since assessments occur regardless of resale, but reflects estimated rather than realized market values.\footnote{For small changes, the log difference approximates the rate of return.} I estimate regressions including block group-by-year, resale or assessment year fixed effects, and observable housing characteristics. Table~\ref{tab:assessresalemargin} shows no statistically significant difference in gross margins by seller race across both measures, different geographic specifications and alternative definitions of minority status. On average, algorithmic investors are not systematically earning lower returns on purchases from minority homeowners.
+
+A potential concern is that algorithmic investors may invest more in post-purchase improvements for homes acquired from minority sellers, which could mask differences in initial quality. To investigate this, Appendix Table~\ref{atab:assessimp} analyzes reported improvement expenditures from tax assessor records. Consistent with prior research, Columns 2, 4 and 6, show that minority owner-occupiers spend less on improvements than White owners, on average \citep{bayer2016_borrowing}. In Columns 1, 3 and 5, however, I find no statistically significant difference in improvement spending among algorithmic investors. This suggests that differences in post-purchase investment cannot explain the similar gross margins observed for homes purchased from minority and White sellers.
+
+
+% To evaluate whether algorithmic investors achieve different returns based on seller race, I estimate the following regression for homes purchased in year $t$, located in census block $c$, and either resold or reassessed in year $r$:
+
+% \begin{equation}
+%     \ln(\text{price}^{\text{resale}}_{irc}) - \ln(\text{price}^{\text{purchase}}_{itc}) = \gamma X_{irtc} + \beta_1^{\text{algo}} \cdot \text{SellerMinority}_{itrc} + \epsilon_{itrc}
+% \end{equation}
+
+
+\subsection{County Digitization Increases House Sale Prices}
+Up to this point, the analysis has focused on relative prices, specifically the racial price gap, by comparing observably similar homes within neighborhoods. I now examine the effect of digitization on average sale prices. 
+
+Panel A of Figure~\ref{fig:es_logprices} plots event study estimates of the impact of county digitization on house sale prices, controlling for house characteristics and census block group and year fixed effects. Prices are stable in the pre-digitization period, then begin to rise in the year after digitization. By year three, average sale prices are about 3 log points higher, and the increase persists through year five.
+
+Panel B separates results by seller race. Prices for homes sold by minority owners rise by roughly 5 log points within three years of digitization, compared to an increase of about 2 log points for White-owned homes. These effects emerge in the year following digitization and grow over time. The results indicate that the narrowing of the racial price gap is driven primarily by faster price growth for homes sold by minority owners, rather than price declines for White-owned properties.
+
+Although the percentage gains in sale prices are modest, they translate into large wealth increases for minority sellers. Based on 2019 Survey of Consumer Finances data from \citet{bhuttaDisparitiesWealthRace2020}, the estimated price effects imply a 38\% increase in median wealth for Black households and a 25\% increase for Hispanic households, whose median wealth was \$24,100 and \$36,100, respectively. For the median White household, the same price effect represents only a 2\% gain. These calculations highlight the disproportionate impact of housing appreciation could have on wealth for the typical minority households.\footnote{Figures are based on median household wealth by race overall, not conditional on homeownership.}
+
+% average sale price of minority = 183,199
+% average sale price of minority = 213,232
+% median black wealth from SCF = 24,100, hipaic = 36,100, white = 188,200
+% Black = 183,199*.05=9160 /24,100 = 38% 
+% Hispanic = 183,199*.05=9160 /36,100 = 25% 
+% White = 213,232*.02 = 4265/188,200 = 2%
+% Note that there is a drop in prices in the first year of digitization (year zero). This is consistent with the fact that in year zero, 
+
+
+
+\section{Conclusion}
+Progress in machine learning and the widespread availability of digitized data are transforming decision-making across a range of economic domains. This paper provides early empirical evidence of how algorithms reshape market outcomes, focusing on the U.S. housing market. I study the staggered digitization of property records across four states, which lowered the cost of accurate algorithmic prediction and facilitated the entry of algorithmic investors. Following digitization, average house prices rise and the racial price penalty narrows by 45 percent. This convergence reflects not only algorithmic firms disproportionately purchasing homes from minority owners, but also shifts in the behavior of owner-occupiers and human investors. Human investors adapt by reallocating toward segments where available data make algorithmic valuation less effective. Together, the findings show that algorithmic prediction influences individual transactions while also triggering market-wide changes in entry, allocation, and prices.
+
+This work is subject to some qualifications and raises avenues for future research. First, the analysis focuses on four Southeastern housing markets in the early 2010s, a period and setting with unusually high-quality administrative data and relatively thin, inelastic markets. Effects may differ in more liquid or standardized markets, or in regions with less comprehensive data. The period studied also captures an early stage of private-sector machine learning adoption; since then, large language models and alternative data sources have greatly expanded the scope and accessibility of predictive tools, potentially further blurring the line between human and algorithmic decision-making.
+
+Second, this work does not address how algorithmic investment affects housing supply. While the study period shows no change in the quantity of new homes, algorithmic buyers could influence the types of homes built, encouraging more uniform, algorithm-friendly construction. Such general equilibrium effects on supply may be particularly important in markets with more elastic production, such as labor markets, and merit further study.
+
+Finally, the results underscore that even modest algorithmic adoption can produce sizable market-level effects, especially in settings where human decisions are biased. A growing body of evidence suggests that systematic human errors can outweigh informational advantages in decision quality, but whether and how this pattern holds across markets remains an open question \citep{mullainathanbail2017, mullainathanobermeyer2019, rambachanIdentifyingPredictionMistakes, kahnemanNoiseFlawHuman2021}. As prediction technologies advance, it will become increasingly important to understand their spillover effects and how these vary across institutional contexts.
+%Finally, this work raises questions about how algorithms can be used as a tool to study human errors. While the importance of private information is widely cited as a barriers to algorithmic decision making, this work suggests that the human decision maker is not always correct. Instead, the value of the trade-off depends on the importance of private information and the degree of bias in human decisions. 
+ 
+
+
+%\bibpunct{(}{)}{;}{a}{}{,}
+\clearpage
+\begin{spacing}{0.8}
+%\bibliographystyle{aea}
+\bibliography{CNA_Bibliography.bib}
+\end{spacing}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%TABLES AND FIGURES IN ANOTHER FILE, INPUTTED HERE.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\input{tablesandfigs.tex}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%APPENDIX TABLES AND FIGURES IN ANOTHER FILE, INPUTTED HERE.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\input{online_appendix.tex}
+
+\end{document}

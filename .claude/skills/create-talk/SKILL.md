@@ -46,6 +46,10 @@ Before dispatching the Storyteller, read:
 2. `.claude/rules/domain-profile.md` for field conventions and audience calibration
 3. The Beamer Custom Environments table in `CLAUDE.md` for available environments
 4. `Preambles/header.tex` if it exists, for shared preamble setup
+5. **Slide style and structure** — the on-demand rules that used to load globally:
+   - `.claude/skills/create-talk/style.md` — LaTeX style, color discipline, builds, palette
+   - `.claude/skills/create-talk/structure.md` — the 12-block deck template
+   - `.claude/skills/create-talk/template.tex` — compilable block-by-block skeleton
 
 ### Step 3: Launch Storyteller Agent
 
@@ -53,10 +57,13 @@ Delegate to the `storyteller` agent via Task tool:
 
 ```
 Prompt: Create a [format] talk from [paper].
+Read first: .claude/skills/create-talk/style.md, structure.md, and template.tex —
+these carry the slide style rules and the 12-block deck scaffold.
 Read the paper and extract: research question, identification strategy, main result,
 secondary results, robustness checks, key figures/tables, institutional background.
-Design narrative arc for [format] format.
-Build Beamer .tex file using shared preamble and custom environments from CLAUDE.md.
+Design narrative arc for [format] format following structure.md.
+Build Beamer .tex file from template.tex, using shared preamble and custom
+environments from CLAUDE.md.
 Save to Slides/[format]_talk.tex
 Do NOT compile — compilation is handled separately.
 ```

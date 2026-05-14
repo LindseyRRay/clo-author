@@ -1,0 +1,450 @@
+\documentclass[aspectratio=169,t,11pt,table]{beamer}
+\usepackage{slides,math}
+
+%\input{Preambles/header_beamer}
+
+\graphicspath{{../}}
+
+% Optionally define `accent`/`accent2` colors for theme customization
+% I recommend changing the top slider on this: https://hslpicker.com/#1e9400
+\definecolor{accent}{HTML}{940034}
+\definecolor{accent2}{HTML}{006896}
+
+\title{Prediction Policy with a Twist: Part I}
+\date{March 2025}
+\author{Lindsey Raymond}
+\institute{ {\small Microsoft Research \& Harvard University}}
+%\addbibresource{references.bib}
+\addbibresource{combined_bibliography.bib}
+
+\begin{document}
+
+% ------------------------------------------------------------------------------
+\begin{frame}[noframenumbering,plain]
+\maketitle
+\end{frame}
+
+
+\begin{frame}{Hiring as Exploration}{Joint with Danielle Li (MIT) and Peter Bergman (UT Austin)} \small 
+
+\begin{itemize}
+\item Machine learning depends on strong assumptions around the data generating process
+\begin{itemize}
+\item Independent and identically distributed data
+\item Stable underlying distribution
+\end{itemize}
+\medskip \pause 
+\item Algorithms often trained on human-generated behavior
+\end{itemize}
+\alert{This paper:} Can we use insights from economics to build better algorithms?
+\begin{itemize}
+    \item Can we build hiring algorithms that are more efficient and equitable?
+\end{itemize}
+\end{frame}
+
+
+
+
+\begin{frame}{Supervised learning algorithms play an important role in hiring} \small 
+\alert{Firms increasingly use machine learning in their recruiting processes} \\
+\vspace{2mm}
+\alert{Hiring AI is based on ``supervised learning''}
+\begin{enumerate}
+\item Start with a historical training dataset of worker covariates and outcomes
+\item Build a predictive model in the training data
+\item Apply its predictions to future job applicants %\pause
+\end{enumerate}
+\bigskip
+\pause 
+\alert{This works well when...}
+\begin{itemize}
+\item ...there's lots of representative data on workers from all backgrounds
+%\item ...data are labeled properly: e.g. reliable measure of success
+\item ...the environment is stationary
+\end{itemize}
+\bigskip %\pause
+\alert{But is this true of hiring?}
+\end{frame}
+
+
+\begin{frame}{Supervised learning and algorithmic bias} \small 
+
+\alert{Lots of evidence for bias in human hiring}
+\begin{itemize}
+\item  e.g. Neal and Johnson (1996); Goldin and Rouse (2000); Bertrand and Mullainathan (2004); Charles and Guryan (2008)
+\end{itemize}
+\bigskip
+\pause
+\alert{Human biases may translate into algorithmic underperformance}
+\begin{itemize}
+\item Changes in worker skills and returns to skills
+\item Fewer minorities in historic data $\implies$ less precise estimates 
+\item Biases in firm evaluation lead to biases in outcome variables
+\item Historical structure disadvantages
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{We propose a new approach} \small 
+\alert{Key idea: think of hiring as a bandit problem}
+\begin{itemize}
+\item Firm can select applicants it thinks are good (exploit)
+\item Firm can select unknown applicants to learn about their quality (explore)
+\end{itemize}
+ \bigskip \pause 
+\alert{Optimal solution balances exploration and exploitation}
+\begin{itemize}
+\item Supervised learning is exploitation only: maximizes predicted quality  \smallskip
+\item ``Contextual bandit'' allows for exploration: additional value to exploration
+\end{itemize}
+\bigskip
+\alert{Bandits are a very common tool but, to our knowledge, has not been applied and studied in the context of hiring. }
+\end{frame}
+% LR note - these algos are likely to be used in each hiring cycle rather than once and this fits more with an "online" manner or learning
+
+
+\begin{frame}{This project} \small 
+
+\alert{1.  Build a two screening algorithms} \\
+\begin{itemize}
+\item Train and test using administrative data on professional services hiring at a large financial services firm
+\item Goal is to help the firm decide which applicants should receive a first-round interview
+\end{itemize}
+\medskip
+\pause 
+\alert{2.  Examine its impact on diversity and quality of those selected for an interview} \\
+\begin{itemize}
+\item Quality is defined as whether a worker is hired conditional on being given an interview
+\item vs. the firm's actual decisions 
+\item vs. a supervised ML that does not engage in exploration 
+\end{itemize}
+\end{frame}
+
+
+
+\begin{frame}{Our setting is one that has struggled with diversity} 
+
+\makebox[\linewidth]{
+\begin{tabular}{c}
+\includegraphics[scale=0.4]{Output/presentation_plots/diversity_financeinterns.png}
+\end{tabular}
+}
+\end{frame}
+
+\begin{frame}{Initial interview decisions are important} \small 
+
+\alert{Firm is overwhelmed with options initially}
+\begin{itemize}
+\item 100 applicants for every opening. 
+\item $>90$\% of applicants rejected without being interviewed
+\end{itemize}
+\bigskip
+\pause 
+\alert{Recruiters make interview decisions with limited information}
+\begin{itemize}
+\item Resume review only
+\item See demographics, work and education history.
+\item Sometimes a cover letter
+\end{itemize}
+\bigskip
+\pause
+\alert{Decisions matter}
+\begin{itemize}
+\item Easy to pass over qualified candidates
+\item Good jobs
+\end{itemize}
+\end{frame}
+
+\begin{comment}
+
+\begin{frame}{Who should firms interview?}
+ \smallskip
+\begin{itemize}
+\item Applicant has quality $q$, initially unobserved, revealed if interviewed ($I=1$)
+\item Assume applicant is hired if interviewed and if $q > \tau$.  
+\item Implicitly, this translates into a potential outcome $H^1 = \mathbb{I}(q > \tau)$.
+\item Firms want to predict $H^1$ and interview candidates with $H^1=1$.
+\end{itemize}
+\bigskip
+\alert{In our data, 90\% of applicants who are interviewed are not hired}
+\begin{itemize}
+\item Cost of interviewing is not zero: takes employees out of productive work (Kuhn and Yu, 2019)
+\end{itemize}
+\bigskip
+\alert{Can AI help?}
+\end{frame}
+\end{comment}
+
+\begin{frame}{Available predictors} \small 
+\alert{We have the following information on applicants}
+\begin{itemize}
+\item Gender
+\item Race/ethnicity: black, white, asian, hispanic
+\item Education: foreign vs. US degree, highest degree, tier of university, degree major
+\item Referral
+\item Prior internship 
+\item Application history to firm
+\item Prior work history; includes company names and job titles \medskip
+\end{itemize}
+
+\alert{Recruiters have little additional info:} they do not interact directly with candidates---pure resume review.
+
+\end{frame}
+
+
+
+\begin{frame}{We compare three interview policies} \small 
+\alert{1.  Human model: predict $I$} 
+\begin{itemize}
+\item Actually interviewed if $I=1$
+\item Create an algorithm designed to mimic the human
+\begin{itemize} \small 
+\item Each applicant receives a score $s^{H} = \hat{E}[I | X]$
+\item Interview if $s^{H} \geq \tau^{H}$ for some threshold.  Call that $I^{H}=1$.
+\end{itemize}
+\end{itemize}
+\smallskip \pause 
+\alert{2. Supervised learning model: predict $H^1$, exploitation only} \small 
+\begin{itemize}
+%\item Supervised learning approach based on static dataset.
+\item Each applicant receives a score $s^{S} = \hat{E}[H^1 | X]$
+\item Interview if $s^{S} \geq \tau^{S}$ for some threshold.  Call that $I^{S}=1$.
+\end{itemize}
+\smallskip \pause
+\alert{3.  Contextual bandit UCB: predict $H^1$ with exploration bonus} \small 
+\begin{itemize}
+%\item Reinforcement learning approach based on dynamic data 
+\item Each applicant receives a score $s^{UCB} = \hat{E}[H^1 | X] + B$, $B$ is an ``exploration bonus'' based on upper confidence bound (UCB)
+\item Interview if $s^{UCB} \geq \tau^{UCB}$ for some threshold.  Call that $I^{UCB}=1$.
+%\item Selected candidates added to the training data and model is updated
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{Our approach: Optimism in the face of uncertainty} 
+
+%\item Start with the same predictions as the SL model \medskip
+  
+%\item But score candidates according to a different rule: 
+$$
+ \text{Score}^{UCB}(X)=\textcolor{black}{\text{Average Quality}(X)} +\alpha  \textcolor{red}{\text{Bonus}(X)}.
+$$
+%Exploration bonus is calculated following  Li, Lu and Zhou (2017):
+\vspace{-15pt}
+\begin{eqnarray*} \textcolor{red}{\text{Bonus}} &=& \sqrt{(X-\bar{X})'V_t^{-1}(X-\bar{X})}\\ 
+&&\text{ where } V_t  = \sum_{j \in D^{UCB}_{t}} (X_j-\bar{X})(X_j-\bar{X})'\end{eqnarray*} 
+\vspace{-3pt}
+
+\alert{Intuition:}\smallskip
+\begin{eqnarray*}
+ \text{Score}^{UCB}(X) &=& \underbrace{\text{Average Quality($X$)}}_{=\text{ Exploitation}}+  \underbrace{\alpha\text{\textcolor{red}{Distinctiveness($X$)}}}_{=\text{ \textcolor{red}{Exploration}}} 
+\end{eqnarray*}
+
+
+%\textcolor{red}{Note: there is no explicit preference given to demographic minorities}
+%the V-1 matrix is reweighting the feature values to emphasize the values that are most 
+%You get a high bonus if your covariates are very unlike the mean.  and this variance matrix here is to account for the fact that some variables just have more variance.  so you get the highest bonus if you have a very different value of a variable that is pretty concentrated otherwise.
+\end{frame}
+
+
+
+
+
+
+ 
+\begin{frame}{Training and testing data} \small 
+
+We divide our sample as follows: \bigskip
+\begin{enumerate}
+\item \alert{Data for algorithm training and testing:} 2016-2017 applicants \smallskip
+\begin{itemize}
+\item Use this data to predict actual interview offers and interview success\smallskip
+\pause
+\end{itemize}
+\item \alert{Data for main analysis:} 2018-2019 applicants\smallskip
+\begin{itemize}
+\item Form $s^H$, $s^{S}$, $s^{UCB}$ for all applicants \smallskip
+%\item Reinforcement model is updated monthly in the 2018-2019 data. \smallskip
+\item Compare differences in interview decisions and productivity of interviews on these data
+\end{itemize}
+\end{enumerate}
+\end{frame}
+
+
+\begin{frame}{Diversity Results} \small 
+ \smallskip
+\alert{Compare demographic composition of interview classes selected by different policies:}  \smallskip
+\begin{itemize}
+\item Actual interview decisions: $E[X | I=1]$ \smallskip
+\item Supervised learning interview decisions: $E[X | I^{S}=1]$ \smallskip
+\item UCB interview decisions: $E[X | I^{UCB}=1]$ \smallskip
+\item Select the same number of people to interview: $E[I]=E[I^{S}]= E[I^{UCB}]$ \smallskip
+\item $X$ is always observed.
+\end{itemize}
+\end{frame}
+
+
+
+
+\frame{
+\frametitle{Race/Ethnicity Outcomes}
+\makebox[\linewidth]{
+\begin{tabular}{cc}
+\textsc{\footnotesize{A. Applicant Shares}} & \textsc{\footnotesize{B.  Actual Decisions (Human)}} \\
+  \includegraphics[scale=0.29]{Output/Jan2021/pie_applicants_byrace_noncampus.pdf} & \includegraphics[scale=0.29]{Output/Jan2021/pie_selAI_Hact_byrace_noncampus.pdf}\\ 
+\textsc{\footnotesize{C. Updating SL}} & \textsc{\footnotesize{D. UCB}}  \\ 
+\includegraphics[scale=0.29]{Output/Jan2021/pie_selAI_Sup_byrace_noncampus.pdf}  &  \includegraphics[scale=0.29]{Output/Jan2021/pie_selAI_Rlogucb_byrace_noncampus.pdf}\\
+\end{tabular}
+}
+}
+
+
+
+\begin{frame}{``Quality'' results} \small 
+
+\alert{Want to compare $E[H^1 | I=1]$ vs. $E[H^1 | I^{S}=1]$ vs. $E[H^1 | I^{UCB}=1]$}\smallskip
+\begin{itemize}
+\item But $H^1$ only observed when $I=1$.  
+\end{itemize}
+\bigskip
+\pause
+\alert{Three approaches} \smallskip
+\begin{enumerate}
+\item \textcolor{asher}{Compare within interviewed only: select top X\% of applicants as ranked by each algorithm and compare $E[H^1| \text{Selected}, I=1]$ } \smallskip
+\item Propensity score reweighting \smallskip
+\item Resume screen leniency
+\end{enumerate}
+\end{frame}
+
+\frame[label=selectiontest]{
+\frametitle{Inverse Propensity Reweighting, Full Sample} 
+
+\alert{Want to compare $E[H|I^{ML}=1]$ vs. $E[H|I=1]$}
+	\begin{itemize}
+	\item Sample selection problem: we only observe hiring outcomes for $I=1$ candidates.  
+	\end{itemize}
+\smallskip
+\alert{Use inverse propensity reweighting}
+	\begin{itemize}
+	\item Intuition: infer $E[H|I^{ML}=1]$ using information on interviewed candidates.
+	\item Reweight outcomes of $I=1$ candidates to give more weight to candidates with high ML-selection propensity (Hirano, Imbens, Ritter, 2003).
+	$$E[H|I^{ML}=1] = E\left[\frac{p(I^{ML}=1 | X)}{p(I=1|X)}H|I=1\right]$$
+	\item Assumption: no selection on unobservables.
+	\end{itemize}
+\smallskip
+\alert{Assuming no selection on unobservables is not crazy in our setting}
+	%\begin{itemize}
+ %   \item Recruiters only see CV variables (which we use)
+%	\item They do not interact with the candidates.
+%	\end{itemize}
+}
+
+
+\frame[label=ipw]{
+\frametitle{Hiring Likelihood, Full Sample}
+\makebox[\linewidth]{\includegraphics[scale=.24]{Data/Revision/AnalysisData/pscore_quality_results/hired_race_aware_comb_seed1666583033/PropensityScoreQualityResults_unblinded.png}}
+\vspace{-20pt}
+
+}
+
+% \begin{itemize}
+%\item Actual hiring yield is 10\%.  When updating SL and UCB models select the same \# of candidates, predicted hiring yield is 30-35\%.
+%\item There are a lot of not-interviewed people with the same observables as interviewed people who are hired.  
+%\end{itemize}
+
+\begin{comment}
+\begin{frame}{Pareto improving interview policy}
+\alert{Can not directly compare $E[H | I^{S}=1]$ vs $E[H | I^{UCB}=1]$ vs $E[H | I=1]$.  But can ask a different question:}
+\medskip
+\begin{itemize}
+\item Can we improve hiring accuracy by constructing an alternative interview policy $\tilde{I}$ that places more weight on algorithmic recommendations? \smallskip
+\item If so, this is evidence that following algorithmic recommendations can improve outcomes on the margin.
+\end{itemize}
+\end{frame}
+\end{comment}
+
+\begin{frame}{An alternative interview policy} \small 
+\alert{$Z$ is random assignment to a lenient (high interview rate) screener}
+$$
+\tilde{I}=
+\begin{cases}
+I^{Z=1} \text{ if } s^{UCB}(X) > \underline{\tau},\\
+I \text{ if }  \underline{\tau} \leq s^{R}(X) \leq \overline{\tau},\\
+I^{Z=0} \text{ if } s^{UCB}(X) < \overline{\tau},\\
+\end{cases}
+$$ \pause
+\begin{itemize}
+\item If UCB score is high, interview as if applicant has a lenient screener
+\item If UCB score is low, interview as if applicant has a strict screener
+\end{itemize}
+\medskip
+\alert{What is the difference in interview outcomes between $I$ and $\tilde{I}$?}
+\begin{itemize}
+\item High UCB score instrument compliers are interviewed
+\item Low UCB score instrument compliers are not interviewed
+\item $\tilde{I}$ is better if $$E[H^1| s^{UCB}(X) > \underline{\tau}, I^{Z=1}>I^{Z=0}] > E[H^1| s^{UCB}(X) < \overline{\tau}, I^{Z=1}>I^{Z=0}]$$
+\end{itemize}
+\end{frame}
+
+
+\begin{comment}
+    
+
+\begin{frame}{Estimate the hiring likelihood of marginally interviewed candidates}
+\alert{Estimate the following regression}
+\begin{eqnarray*} \label{eq:marginal}
+H^1_i \times I_{i} &=& a_{0} + a_{1} I_{i} + \alpha X_{i} + \varepsilon_{i} \text{ for high UCB applicants}\\
+H^1_i \times I_{i} &=& b_{0} + b_{1} I_{i} + \beta X_{i} + \epsilon_{i}  \text{ for low UCB applicants}
+\end{eqnarray*}
+
+\begin{itemize}
+\item $\hat{a}^{OLS}_{1}$ is the average hiring likelihood of interviewed applicants
+\item $\hat{a}^{IV}_{1}$ is the average hiring likelihood of \textbf{complier} interviewed applicants (just like a LATE)
+\end{itemize}
+\end{frame}
+
+\begin{frame}{IV validity}
+  \vspace{10pt}
+  \begin{center}
+\scalebox{0.5}{\makebox[\linewidth]{\input{Output/Dec2019/IVvalidation.tex}}}
+\end{center}
+\end{frame}
+\end{comment}
+
+
+\frame{
+\frametitle{Characteristics of marginal candidates: UCB score}
+
+\makebox[\linewidth]{
+\begin{tabular}{cc}
+\textsc{\footnotesize{A. Black}} & \textsc{\footnotesize{B.  Hispanic}} \\
+\includegraphics[scale=0.29]{Output/Dec2019/IV_highlow_black.pdf} & \includegraphics[scale=0.29]{Output/Dec2019/IV_highlow_hisp.pdf}\\
+\textsc{\footnotesize{C. Female}} & \textsc{\footnotesize{D. Hiring Likelihood}} \\
+\includegraphics[scale=0.29]{Output/Dec2019/IV_highlow_female.pdf} & \includegraphics[scale=0.29]{Output/Dec2019/IV_highlow.pdf}\\
+\end{tabular}
+}
+}
+
+\frame{
+\frametitle{Characteristics of marginal candidates: SL score}
+
+\makebox[\linewidth]{
+\begin{tabular}{cc}
+\textsc{\footnotesize{A. Black}} & \textsc{\footnotesize{B.  Hispanic}} \\
+\includegraphics[scale=0.29]{Output/Dec2019/IVSL_highlow_black.pdf} & \includegraphics[scale=0.29]{Output/Dec2019/IVSL_highlow_hisp.pdf}\\
+\textsc{\footnotesize{C. Female}} & \textsc{\footnotesize{D. Hiring Likelihood}} \\
+\includegraphics[scale=0.29]{Output/Dec2019/IVSL_highlow_female.pdf} & \includegraphics[scale=0.29]{Output/Dec2019/IVSL_highlow.pdf}\\
+\end{tabular}
+}
+}
+
+\frame{
+\frametitle{Conclusion}
+\centering
+\vspace{-20mm}
+\includegraphics[scale=0.5]{Output/presentation_plots/pareto_short4.pdf}
+} 
+
+
+\end{document}
+

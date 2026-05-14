@@ -1,0 +1,1011 @@
+\documentclass[aspectratio=169,t,11pt,table]{beamer}
+\usepackage{slides,math}
+
+%\input{preambles/header_beamer}
+
+\graphicspath{{../}}
+
+% Optionally define `accent`/`accent2` colors for theme customization
+% I recommend changing the top slider on this: https://hslpicker.com/#1e9400
+\definecolor{accent}{HTML}{940034}
+\definecolor{accent2}{HTML}{006896}
+
+\title{Generative AI at Work}
+% originally this was created for the MIT Future of Work Conference in December of 2024
+% was presented at Deutsche Bank and at the TASK conference 
+\date{September 2025}
+\author{Lindsey Raymond }
+\institute{ { Microsoft Research \& MIT}  \\
+TASKS VII: The Economic Impacts of AI on Work and Labor Markets }
+% \\ {\small  Joint with} \\  {\small Erik Brynjolfsson (Stanford) and Danielle Li (MIT)}
+%\addbibresource{references.bib}
+\addbibresource{AugI_Bibliography.bib}
+
+\begin{document}
+
+% ------------------------------------------------------------------------------
+\begin{frame}[noframenumbering,plain]
+\maketitle
+
+%\bottomleft{\footnotesize $^*$A bit of extra info here. Add an asterich to title or author}
+\end{frame}
+% ------------------------------------------------------------------------------
+
+% ------------------------------------------------------------------------------
+% turn this on to turn on an automatic outline slide \section{Common Items}
+% ------------------------------------------------------------------------------
+
+
+\begin{frame}{The old: programmable computers}
+\medskip
+\bi  
+\item[] Traditionally, computers require inputs ($X$) and \underline{instructions} ($f(X)$) to produce output ($Y$)
+\ei 
+\begin{figure}
+\begin{center}
+    \includegraphics[scale=0.60]{figures/presentation_images/trad_programming_LR.png}
+\end{center}
+\end{figure}
+\bi  
+\item[] Computers limited to tasks where we know $f(X)$
+\ei 
+\end{frame}
+
+
+\begin{frame}{The new: learn f(X) from data}
+\medskip
+\bi  
+\item[] Machine learning requires inputs ($X$) and output ($Y$) to \underline{learn} instructions ($f(X)$)
+\ei 
+\begin{figure}
+\begin{center}
+    \includegraphics[scale=0.60]{figures/presentation_images/ml_programming_LR.png}
+\end{center}
+\end{figure}
+\bi  
+\item $f(X)$ is an output, not an input
+\item Polyani's paradox (\cite{autorPolanyiParadoxShape2014})
+\ei 
+\end{frame}
+
+% add pros/cons around computers playing a role in tasks 
+\begin{comment}
+\begin{frame}{Generative AI: optimism and apprehension}
+\alert{Generative AI:} ML that uses learned patterns to generate new content
+\smallskip
+\begin{enumerate}
+    \item Can generative AI expand the set of tasks machines can perform?
+    \bi
+    \medskip
+    \item Reasons to be skeptical: 
+    \bi 
+    \item Decision support tools + human seem to do worse than human or algorithm alone
+    \medskip
+    \item Gulf between lab and real world
+    \medskip
+    \item Coherent but inaccurate 
+    \ei 
+    \ei  \pause
+    % heterogeneity in effects -> f(X) unevenly distributed 
+    \bigskip
+    \item Will generative AI also change the experience of work?
+
+\end{enumerate}
+\end{frame}
+\end{comment}
+
+\begin{frame}{Generative AI: optimism and apprehension}
+\alert{Generative AI:} ML that uses learned patterns to generate new content
+\smallskip
+\begin{itemize}
+    \item \textbf{Optimism}
+    \begin{itemize}
+        \item Expands the set of tasks machines can perform
+        \medskip
+    \end{itemize}
+    \medskip
+    \item \textbf{Apprehension}
+        \begin{itemize}
+            \item Adjustment costs, gulf between lab and real-world scenarios
+        \medskip
+        \pause 
+        \item Humans + machines 
+        \begin{itemize}
+            \item Decision support tools + human seem to do worse than human or algorithm alone (Vaccaro, Almaatouq \& Malone, 2024)
+        \end{itemize}
+        \medskip
+    \item Coherent but inaccurate
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{A paper: Generative AI at Work} {Joint work with Erik Brynjolfsson (Stanford) and Danielle Li (MIT)}
+\begin{enumerate}
+    \item Does access to generative AI suggestions increase productivity? 
+    
+    \only<3>{ \alert{15\% increase in resolutions per hour} }
+      \medskip
+    \item For which workers and why? 
+
+    \only<3>{\alert{Increases are driven by less experienced, less skilled workers} }
+    \medskip
+    \item How does this change the experience of work? 
+        \only<3>{\alert{Attrition, customer interactions}}
+    \medskip
+\end{enumerate}
+\medskip 
+\only<2>{\textcolor{teal}{Setting}: Customer support  
+	\bigskip
+ 
+\textcolor{teal}{Technology}: AI assistant built on GPT-3  \pause
+	\bigskip
+ 
+\textcolor{teal}{Empirical design}: Staggered roll-out  at a Fortune 500  software company
+\medskip }
+\end{frame}
+
+
+
+\begin{frame}{Agenda}
+\be
+\item \textbf{Setting: customer support}
+\bi 
+\item AI chatbot design and output
+\ei 
+\medskip
+\item Data and study design
+\medskip 
+\item Productivity effects
+\bi
+\item Aggregate and by skill and experience
+\item Productivity-experience curve
+\item Copying or learning?
+\item Learning what?
+\ei 
+\medskip
+\item \textcolor{gray}{Experience of work}
+\bi 
+\item \textcolor{gray}{Customer interactions}
+\item \textcolor{gray}{Attrition}
+\ei 
+\ee 
+\end{frame}
+
+\begin{frame}{Customer support is leading AI adoption}
+\textcolor{raspberry}{Technical feasibility: }
+\begin{itemize}
+\item Millions of chats with automatically labeled outcomes 
+\end{itemize} 
+\medskip \pause
+\textcolor{raspberry}{Business need}:
+\begin{itemize} 
+\item High turnover %(60 percent)
+\item Large and persistent performance differences  
+\end{itemize} 
+\medskip \pause
+\textcolor{raspberry}{Technical and social skills required: }
+\begin{itemize}
+\item Computer and accounting knowledge
+\item Social and emotional intelligence 
+\end{itemize} 
+\end{frame}
+
+\begin{frame}{Customer support}
+
+\begin{figure}
+\centering
+\makebox[\linewidth]{\includegraphics[scale=0.23]{figures/presentation_images/live-engagescreen1.pdf}}
+\end{figure}
+\end{frame}
+
+%%%%%DESCRIBE WHY CUSTOMER SERVICE IS AN ML PROBLEM
+\begin{frame}{Why is customer support an ML problem?}
+\begin{enumerate}
+\item \alert{Diagnose the problem} \smallskip
+    \begin{itemize}
+    \item What underlying problems present as ``I can't login"? \bigskip
+     \end{itemize}
+    \pause 
+ \item \alert{Predict what will resolve it} \smallskip
+\begin{itemize}
+ \item What types of solutions have typically worked for this problem? \bigskip
+  \end{itemize} 
+ \pause 
+  \item \alert{Recognize what gets people yelled at} \smallskip
+   \begin{itemize}
+ \item How to communicate in ways that alleviate customer frustration?
+  \end{itemize}
+\end{enumerate}
+
+\end{frame}
+
+
+%%%%%DESCRIBE WHY CUSTOMER SERVICE IS AN ML PROBLEM
+\begin{frame}{Our AI system}
+\textcolor{raspberry}{Model design}: 
+\begin{enumerate}
+\item \alert{Start} from a large language model from the Generative Pre-Trained Transformer (GPT) family of models (GPT-3)
+\medskip \pause
+\item \alert{Train} model to focus on customer service applications using data on historical chats  
+\bi
+\item Text of conversation
+\item Labelled with outcomes: call duration, successfully resolved, customer satisfaction, ``high performer'' or not
+\ei 
+\pause
+ \item \alert{Fine-tuned} with human feedback
+\end{enumerate}
+\bigskip \pause
+\textcolor{raspberry}{System function}: 
+\bi
+\item Real-time text suggestions and links to technical material
+\item Worker retains \alert{full discretion}
+\ei
+\end{frame}
+
+
+
+
+\begin{comment}
+%%%%%DESCRIBE OUR SETTING
+\begin{frame}{Our tool}
+% https://latexdraw.com/how-to-annotate-an-image-in-latex/
+\begin{figure}
+\begin{center}
+    \includegraphics[scale=0.40]{figures/Setting/cresta_customer_v2_redacted.png}
+\end{center}
+\end{figure}
+\end{frame}
+\end{comment}
+
+\begin{frame}{AI tool provides suggestions to the agent}
+% https://latexdraw.com/how-to-annotate-an-image-in-latex/
+\begin{figure}
+\begin{center}
+\makebox[\linewidth]{
+\begin{tabular}{cc}
+\includegraphics[scale=0.25]{figures/productimages/cresta_customer_v2_redacted.png} & 
+ \includegraphics[scale=0.25]{figures/productimages/cresta_example_suggestion.png}
+\end{tabular}
+}
+\end{center}
+\end{figure}
+\begin{itemize}
+\item Recommendations based on responses that are most correlated with successful outcomes
+\item In this case: establishing a friendly, reassuring rapport.
+\end{itemize} 
+\end{frame} 
+
+
+
+
+\begin{comment}
+%\section{Data and Study Overview}
+% hyperlink to the deployment graph
+%\frame{\tableofcontents[currentsubsection]}
+\begin{frame}[label=study-design]{Data and study design}
+\medskip
+\alert{Data}
+\begin{itemize}
+%\item \textcolor{blue}{Research Question:}  \smallskip
+\item \textbf{Conversations:} 3,000,000 chats between January 2020 and June 2021 
+\item \textbf{Agents:} 3,000 agents, 140 teams and 5 firms 
+\item \textcolor{raspberry}{Data:} Chat text, AI output, agent interactions 
+\item \textcolor{raspberry}{Outcomes:} Issues solved per hour and customer satisfaction
+\end{itemize} 
+
+\end{frame}
+ \begin{frame}{Data and study design}
+\alert{Study Design}
+\begin{equation*} \label{eq:dd_main}
+y_{it}= \delta_{t} + \alpha_{i} + \sum_{k \ne -1} \beta_{k}\times 1[t=k] \times AI_{it} + \gamma X_{it}+ \epsilon_{it}
+\end{equation*}
+\begin{itemize} 
+\item AI rolled out over six months at the agent level \hyperlink{deployment-timeline}{\beamerbutton{Timeline}}  
+\item $AI_{it}$ indicates agent $i$ has access to AI assistance at time $t$
+\item Use estimators robust to differential timing
+\end{itemize}
+
+\end{frame}   
+\end{comment}
+
+\begin{frame}{Agenda}
+\be
+\item \textcolor{asher}{Setting: customer support}
+\bi 
+\item \textcolor{asher}{AI chatbot design and output}
+\ei 
+\medskip
+\item \textbf{Data and study design}
+\medskip 
+\item Productivity effects
+\bi
+\item Aggregate and by skill and experience
+\item Productivity-experience curve
+\item Copying or learning?
+\item Learning what?
+\ei 
+\medskip
+\item Experience of work
+\bi 
+\item Customer interactions
+\ei 
+\ee 
+\end{frame} 
+
+
+\begin{frame}[label=data]{Our data}
+\textbf{Sample}
+\bi
+\footnotesize
+\item 3 million customer service chats between 2020-2021 
+\item 5,000 agents; 1,500 treated
+\item 5 firms (data firm and 4 outsourcing firms)
+\ei
+\medskip
+\textbf{Chat level information}
+\bi
+\footnotesize
+\item Customer and agent text
+\item Adherence to AI suggestions
+\item Chat duration
+\ei 
+\medskip
+\textbf{Agent-month level information}
+\bi
+\footnotesize
+\item Average call resolution rate 
+\item Average surveyed customer satisfaction
+\ei
+\hyperlink{summary-stats}{\beamerbutton{Summary stats}} 
+\hyperlink{balance}{\beamerbutton{Balance table}} 
+\end{frame}
+
+
+\begin{frame}{Empirical strategy: staggered rollout of AI}
+\begin{columns}[T] % top align the columns 
+    \begin{column}{.4\textwidth}
+\textcolor{digitalblue}{Rollout shaped by two constraints:}
+\begin{itemize}
+    \item Scheduling
+    \begin{itemize}
+        \item Limited training personnel $\implies$ long rollout
+        \item Scheduling constraints $\implies$ agent-level rollout
+    \end{itemize}
+    \vspace{2mm}
+    \item Budget
+        \begin{itemize}
+        \item Small RCT before deployment
+        \item Fixed dollar budget
+    \end{itemize}
+\end{itemize}
+\end{column}
+    \hspace{-4mm}
+     \begin{column}{.6\textwidth}
+     \begin{center}
+\includegraphics[scale=0.55]{figures/24June2024/deployment_timeline_cumulative.pdf}
+\end{center}
+     \end{column}
+        \hfill
+  \end{columns}
+\end{frame}
+
+
+ \begin{frame}[label=studydesign]{Empirical strategy: staggered rollout of AI}
+\alert{Study Design}
+\only<1>{ 
+$$ \textcolor{raspberry}{\underbrace{\bm{y_{it}}}_{\makebox[0pt]{\text{\shortstack{\normalsize Resolutions per hour }}}}} = \alpha_{i} + \delta_{t} + 
+     \sum^{J}_{j\ne-1}\beta_j (AI_{it} \times  \Ind[t=j]) + \gamma X_{it} + \epsilon_{it}  $$ 
+}
+\only<2>{ 
+$$ y_{it} = \textcolor{raspberry}{\underbrace{\bm{\alpha_{i} + \delta_{t}}}_{\makebox[0pt]{\text{\shortstack{\normalsize Agent + \\ Month FE }}}}} + 
+     \sum^{J}_{j\ne-1}\beta_j (AI_{it} \times  \Ind[t=j]) + \gamma X_{it} + \epsilon_{it}  $$ 
+}
+\only<3>{ 
+$$ y_{it} = \alpha_{i} + \delta_{t} + 
+     \sum^{J}_{j\ne-1}\beta_j (\textcolor{raspberry}{\underbrace{\bm{AI_{it}}}_{\makebox[0pt]{\text{\shortstack{\normalsize AI \\ Turned On }}}}} \times  \Ind[t=j]) + \gamma X_{it} + \epsilon_{it}  $$ 
+}
+\only<4->{ 
+$$ y_{it} = \alpha_{i} + \delta_{t} + 
+     \sum^{J}_{j\ne-1}\beta_j (AI_{it} \times  \Ind[t=j]) + \gamma \textcolor{raspberry}{\underbrace{\bm{X_{it}}}_{\makebox[0pt]{\text{\shortstack{\normalsize Controls }}}}} + \epsilon_{it}  $$ 
+}
+\begin{itemize} 
+\item AI rolled out over six months at the agent level  
+\item $AI_{it}$ indicates agent $i$ has access to AI assistance at time $t$
+\item $ X_{it}$ months of agent tenure
+\item Use estimators robust to differential timing
+\item Data available at the agent-month level
+\end{itemize}
+
+\end{frame} 
+
+
+
+
+% replace agenda 
+\begin{frame}{Agenda}
+\be
+\item \textcolor{asher}{Setting: customer support}
+\bi 
+\item \textcolor{asher}{AI chatbot design and output}
+\ei 
+\medskip
+\item \textcolor{asher}{Data and study design}
+\medskip 
+\item \textbf{Productivity effects}
+\bi
+\item Aggregate and by skill and experience
+\item Productivity-experience curve
+\item Copying or learning?
+\item Learning what?
+\ei 
+\medskip
+\item \textcolor{gray}{Experience of work}
+\bi 
+\item \textcolor{gray}{Customer interactions}
+\ei 
+\ee 
+\end{frame} 
+
+\begin{comment}
+    
+
+\begin{frame}{Gains are evident in the raw data}
+\begin{figure}
+\centering
+\makebox[\linewidth]{
+\begin{tabular}{cc}
+\includegraphics[height=3.6cm]{figures/24June2024/productivity_rph_cresta_kdensity_0.pdf} & \pause \includegraphics[height=3.6cm]{figures/24June2024/productivity_aht_kdensity_0.pdf} \\
+
+\pause \includegraphics[height=3.6cm]{figures/24June2024/productivity_cph_kdensity_0.pdf} &  \pause \includegraphics[height=3.6cm]{figures/24June2024/productivity_fcr_cresta_kdensity_0.pdf} \\
+\end{tabular}
+}
+\end{figure}
+\end{frame}
+\end{comment}
+
+\begin{frame}{Gains are evident in the raw data}
+\begin{figure}
+\centering
+\makebox[\linewidth]{
+\begin{tabular}{cc}
+\includegraphics[height=3.6cm]{figures/24June2024/productivity_rph_cresta_kdensity_1.pdf} &  \pause \includegraphics[height=3.6cm]{figures/24June2024/productivity_aht_kdensity_1.pdf} \\ \pause
+
+\includegraphics[height=3.6cm]{figures/24June2024/productivity_cph_kdensity_1.pdf} &  \pause \includegraphics[height=3.6cm]{figures/24June2024/productivity_fcr_cresta_kdensity_1.pdf} \\
+\end{tabular}
+}
+\end{figure}
+\end{frame}
+
+
+
+\begin{frame}[label=dd-figure]{On average, a 15 percent productivity improvement}
+\begin{figure}[ht!]
+\begin{center}
+\makebox[\linewidth]{
+  \includegraphics[scale=0.5]{figures/15Aug2024/ES_rph_cresta_AS.pdf} 
+}
+\end{center}
+\end{figure}   
+\hyperlink{dd-table}{\beamerbutton{Difference-in-differences table}} 
+\hyperlink{adherence}{\beamerbutton{AI adherence}} 
+\end{frame}
+
+
+\begin{frame}{Similar results across estimators}
+\begin{figure}[ht!]
+\begin{center}
+\makebox[\linewidth]{\includegraphics[scale=0.7]{figures/20Jul2023/ALL_ES_rph_cresta.pdf}
+}
+\end{center}
+\end{figure}
+\end{frame}
+
+
+\begin{frame}[label=adherence]{35\% of AI suggestions followed}
+\begin{figure}[ht!]
+\begin{center}
+\makebox[\linewidth]{
+  \includegraphics[scale=0.7]{figures/24June2024/receptivity_dist.pdf}
+}
+\end{center}
+\end{figure}    
+\end{frame}
+
+
+\begin{frame}{Event studies, additional outcomes}
+\begin{figure}[ht!]
+\begin{center}
+\makebox[\linewidth]{
+\begin{tabular}{cc}
+\textsc{A. Average Handle Time} & \textsc{B.  Chats Per Hour}\\
+\includegraphics[scale=0.25]{figures/15Aug2024/ES_aht_AS.pdf} & \pause \includegraphics[scale=0.25]{figures/15Aug2024/ES_cph_AS.pdf} 
+\\
+\textsc{C. Resolution Rate} & \textsc{D. Customer Satisfaction (NPS)}\\
+\pause  \includegraphics[scale=0.25]{figures/15Aug2024/ES_fcr_cresta_AS.pdf} & \pause  \includegraphics[scale=0.25]{figures/15Aug2024/ES_tnps_cresta_AS.pdf} 
+\\
+\end{tabular}
+}
+\end{center}
+\end{figure}
+\end{frame}
+
+
+
+
+%%%%%%%%%%%%%DIFFERENTIAL EFFECTS BY WORKER SKILL LEVEL
+\begin{frame}{How does the value of AI assistance vary across workers?}
+
+\alert{Higher ability workers use AI more effectively}
+\bi
+\item Prior evidence of skill bias in IT \citep{bartel2007}
+\smallskip
+\item AI requires discretion 
+\ei
+\bigskip \pause
+\alert{Lower-ability workers have more knowledge gaps}
+\bi
+\item ML learns from best workers
+\smallskip
+\item Better workers already know AI suggestions, less skilled workers do not
+\ei
+\bigskip \pause
+\alert{We measure worker skill and experience}
+\bi
+\item \textcolor{teal}{Skill}: pre-AI index of all outcomes
+\smallskip
+\item \textcolor{teal}{Experience}: pre-AI tenure with the firm
+\ei
+\end{frame}
+
+\begin{frame}{Highest returns for the lowest skill agents}
+
+\begin{figure}
+\centering
+\makebox[\linewidth]{
+\begin{tabular}{c}
+\includegraphics[scale=0.55]{figures/15Aug2024/DD_rph_cresta_skill_tenure.pdf} 
+\end{tabular}
+}
+\end{figure}
+\hyperlink{tenure1}{\beamergotobutton{Tenure}}
+\end{frame}
+
+
+
+\begin{frame}[label=skill]{Additional outcomes by worker skill}
+\begin{figure}
+\begin{center}
+\makebox[\linewidth]{
+\begin{tabular}{cc}
+\textsc{A. Average Handle Time} & \textsc{B.  Chats Per Hour}\\
+\includegraphics[scale=0.26]{figures/15Aug2024/DD_aht_skill_tenure.pdf} \pause & \includegraphics[scale=0.26]{figures/15Aug2024/DD_cph_skill_tenure.pdf}  \pause
+\\
+\textsc{C. Resolution Rate} & \textsc{D.  Customer Satisfaction (NPS)}\\
+\includegraphics[scale=0.26]{figures/15Aug2024/DD_fcr_cresta_skill_tenure.pdf} \pause & \includegraphics[scale=0.26]{figures/15Aug2024/DD_tnps_cresta_skill_tenure.pdf} 
+\\
+\end{tabular}
+}
+\end{center}
+\end{figure}
+\end{frame}
+
+%%%%%%%%%%%%%DIFFERENTIAL EFFECTS BY WORKER TENURE 
+
+\begin{frame}[label=tenure1]{Highest returns for the newest agents}
+\begin{figure}
+\centering
+\makebox[\linewidth]{
+\begin{tabular}{c}
+\includegraphics[scale=0.6]{figures/15Aug2024/DD_rph_cresta_tenure_skill.pdf} 
+\end{tabular}
+}
+\end{figure}
+%\hyperlink{skill}{\beamerbutton{Back}} 
+\end{frame}
+
+
+\begin{frame}[label=tenure2]{Additional outcomes by worker tenure}
+\begin{figure}
+\begin{center}
+\makebox[\linewidth]{
+\begin{tabular}{cc}
+\textsc{A. Average Handle Time} & \textsc{B.  Chats Per Hour}\\
+\includegraphics[scale=0.26]{figures/15Aug2024/DD_aht_tenure_skill.pdf} & \pause \includegraphics[scale=0.26]{figures/15Aug2024/DD_cph_tenure_skill.pdf}  \pause
+\\
+\textsc{C. Resolution Rate} & \textsc{D.  Customer Satisfaction (NPS)}\\
+\includegraphics[scale=0.26]{figures/15Aug2024/DD_fcr_cresta_tenure_skill.pdf}  \pause & \includegraphics[scale=0.26]{figures/15Aug2024/DD_tnps_cresta_tenure_skill.pdf} 
+\\
+\end{tabular}
+}
+\end{center}
+\end{figure}
+%\hyperlink{skill}{\beamerbutton{Back}} 
+\end{frame}
+
+
+\begin{frame}{AI assistance helps newer agents ``catch up''}
+\begin{figure}
+\begin{center}
+\makebox[\linewidth]{
+\begin{tabular}{c}
+  \begin{overprint}
+ \onslide<1>\includegraphics[scale=0.6]{figures/15Aug2024/learningcurve_rph_cresta_0.pdf}
+ \onslide<2>\includegraphics[scale=0.6]{figures/15Aug2024/learningcurve_rph_cresta_1.pdf}
+ \onslide<3>\includegraphics[scale=0.6]{figures/15Aug2024/learningcurve_rph_cresta.pdf}
+    \end{overprint} 
+\end{tabular}
+}
+\end{center}
+\end{figure}
+\smallskip
+\end{frame}
+
+
+
+% add subbuttons for these 
+\begin{frame}[label=robustness]{Robustness checks}
+\begin{itemize}
+    \item Instrument individual adoption with earliest date of team adoption \hyperlink{teamcompanyiv}{\beamergotobutton{IV estimates}} 
+    \vspace{3mm}
+    \item Alternative diff-in-diff specifications \hyperlink{altspecs}{\beamergotobutton{Alternative specifications}}
+    \vspace{3mm}
+    \item Analyze randomized control trial \hyperlink{rct}{\beamergotobutton{Randomized control trial}}
+    \vspace{3mm}
+    \item Vary the level of clustering \hyperlink{clustering}{\beamergotobutton{Clustering}}
+    \vspace{3mm}
+    \item Weight by the number of chats \hyperlink{weighting}{\beamergotobutton{Weighting}}
+    \vspace{3mm}
+        \item Mean reversion \hyperlink{meanrev}{\beamergotobutton{mean reversion?}}
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%
+% results we can give ourself some credit for! 
+% add a slide lead up to 
+% pass thtough the text 
+
+\begin{frame}{Testing for worker learning}
+\begin{enumerate}
+    \item \alert{Learning:} examples help workers learn how to manage customers and how to solve problems
+  \pause 
+  \bigskip
+    \begin{itemize} 
+    \item Manager coaching is constrained by time and human capabilities
+    \item[] $\implies$ AI-exposed workers will do better even without AI access
+    \end{itemize} 
+    \pause  
+    \bigskip
+    \item \alert{Blind copying:} workers blindly follow AI recommendations and develop no more human capital than otherwise
+     \bigskip
+    \begin{itemize} \pause 
+    \item[] $\implies$ AI-exposed workers will be no better without AI access
+    \end{itemize} 
+\end{enumerate}
+
+\end{frame}
+
+
+\begin{frame}{Occasional periods of AI outages}
+\begin{figure}
+\begin{center}
+\makebox[\linewidth]{
+\begin{tabular}{c}
+  \includegraphics[scale=0.6]{figures/24June2024/outage3_10sept2020_graph.pdf}
+\end{tabular}
+}
+\end{center}
+\end{figure}
+\smallskip
+\end{frame}
+
+\begin{frame}{AI-exposed workers faster during AI outages after exposure}
+\begin{figure}
+\centering
+\makebox[\linewidth]{
+\begin{tabular}{cc}
+a.  AI Working & b.  AI Outage \\
+\includegraphics[scale=.55]{figures/15Aug2024/ES_aht_nonoutage.pdf} \pause  & \includegraphics[scale=.55]{figures/15Aug2024/ES_aht_outage.pdf} \\
+\end{tabular}
+}
+\end{figure}
+\end{frame}
+
+
+\begin{frame}{Intensive AI users are faster during outages}
+\begin{figure}
+\centering
+\makebox[\linewidth]{
+\begin{tabular}{cc}
+a.  High Initial Adherence & b.  Low Initial Adherence \\
+\includegraphics[scale=.55]{figures/15Aug2024/ES_aht_outage_recept3.pdf} \pause  & \includegraphics[scale=.55]{figures/15Aug2024/ES_aht_outage_recept1.pdf} \\
+\end{tabular}
+}
+\end{figure}
+%\begin{itemize}
+%    \item Consistent with other work from the education context
+%\end{itemize}
+\end{frame}
+
+
+\begin{frame}{Assessing mechanism}
+\begin{enumerate}
+    \item AI learns patterns associated with success
+        \begin{itemize} 
+    \item[] \alert{Challenge:} patterns are not human-interpretable
+    \end{itemize} 
+    \medskip \pause
+    \item Chat transcripts are a window into what workers do
+    \begin{itemize} 
+    \item[] $\implies$ Assess chat text
+    \end{itemize} 
+    \medskip  \pause
+      \end{enumerate}
+    \textcolor{raspberry}{Evidence on mechanism:}
+    \begin{itemize}
+    \item Analyze impacts on English proficiency
+    \item \textcolor{gray}{Compare high and low skill workers' language convergence}
+    \item Impacts by problem topic
+      \end{itemize}
+\end{frame}
+
+
+
+\begin{frame}{English language fluency}
+\begin{itemize}
+    \item Good call center agents communicate with \alert{comprehensible} and \alert{native-sounding} English
+    \vspace{2mm}
+    \item We use the chat transcripts to measure;
+    \begin{enumerate}
+        \item \textbf{Comprehensibility} - a score ranging from 1 (``very difficult to comprehend'') to 5 (``very fluent and easily understandable, with no significant errors'')
+        \vspace{2mm}
+        \item\textbf{Native fluency} -  Interagency Language Roundtable ``functionally native'' proficiency standard score from 1 to 5 
+    \end{enumerate}
+    \item Transcripts scored by Gemini, a LLM, and LLM scores are human-validated
+    \vspace{2mm}
+    \item Does access to AI impact agent comprehensibility or native fluency?
+\end{itemize}
+\end{frame}
+
+\begin{frame}{AI access increases English fluency}
+\begin{figure}
+\begin{center}
+\makebox[\linewidth]{
+    \begin{tabular}{cc}
+\textsc{Comprehensibility Score} &  \textsc{Native Fluency Score}\\
+    \includegraphics[scale=0.4]{figures/15Aug2024/ES_fluency_score_AS.pdf} & \pause
+  \includegraphics[scale=0.4]{figures/15Aug2024/ES_native_score_AS.pdf}\\ 
+\end{tabular}
+}
+\end{center}
+\end{figure}
+\begin{itemize}
+    \item 5\% increase in comprehensibility score
+    \item 6\% increase in native fluency score
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Filipino agents linguistic improvements double the U.S workers}
+\begin{figure}
+\begin{center}
+\makebox[\linewidth]{
+    \begin{tabular}{cc}
+\textsc{Comprehensibility Score} & \textsc{Native Fluency Score}\\
+\includegraphics[scale=0.33]{figures/15Aug2024/languagedd_bycountry_comp.pdf} & \pause \includegraphics[scale=0.33]{figures/15Aug2024/languagedd_bycountry_native.pdf} 
+\end{tabular}
+}
+\end{center}
+\end{figure}
+\begin{itemize}
+\item \textbf{Comprehensibility:} US +3.5\%; Philippines +5.7\%  
+\item \textbf{Native Fluency:} US +2.9\%; Philippines +5.3\%
+\item Customer engagement occurs across a wide range of jobs
+\end{itemize}
+\end{frame}
+
+
+
+\begin{frame}{Identify the chat topic}
+\begin{columns}[T] % top align the columns 
+\begin{column}{.4\textwidth}
+\begin{center}
+    \begin{itemize}
+        \item Randomly sample 5,000 chats
+        \item Ask for a short description of chat topic
+        \item Cluster descriptions into 50 topics
+        \item Classify all conversations into topic 
+        \item Human validation
+    \end{itemize}
+\end{center}
+     \end{column}
+      \hspace{-4mm}
+    \begin{column}{.6\textwidth}
+ \begin{center}
+\includegraphics[scale=0.21, angle=90]{figures/24June2024/hist_topic.pdf}
+\end{center}
+\end{column}
+        \hfill
+  \end{columns}
+\end{frame}
+
+
+
+\begin{comment}
+  \begin{frame}[label=topicdesign]{Empirical strategy for chat topic analysis}
+\alert{Study Design}
+$$ y_{itc} = \delta_{t} + \alpha_{i} + \sum_{r=1}^{4} \beta_r (AI_{it} \times Topic_{cr}) + \gamma X_{itc} + \epsilon_{itc} $$ 
+
+\begin{itemize}
+    \item $\beta_r$ impact of AI assistance on call in duration for chats in topic frequency category $r$
+    \item Data is at the chat level
+    \item $AI_{it}$ is an indicator for if agent $i$ has access to AI recommendations in year-month $t$
+    \item $X_{it}$ includes fixed effects for agent tenure and the overall category of topic frequency 
+\end{itemize}
+\end{frame}    
+\end{comment}
+
+
+
+\begin{frame}{Impacts of AI along topic distribution}
+% \only<1>{
+%\begin{enumerate}
+ %   \item Quality of AI predictions improves with data, but humans also have experience
+%\end{enumerate} }
+%\vspace{2mm}
+     \centerline{\includegraphics[scale=0.65]{figures/15Aug2024/chat_duration_minutes_byagg_topic_freq_pct.pdf}}
+   % \only<3->{\centerline{\includegraphics[scale=0.65]{figures/15Aug2024/chat_duration_byindivtopicexp_pct.pdf}}}
+\begin{center}
+\end{center}
+\begin{itemize}
+\item Effects of AI on novel problems
+\item Pulling workers towards the middle of the performance distribution?
+\end{itemize}
+\end{frame} 
+
+\begin{comment}
+\begin{frame}{Assessing what workers are learning}
+\begin{itemize}
+    \item Top performers generate successful outcomes
+    \vspace{2mm}
+        \begin{itemize} 
+    \item[] $\implies$ Compare high and low skill workers conversations before and after AI 
+    \end{itemize} 
+    \vspace{2mm}
+    \item Do we see changes in workers' language around the introduction of AI assistance?
+    \vspace{2mm}
+    \item Does high and low skill workers' language converge?
+    \vspace{2mm}
+    \end{itemize}
+\end{frame}
+
+
+    
+
+\begin{frame}{AI changes worker language}
+\begin{figure}
+\begin{center}
+\makebox[\linewidth]{
+\begin{tabular}{c}
+\includegraphics[scale=0.6]{figures/06Oct2023/within_agent_sim_to_month_minus1.pdf}
+\end{tabular}
+}
+\end{center}
+\end{figure}
+\end{frame}
+
+
+\begin{frame}[label=high-low-gap]{After AI access, low-skill workers sound more like high-skill workers}
+\begin{figure}
+\begin{center}
+\makebox[\linewidth]{
+\begin{tabular}{c}
+\includegraphics[scale=0.75]{figures/05Apr2023/HL_chat_sim_nagents.pdf}
+\end{tabular}
+}
+\end{center}
+\end{figure}
+\end{frame}
+\end{comment}
+
+\begin{frame}{Conclusion}
+\alert{Evidence from contact centers}
+\begin{itemize}
+\item Clear, quantifiable outcomes  
+\item Mix of repetitive tasks and less routine tasks
+\end{itemize}
+
+\alert{Raises further questions:}
+\begin{itemize}
+\item \textbf{Employment:} Corresponds to 12\% fewer worker-hours
+\begin{itemize}
+    \item Where will those jobs be located?
+\end{itemize}
+\item \textbf{Wages:} Nature of the existing contract structure
+\begin{itemize}
+    \item Workers: performance-based pay
+    \item Outsourcing firms: contracts in hours of work
+\end{itemize}
+\end{itemize}
+
+\bigskip
+\textcolor{raspberry}{Questions:} lraymond@mit.edu
+\end{frame}
+
+
+% ------------------------------------------------------------------------------
+\appendix
+\begin{frame}[allowframebreaks,noframenumbering]{Appendix}
+  \thispagestyle{empty}
+  %\printbibliography
+\end{frame}
+
+
+\begin{frame}{Sample Summary Statistics}\label{summary-stats}
+\begin{table}
+\scalebox{.70}{\makebox[\linewidth]{\input{tables/12Mar2023/summary_table}}}
+    \caption{Sample Summary Statistics}
+    \label{tab:summarystats}
+\end{table}
+\end{frame}
+% ------------------------------------------------------------------------------
+
+\begin{frame}[label=dd-table]{On average, a 15 percent productivity improvement}
+\begin{figure}[ht!]
+\begin{center}
+\scalebox{.6}{\makebox[\linewidth]{\input{tables/15Aug2024/maindd_rph.tex}}}
+\end{center}
+\end{figure}   
+\hyperlink{dd-figure}{\beamerbutton{Back}}
+\end{frame}
+
+\begin{frame}[label=teamcompanyiv]{Team Company IV}
+\begin{center}
+\scalebox{.6}{\makebox[\linewidth]{\input{tables/15Aug2024/ivdd_companylocteam.tex}}}
+\end{center}
+\hyperlink{robustness}{\beamerbutton{Back}} 
+\end{frame}
+
+\begin{frame}[label=altspecs]{Alternative Specifications}
+\begin{center}
+\scalebox{.6}{\makebox[\linewidth]{\input{tables/15Aug2024/refrequest_maindd_rph.tex}}}
+\end{center}
+\hyperlink{robustness}{\beamerbutton{Back}} 
+\end{frame}
+
+
+
+
+
+\begin{frame}[label=rct]{Randomized control trial}
+\begin{center}
+\scalebox{.75}{\makebox[\linewidth]{\input{tables/15Aug2024/rctdd.tex}}}
+\end{center}
+\hyperlink{robustness}{\beamerbutton{Back}} 
+\end{frame}
+
+\begin{frame}[label=clustering]{Robustness to alternative clustering}
+\begin{center}
+\scalebox{.75}{\makebox[\linewidth]{\input{tables/15Aug2024/robustness_clustering.tex}}}
+\end{center}
+\hyperlink{robustness}{\beamerbutton{Back}} 
+\end{frame}
+
+
+\begin{frame}[label=weighting]{Weighting by number of chats}
+\begin{center}
+\scalebox{.75}{\makebox[\linewidth]{\input{tables/15Aug2024/robustdd_nchat_weight.tex}}}
+\end{center}
+\hyperlink{robustness}{\beamerbutton{Back}} 
+\end{frame}
+
+\begin{frame}[label=meanrev]{Evidence of mean reversion?}
+\begin{center}
+\makebox[\linewidth]{
+\includegraphics[scale=0.65]{figures/24June2024/meanrev_rph.pdf} 
+}
+\end{center}
+\hyperlink{robustness}{\beamerbutton{Back}} 
+\end{frame}
+
+\end{document}
+

@@ -1,0 +1,395 @@
+% =========================================================================
+% Seminar / Conference Talk Template
+%
+% Scaffold for /create-talk. Rules live in style.md + structure.md
+% (loaded with this skill); fidelity rules in single-source-of-truth.md;
+% past-talk pitfalls in quality_reports/2026-05-04_seminar_talk_review.md.
+%
+% Format budgets (slides at 60-90 sec/slide pacing):
+%   30-min seminar       25-32 main + 10-15 backup
+%   45-60-min job market 40-50 main + 15-20 backup  (add Preview after Block 3)
+%   15-min short         10-15 main, few backup
+%   5-min lightning       3-5 main, no backup
+%
+% slides.sty macros (most-used):
+%   \bi/\ei \be/\ee     itemize / enumerate
+%   \alert{} \asher{}   raspberry emphasis / gray de-emphasis
+%   \xsmallcitecolor{\citet{...}}    grayed inline citation
+%   \highlight{...}     equation-term wrap (raspberry); also \highlightteal/orange
+%   \tabletitle{Outcome:}{...}       title OUTSIDE the tabular
+%   \bottomleft{\beamergotobutton{Back}}    appendix pills / back-buttons
+%   \imageframe{path}   full-bleed image frame
+%
+% Colors defined in slides.sty:
+%   raspberry teal navy trueblue digitalblue lightblue
+%   purple cranberry orange ruby alice daisy coral kelly asher (gray)
+%   accent / accent2 (\providecolor — do not redefine here)
+%
+% Replace every [TODO: ...] before delivery.
+% =========================================================================
+
+\documentclass[aspectratio=169,t,11pt,table]{beamer}
+\usepackage{slides,math}
+
+\graphicspath{{figures/}{../}}
+
+\title{[TODO: paper title]}
+\author{[TODO: author names]}
+\institute{[TODO: affiliation] \\ [TODO: conference / seminar / lecture name]}
+\date{[TODO: Month YYYY]}
+
+\begin{document}
+
+% BLOCK 1 — TITLE
+\begin{frame}[noframenumbering,plain]
+  \maketitle
+\end{frame}
+
+% BLOCK 2 — HOOK / FRAMING (2-4 slides)
+% Field-level puzzle. No paper-specific machinery, no findings, no
+% citations on the first 1-2 slides.
+\begin{frame}{[TODO: declarative phenomenon — e.g., "Decisions increasingly rely on algorithmic prediction"]}
+  % TODO: open the field-level question. Avoid jargon.
+  \pause
+  \bi
+    \item [TODO: 1st piece of context — concrete, layperson-accessible]
+    \item [TODO: 2nd piece of context]
+  \ei
+\end{frame}
+
+\begin{frame}{[TODO: framing slide 2 — sharpen the puzzle]}
+  % TODO: introduce the tension the paper resolves
+\end{frame}
+
+% BLOCK 3 — PAPER INTRODUCTION (1 slide, 3 builds)
+% Build 1: questions. Build 2: setting/technology/design labels.
+% Build 3: \alert{} answers. Co-author line in second \frame{}{} arg.
+\begin{frame}{A paper: [TODO: short title]}{[TODO: Joint work with X (Affiliation) and Y (Affiliation)]}
+  \be
+    \item<1-> [TODO: question 1 — e.g., "Does X cause Y?"]
+      \only<3>{ \\ \alert{[TODO: 1-line answer with magnitude]} }
+    \item<1-> [TODO: question 2]
+      \only<3>{ \\ \alert{[TODO: 1-line answer with magnitude]} }
+    \item<1-> [TODO: question 3]
+      \only<3>{ \\ \alert{[TODO: 1-line answer with magnitude]} }
+  \ee
+  \onslide<2->{
+    \medskip
+    \textcolor{teal}{Setting:} [TODO: 1-line setting] \\
+    \textcolor{teal}{Technology / Treatment:} [TODO: 1-line] \\
+    \textcolor{teal}{Empirical design:} [TODO: 1-line]
+  }
+\end{frame}
+
+% BLOCK 4 — LITERATURE POSITIONING (1 slide)
+% "Optimism and apprehension" pattern. Two strands as builds. Final
+% build: "This paper:" block. Placement is flexible (before or after
+% Block 3 depending on whether the literature debate IS the puzzle).
+\begin{frame}{[TODO: Topic]: optimism and apprehension}
+  \textcolor{trueblue}{Optimism:}
+  \bi
+    \item<1-> [TODO: claim 1] \xsmallcitecolor{\citet{[TODO: ref1, ref2]}}
+    \item<1-> [TODO: claim 2] \xsmallcitecolor{\citet{[TODO: ref3]}}
+  \ei
+  \pause
+  \medskip
+  \textcolor{raspberry}{Apprehension:}
+  \bi
+    \item<2-> [TODO: counter-claim 1] \xsmallcitecolor{\citet{[TODO: ref4, ref5]}}
+    \item<2-> [TODO: counter-claim 2] \xsmallcitecolor{\citet{[TODO: ref6]}}
+  \ei
+  \pause
+  \bigskip
+  \alert{This paper:} [TODO: 1-2 sentences naming the gap and the contribution]
+\end{frame}
+
+% BLOCK 5 — AGENDA (1 slide, no builds)
+% Re-shown at each section transition; completed sections in \asher{}.
+\begin{frame}{Agenda}
+  \be
+    \item Setting \& data
+    \item Empirical strategy
+    \item [TODO: Section 3 title — first finding block]
+    \item [TODO: Section 4 title — framework + second finding block]
+    \item [TODO: Section 5 title — heterogeneity / robustness]
+  \ee
+\end{frame}
+
+% BLOCK 6 — SETTING (3-5 slides)
+% Pattern: why-this-setting → concrete-example → why-X-is-an-ML-problem.
+% Drop or rename the third slide for non-ML papers. Add a 4th for the
+% treatment object (AI tool, policy, etc.) when relevant.
+\begin{frame}{Why [TODO: setting]?}
+  \bi
+    \item<1-> \alert{[TODO: reason 1 keyword]} — [TODO: 1-line elaboration]
+    \item<2-> \alert{[TODO: reason 2 keyword]} — [TODO: 1-line elaboration]
+    \item<3-> \alert{[TODO: reason 3 keyword]} — [TODO: 1-line elaboration]
+  \ei
+\end{frame}
+
+\begin{frame}{[TODO: concrete example title]}
+  % Use \begin{quotation}...\end{quotation} for an interview quote.
+  % Citation underneath in raspberry or trueblue.
+  \begin{center}
+    \includegraphics[width=0.7\textwidth]{[TODO: screenshot.png]}
+  \end{center}
+\end{frame}
+
+\begin{frame}{Why is [TODO: setting] an [TODO: ML / prediction] problem?}
+  \be
+    \item<1-> \alert{[TODO: prediction structure 1]} — [TODO: 1-line]
+    \item<2-> \alert{[TODO: prediction structure 2]} — [TODO: 1-line]
+    \item<3-> \alert{[TODO: prediction structure 3]} — [TODO: 1-line]
+  \ee
+\end{frame}
+
+% BLOCK 7 — DATA (1-2 slides)
+% Three labeled blocks (Sample / Unit info / Outcomes); pills to backup.
+\begin{frame}{Our data}
+  \textcolor{raspberry}{Sample:} [TODO: 1-line — N units, time range] \\[2pt]
+  \textcolor{teal}{[TODO: Unit]-level information:}
+  \bi
+    \item [TODO: variable type 1]
+    \item [TODO: variable type 2]
+  \ei
+  \medskip
+  \textcolor{digitalblue}{Outcomes:}
+  \bi
+    \item [TODO: outcome 1 (with unit)]
+    \item [TODO: outcome 2 (with unit)]
+  \ei
+  \bottomleft{
+    \hyperlink{summary-stats}{\beamergotobutton{Summary stats}}
+    \hyperlink{balance-table}{\beamergotobutton{Balance}}
+  }
+\end{frame}
+
+% BLOCK 8 — EMPIRICAL STRATEGY (1-3 slides)
+% Visual-first, then equation walkthrough with 4-5 term-by-term builds
+% (dep var → FE → treatment → controls → plain + assumptions).
+% IV: repeat the equation slide for first stage + reduced form.
+% Triple-diff / structural: one slide per equation tier.
+\begin{frame}{Empirical strategy: [TODO: 1-line description of variation]}
+  \begin{columns}
+    \begin{column}{0.6\textwidth}
+      \includegraphics[width=\linewidth]{[TODO: rollout_figure.png]}
+    \end{column}
+    \begin{column}{0.4\textwidth}
+      \bi
+        \item [TODO: constraint / source of variation]
+        \item [TODO: identifying assumption in plain English]
+      \ei
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Empirical strategy: equation}
+  \only<1>{
+    $$ \textcolor{raspberry}{\underbrace{\bm{y_{it}}}_{\text{[TODO: outcome]}}}
+       = \alpha_i + \delta_t + \beta D_{it} + \gamma X_{it} + \varepsilon_{it} $$
+  }
+  \only<2>{
+    $$ y_{it}
+       = \textcolor{raspberry}{\underbrace{\bm{\alpha_i + \delta_t}}_{\text{[TODO: FE structure]}}}
+       + \beta D_{it} + \gamma X_{it} + \varepsilon_{it} $$
+  }
+  \only<3>{
+    $$ y_{it} = \alpha_i + \delta_t
+       + \textcolor{raspberry}{\underbrace{\bm{\beta D_{it}}}_{\text{[TODO: treatment]}}}
+       + \gamma X_{it} + \varepsilon_{it} $$
+  }
+  \only<4>{
+    $$ y_{it} = \alpha_i + \delta_t + \beta D_{it}
+       + \textcolor{raspberry}{\underbrace{\bm{\gamma X_{it}}}_{\text{[TODO: controls]}}}
+       + \varepsilon_{it} $$
+  }
+  \only<5>{
+    $$ y_{it} = \alpha_i + \delta_t + \beta D_{it} + \gamma X_{it} + \varepsilon_{it} $$
+    \medskip
+    \bi
+      \item \alert{Identifying assumption:} [TODO]
+      \item \alert{Cluster standard errors at:} [TODO]
+    \ei
+  }
+\end{frame}
+
+% AGENDA RE-SHOW before Findings
+\begin{frame}{Agenda}
+  \be
+    \item \asher{Setting \& data}
+    \item \asher{Empirical strategy}
+    \item \textbf{[TODO: Section 3 title]}
+    \item \asher{[TODO: Section 4 title]}
+    \item \asher{[TODO: Section 5 title]}
+  \ee
+\end{frame}
+
+% BLOCK 9 — FINDINGS, FIRST HALF (4-8 slides)
+% Declarative title (state the finding, not "Main results"). Figure body
+% with progressive builds; optional magnitude sidebar; pills to backup.
+% Standard follow-up: "Similar results across estimators".
+\begin{frame}{[TODO: headline finding — declarative, with magnitude]}
+  \begin{columns}
+    \begin{column}{0.7\textwidth}
+      \includegraphics[width=\linewidth]{[TODO: main_finding.png]}
+    \end{column}
+    \begin{column}{0.3\textwidth}
+      \alert{Magnitude:} [TODO: % effect or units] \\[6pt]
+      \alert{Sample:} [TODO: N units] \\[6pt]
+      [TODO: 1-line takeaway]
+    \end{column}
+  \end{columns}
+  \bottomleft{
+    \hyperlink{dd-table}{\beamergotobutton{Table}}
+    \hyperlink{altspecs}{\beamergotobutton{Alt. specifications}}
+  }
+\end{frame}
+
+\begin{frame}{Similar results across estimators}
+  \begin{center}
+    \includegraphics[width=0.8\textwidth]{[TODO: estimator_comparison.png]}
+  \end{center}
+\end{frame}
+
+% Repeat finding slides as needed for first half (typically 2-4 more)
+
+% AGENDA RE-SHOW before Framework
+\begin{frame}{Agenda}
+  \be
+    \item \asher{Setting \& data}
+    \item \asher{Empirical strategy}
+    \item \asher{[TODO: Section 3 title]}
+    \item \textbf{[TODO: Section 4 title]}
+    \item \asher{[TODO: Section 5 title]}
+  \ee
+\end{frame}
+
+% BLOCK 10 — CONCEPTUAL FRAMEWORK (2-3 slides, MID-DECK)
+% Place AFTER the first finding. Two-color comparison (trueblue vs
+% raspberry), 3 builds: defining bullets → parallel equations → diff.
+\begin{frame}{[TODO: Framework title — e.g., "Humans and algorithms are distinct prediction technologies"]}
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      \centering
+      \textcolor{trueblue}{[TODO: Entity A]} \\
+      {\color{trueblue}\rule{\linewidth}{2pt}}
+      \bi
+        \item<1-> \textcolor{trueblue}{[TODO: defining property]}
+        \item<2-> $\hat{y}^A_i = [TODO]$
+      \ei
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \centering
+      \textcolor{raspberry}{[TODO: Entity B]} \\
+      {\color{raspberry}\rule{\linewidth}{2pt}}
+      \bi
+        \item<1-> \textcolor{raspberry}{[TODO: defining property]}
+        \item<2-> $\hat{y}^B_i = [TODO]$
+      \ei
+    \end{column}
+  \end{columns}
+  \onslide<3->{
+    \bigskip
+    \centering
+    $\hat{y}^A_i - \hat{y}^B_i = [TODO: difference equation]$
+    \medskip
+    \alert{Prediction:} [TODO: testable implication]
+  }
+\end{frame}
+
+% BLOCK 11 — FINDINGS, SECOND HALF (4-6 slides)
+% Same template as Block 9. Tests framework predictions, not headline.
+\begin{frame}{[TODO: sub-finding 1 — declarative]}
+  \begin{center}
+    \includegraphics[width=0.8\textwidth]{[TODO: subfinding1.png]}
+  \end{center}
+\end{frame}
+
+\begin{frame}{[TODO: heterogeneity finding — declarative]}
+  \begin{center}
+    \includegraphics[width=0.8\textwidth]{[TODO: heterogeneity.png]}
+  \end{center}
+\end{frame}
+
+% BLOCK 12 — ROBUSTNESS (2-4 slides)
+% 3+ challenges: checklist re-show with progressive graying.
+% 1-2 challenges: direct deep-dive, skip the re-shows.
+\begin{frame}{Assessing the empirical strategy}
+  \bi
+    \item<1-> \textbf{Challenge 1:} [TODO: e.g., "Pre-trends"]
+    \item<2-> \textbf{Challenge 2:} [TODO: e.g., "Selection into treatment"]
+    \item<3-> \textbf{Challenge 3:} [TODO: e.g., "Spillovers"]
+  \ei
+\end{frame}
+
+\begin{frame}{[TODO: deep-dive on Challenge 1]}
+  \begin{center}
+    \includegraphics[width=0.7\textwidth]{[TODO: robustness1.png]}
+  \end{center}
+\end{frame}
+
+\begin{frame}{Assessing the empirical strategy}
+  \bi
+    \item \asher{Challenge 1: [TODO]} \checkmark
+    \item \textbf{Challenge 2:} [TODO]
+    \item Challenge 3: [TODO]
+  \ei
+\end{frame}
+
+% CONCLUSION (1-2 slides)
+% "When [trigger]:" → enumerated findings → \alert{} so-what → email.
+\begin{frame}{Conclusion}
+  \textbf{When [TODO: trigger condition mirroring research question]:}
+  \be
+    \item [TODO: Finding 1 with magnitude]
+    \item [TODO: Finding 2 with magnitude]
+    \item [TODO: Finding 3 with magnitude]
+  \ee
+  \medskip
+  \alert{[TODO: One-line so-what claim]:}
+  \be
+    \item [TODO: Implication 1]
+    \item [TODO: Implication 2]
+  \ee
+  \medskip
+  \textcolor{raspberry}{[TODO: email@institution.edu]}
+\end{frame}
+
+% APPENDIX + BACKUP (8-15 slides)
+% Each backup frame: \label{name} matching the originator's \hyperlink,
+% single content (no builds), tiny italic methodology note, back-button.
+\appendix
+\begin{frame}[allowframebreaks,noframenumbering]{Appendix}\end{frame}
+
+\begin{frame}{Summary statistics}\label{summary-stats}
+  \begin{center}
+    \scalebox{.75}{\makebox[\linewidth]{\input{tables/[TODO: summary_stats.tex]}}}
+  \end{center}
+  \parbox{0.8\textwidth}{\justifying \tiny \textit{Note: [TODO: methodology note].}}
+  \bottomleft{\hyperlink{data}{\beamergotobutton{Back}}}
+\end{frame}
+
+\begin{frame}{Balance table}\label{balance-table}
+  \begin{center}
+    \scalebox{.75}{\makebox[\linewidth]{\input{tables/[TODO: balance.tex]}}}
+  \end{center}
+  \parbox{0.8\textwidth}{\justifying \tiny \textit{Note: [TODO: methodology note].}}
+  \bottomleft{\hyperlink{data}{\beamergotobutton{Back}}}
+\end{frame}
+
+\begin{frame}{[TODO: backup table title]}\label{dd-table}
+  \tabletitle{Outcome:}{[TODO: $Y_{it}$ description]}
+  \begin{center}
+    \scalebox{.7}{\makebox[\linewidth]{\input{tables/[TODO: main_table.tex]}}}
+  \end{center}
+  \bottomleft{\hyperlink{[TODO: main finding label]}{\beamergotobutton{Back}}}
+\end{frame}
+
+\begin{frame}{Alternative specifications}\label{altspecs}
+  \begin{center}
+    \scalebox{.7}{\makebox[\linewidth]{\input{tables/[TODO: altspecs.tex]}}}
+  \end{center}
+  \bottomleft{\hyperlink{[TODO]}{\beamergotobutton{Back}}}
+\end{frame}
+
+\end{document}

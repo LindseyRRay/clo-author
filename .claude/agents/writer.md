@@ -15,57 +15,20 @@ Given approved code output (Debugger score >= 80) and the strategy memo, draft p
 
 ---
 
-## Section Standards
+## Read First
 
-### Introduction (first 2 pages must include)
-- Research question (1 sentence)
-- Why it matters (policy or theory)
-- What you do (identification preview)
-- What you find (main result with effect size and units)
-- **Contribution paragraph** — how this advances the literature
+Before drafting any section, read the on-demand drafting rules:
+- `.claude/skills/draft-paper/style.md` — notation protocol, section-length norms, placeholder conventions, banned-pattern checklist
+- `.claude/skills/draft-paper/templates/[section].md` — paragraph-by-paragraph scaffold for the section you are drafting
+- `~/.claude/rules/writing-style.md` — prose-craft rules (sentence flow, paragraph structure, results-vs-interpretation, intro structure, tone)
 
-### Literature Review
-- Organized by theme, not chronologically
-- Draw from Librarian's annotated bibliography
-- Position your paper relative to the frontier
+These carry the full section standards and writing rules. Quick reminders:
 
-### Data
-- Source, sample period, sample size
-- Variable definitions (treatment, outcome, controls)
-- Summary statistics table reference
-- Sample restrictions with justification
-
-### Empirical Strategy
-- Per-design template from strategy memo
-- Equations with consistent notation ($Y_{it}$, $D_{it}$, $ATT(g,t)$)
-- Assumptions stated and discussed
-- Identification threats acknowledged
-
-### Results
-- Main results first, then robustness
-- Statistical AND economic significance
-- Proper table/figure references
-- Effect sizes with units (always)
-
-### Conclusion
-- Restate finding (1 paragraph)
-- Policy implications
-- Limitations
-- Future work (brief)
-
-## Writing Rules
-
-### Anti-Hedging (enforced)
-Remove: "interestingly", "it is worth noting", "arguably", "it is important to note", "it should be noted", "needless to say"
-
-### Notation Protocol
-- $Y_{it}$ for outcomes, $D_{it}$ for treatment, $X_{it}$ for controls
-- Consistent throughout — same symbol never means two things
-- Define every symbol at first use
-
-### Effect Sizes
-- Always report with units: "a 10% increase in X leads to a 2.3 percentage point decrease in Y"
-- Never: "the coefficient is significant"
+- **Introduction:** contribution paragraph within the first 2 pages; main result stated with effect size and units.
+- **Notation:** $Y_{it}$ outcomes, $D_{it}$ treatment, $X_{it}$ controls — consistent throughout; define every symbol at first use.
+- **Effect sizes:** always with units ("a 10% increase in X leads to a 2.3 percentage point decrease in Y"); never "the coefficient is significant".
+- **Anti-hedging:** remove "interestingly", "it is worth noting", "arguably", "it is important to note", "it should be noted", "needless to say".
+- **Placeholders:** `%TBD:` for missing results, `%VERIFY:` for unconfirmed citations — never fabricate.
 
 ## Humanizer Pass
 

@@ -1,0 +1,2263 @@
+\documentclass[aspectratio=169,t,11pt,table]{beamer}
+\usepackage{slides,math}
+
+%\input{Preambles/header_beamer}
+
+\graphicspath{{../}}
+
+% Optionally define `accent`/`accent2` colors for theme customization
+% I recommend changing the top slider on this: https://hslpicker.com/#1e9400
+\definecolor{accent}{HTML}{940034}
+\definecolor{accent2}{HTML}{006896}
+
+\title{The Market Effects of Algorithms}
+\date{February 2025}
+\author{Lindsey Raymond}
+\institute{Microsoft Research \& Harvard University}
+%\addbibresource{references.bib}
+\addbibresource{CNA_Bibliography.bib}
+
+\begin{document}
+
+% ------------------------------------------------------------------------------
+\begin{frame}[noframenumbering,plain]
+\maketitle
+
+%\bottomleft{\footnotesize $^*$A bit of extra info here. Add an asterich to title or author}
+\end{frame}
+% ------------------------------------------------------------------------------
+
+% ------------------------------------------------------------------------------
+% turn this on to turn on an automatic outline slide \section{Common Items}
+% ------------------------------------------------------------------------------
+
+
+
+\begin{frame}{Decisions increasingly rely on algorithmic prediction}
+\begin{columns}[T] % top align the columns 
+    \begin{column}{.35\textwidth}
+    \vspace{5mm}
+     \centering
+     \begin{overprint}
+   % \onslide<1>\includegraphics[width=.8\textwidth]{Figures/Icons/icon_human.png}
+    \onslide<5>\includegraphics[width=.7\textwidth]{Figures/Icons/icon_judge_v_algo.png}
+    \onslide<6>\includegraphics[width=.8\textwidth]{Figures/Icons/icon_judge_v_algo_question.png}
+   \onslide<7>\includegraphics[width=.8\textwidth]{Figures/Icons/icon_judge_v_hiring1.png}
+    \onslide<8->\includegraphics[width=.8\textwidth]{Figures/Icons/icon_judge_v_hiring2.png}
+     \end{overprint} 
+    \end{column}
+    \hspace{-8mm}
+        \begin{column}{.65\textwidth} 
+        \begin{itemize} \small 
+        \item Many decisions require prediction
+       \only<2-4>{    \begin{itemize}
+      \item  Evaluating people: \includegraphics[width=1.25cm]{Figures/Icons/evaluating_people.png} 
+    \only<3-4>{  \item Valuing assets: \includegraphics[width=1.25cm]{Figures/Icons/valuing_assets.png} }
+     \only<4>{ \item Generating suggestions:\includegraphics[width=1.25cm]{Figures/Icons/generating_suggestions.png} }
+  \end{itemize}  }
+   \onslide<5->{\item Data + machine learning $\implies$  algorithms}   \vspace{1mm}
+  \onslide<6->{ \item Algorithms can improve decisions} 
+  \onslide<8->{  \item Many predictions occur in \textcolor{red}{markets} with possible equilibrium effects
+  \begin{itemize}
+      \item Evaluating people: \includegraphics[width=1cm]{Figures/Icons/evaluating_people_red.png}
+      \item Valuing assets: \includegraphics[width=1cm]{Figures/Icons/valuing_assets_red.png}
+      \item Generating suggestions:\includegraphics[width=1cm]{Figures/Icons/generating_suggestions_red.png}
+  \end{itemize} }
+  \vspace{1mm}
+  \onslide<9->{\item Studying market effects presents challenges}
+  \end{itemize}
+    \end{column} 
+    \hfill
+  \end{columns}
+\end{frame}
+
+
+
+\begin{comment}
+    
+
+\begin{frame}{Do algorithms have market effects?}{}
+  \textbf{When algorithmic prediction becomes available:}
+  \begin{enumerate}
+   \vspace{1mm}
+    \item Does market \alert{participation} change?
+     \vspace{1mm} 
+     \item Do \alert{prices} change?
+     \vspace{1mm}
+ \item How do algorithms and humans \alert{exist} together?
+     \vspace{1mm} 
+  \end{enumerate}
+  \vspace{4mm}
+  \onslide<2->{
+ \textcolor{raspberry}{\textbf{Challenge:} market effects require}
+  \begin{enumerate}
+   \item  A novel empirical design
+    \vspace{1mm}
+  \item A market-level treatment 
+    \end{enumerate} }
+\end{frame}
+\end{comment}
+
+\begin{frame}{Housing as a setting}
+\vspace{-2mm}
+\begin{itemize} \small 
+    \item An important asset market where investment is a prediction problem
+    \begin{itemize} \footnotesize
+        \item \textcolor{gray}{Sample: Georgia, North Carolina, South Carolina and Tennessee }
+    \end{itemize}
+    \vspace{2mm} 
+ \onslide<2->{   \item A market-level natural experiment: county record digitization }
+       \begin{itemize} \footnotesize
+  \onslide<3->{    \item \textcolor{gray}{Digitization: physical $\implies$ machine-readable records}  }
+ \end{itemize} 
+     \end{itemize}
+     \vspace{5mm}
+   \onslide<3->{ 
+ \begin{adjustbox}{width = .45\textwidth, center}
+    \includegraphics{Figures/DR_figures/rodcounty_digitization_all_DR.pdf} 
+  \end{adjustbox} 
+}
+\end{frame}
+
+
+
+
+
+
+\begin{comment}
+\begin{frame}{This paper: algorithms in the US housing market}{}
+ With the digitization of housing records:
+  \begin{enumerate} 
+   \vspace{4mm}
+    \item Do algorithm-augmented investors (algorithmic investors) enter the market?
+     \vspace{4mm} 
+     \item Do house prices change and why?
+     \vspace{4mm}
+    \item What happens to human investment?
+     \vspace{4mm} 
+  \end{enumerate} 
+\end{frame}
+\begin{frame}{This paper: algorithms in the US housing market}{}
+\begin{itemize} \small 
+    \item Housing as a setting:
+         \vspace{2mm}
+    \begin{itemize} \footnotesize
+    \item An important asset market where investment is a \alert{prediction} problem
+    \vspace{2mm} 
+    \item A \alert{market-level} natural experiment: county digitization
+     \end{itemize}
+     \vspace{2mm}
+   \onslide<2->{ 
+      \item  With the digitization of housing records:
+  \begin{enumerate} \footnotesize
+   \vspace{2mm}
+    \item Do investors using algorithms enter the market?
+     \vspace{2mm} 
+     \item Do house \alert{prices} change and why?
+     \vspace{2mm}
+    \item Do human investors remain in the market or is there coexistence?
+     \vspace{1mm} 
+  \end{enumerate} }
+    \end{itemize}
+\end{frame}
+
+
+\begin{frame}{The natural experiment: county record digitization}{}
+ \begin{adjustbox}{width = .6\textwidth, center}
+    \includegraphics{Figures/DR_figures/rodcounty_digitization_all_DR.pdf} 
+  \end{adjustbox} 
+  \vspace{-4mm}
+   \begin{itemize} \footnotesize
+     \item Sample: Georgia, North Carolina, South Carolina and Tennessee 
+    \item Digitization: physical $\implies$ machine-readable records
+ \end{itemize}
+\end{frame}
+    \begin{frame}{This paper: algorithms in the US housing market}
+\textbf{Why study the housing market?}
+    \begin{columns}[T]
+    \begin{column}{.4\textwidth}
+\begin{enumerate}
+{\small 
+\vspace{2mm}
+    \item A \alert{large} and \alert{important} setting
+    \vspace{2mm}
+    \item A \alert{physical} asset market 
+    \vspace{2mm}
+    \item Investment decisions depend on a \alert{prediction}
+       \vspace{2mm}
+    \item A \alert{market-level} natural experiment: county record \alert{digitization} }
+\end{enumerate}
+    \end{column}
+        \hspace{-8mm}
+    \begin{column}{.6\textwidth} 
+  \begin{adjustbox}{width = .9\textwidth, center}
+    \includegraphics{Figures/DR_figures/rodcounty_digitization_all_DR.pdf} 
+  \end{adjustbox}
+    \end{column}
+  \end{columns}
+\end{frame}
+\end{comment}
+
+\begin{frame}{This paper: algorithms in the US housing market}{} \footnotesize
+\vspace{-3mm}
+\begin{enumerate}
+    \item \alert{County digitization leads to entry by algorithm-augmented investors}
+       \onslide<1->{      \begin{itemize}  \scriptsize
+                 \item Digitization increases algorithmic investor share of house sold from 0\% to 2\% and 10\% of investment activity
+             \end{itemize} }
+    \vspace{1mm} 
+  \item \alert{Conceptual framework}
+ \onslide<2->{   \begin{itemize} \scriptsize
+       \item (1) Algorithms follow data, while (2) humans see additional information but may be biased
+       \vspace{1mm}
+        \item Pre-existing race penalty: minority houses sell for 5\% less than comparable white-owned homes
+   \end{itemize} }
+     \vspace{1mm} 
+  \item \alert{House prices rise, particularly for minority sellers}
+     \onslide<3->{        \begin{itemize}  \scriptsize
+              \vspace{1mm}
+              \item After digitization, racial disparities shrink 40\%, primarily \textbf{through competition}  
+              \vspace{1mm}
+              \item Analysis of realized returns and house images suggests arbitrage
+          %    \vspace{1mm} 
+         %     \item Overall house prices rise by 2\%
+            \end{itemize} }
+        \item \alert{Human and algorithmic investor specialization}
+  \onslide<4->{  \begin{itemize}\scriptsize
+        \item Total houses bought by human investors constant but shifts by 15\% toward less-predictable houses
+    \end{itemize} }
+\end{enumerate}
+\end{frame}
+
+
+
+%         \item Advances in data and machine learning: a fundamentally different approach to building decisions support systems  \xsmallcitecolor{\citet{atheyscience2017, halevy2009, krizhevsky_imagenet_2012, hintonspeech2012, silver_mastering_2016, sun2017revisitingunreasonableeffectivenessdata}}
+
+\begin{frame}{Algorithms: optimism and apprehension}{}
+\begin{itemize} \footnotesize 
+    \item \textbf{Evaluating human and algorithmic predictions}
+   \only<1>{  \begin{itemize}
+    \scriptsize
+        \item Limitations of human decision-making drove early experimentation
+        \xsmallcitecolor{\citet{dawesbook2001, tetlock_expert_2005}}
+        \item Progress on evaluation
+        \xsmallcitecolor{\citet{kleinbergPredictionPolicyProblems2015b, kleinberg2017, liHiringExplorationNBER2020, mullainathan_diagnosing_2022, rambachanIdentifyingPredictionMistakes, Dietvorst2014AlgorithmAP, jung_simple_2020, bloom_rationalizing_2025, hoffman2018, cowgill2020, mullainathanobermeyer2022}}
+        \item Improved prediction can be useful
+         \xsmallcitecolor{\citet{brynraymondli, harrisyellen2023, noyExperimentalEvidenceProductivity2023, doshicreativity, grimon_better_2024, gruber_managing_2020, tonerrodgers2024science, agarwalCombiningHumanExpertise, otisUnevenImpactGenerative2023}}
+    \end{itemize} }
+    \vspace{1mm}
+    \item \textbf{Growing literature on market effects}  
+        \only<2>{
+    \begin{itemize}  \scriptsize
+        \item Risks of reliance on a single algorithm 
+        \xsmallcitecolor{\citet{assad2023, Kleinberg2021AlgorithmicMA, fish2024algorithmiccollusionlargelanguage, calvanoAI, calderwang2023, toups_ecosystem-level_2024, MacKay2023}}
+        \item Emergence of ``arms races'' and strategic interactions
+        \xsmallcitecolor{\citet{budishHighFrequencyTradingArms2015, aquilinaQuantifyingHighFrequencyTrading2022, chaboudRiseMachinesAlgorithmic2014, jones_what_2013, björkegren2020manipulationproofmachinelearning, akbarpour2023, upsonMultipleMarketsAlgorithmic2017, gonczarowski2020matching}}
+    \end{itemize} }
+    \vspace{1mm}
+    \item \textbf{This paper:}
+    \onslide<3->{
+    \begin{itemize}
+        \item Multiple firms with different algorithms 
+        \vspace{2mm}
+        \item Study prices, entry and allocation between algorithmic and human investors
+        \vspace{2mm}
+        \item Novel empirical strategy
+         \vspace{2mm}
+         \item Algorithms impact racial disparities through competition 
+ % monopsonistic input market
+    \end{itemize} }
+    \end{itemize}
+\end{frame}
+
+
+
+\begin{frame}{Agenda}
+  \begin{enumerate}
+    \item Setup
+    \begin{itemize}
+        \item Setting: Housing
+          \vspace{1mm}
+    \item \gray{Data and Empirical Strategy}
+    \end{itemize} 
+    \vspace{1mm}
+    \item \gray{County digitization leads to entry by algorithmic investors}
+    \vspace{1mm}
+     \item \gray{Conceptual Framework}
+    \vspace{1mm}
+    \item \gray{House prices rise, particularly for minority sellers}   
+    \vspace{1mm}
+    \item \gray{Human and algorithmic investor specialization}
+  \end{enumerate}
+   \vspace{2mm}
+  \end{frame}
+
+
+
+
+\begin{frame}{Setting: single-family homes}\label{setting}
+\begin{itemize} \small 
+    \item Sample: single-family homes in Tennessee, North Carolina, South Carolina and Georgia, 2009--2021
+    \begin{itemize} \footnotesize
+        \item Most of housing stock, important in rental market, vehicle for wealth accumulation \xsmallcitecolor{[\citet{u.s.censusbureauS2504PhysicalHousing2021, u.s.censusbureauS2504PhysicalHousing2021, neal2020, derenoncourtwealth2022, cutlerRiseDeclineAmerican1999}]}
+    \end{itemize}
+    \vspace{2mm}
+ \onslide<2->{   \item Data: comprehensive records collected by law by counties 
+        \begin{itemize} \footnotesize
+           \item Buyer and seller, housing characteristics, sale price, date of sale, transaction details
+           \vspace{1mm}
+            \item \alert{7.2 million arms-length} transactions across 4.8 million houses
+          \vspace{1mm}
+         \item Average house is a \alert{2-bed, 2-bath} house that sells for \alert{\$194,270}
+       \end{itemize}
+       \vspace{2mm} }
+  \onslide<3->{    \item Two groups of buyers: owner occupiers (85\%) and investors (15\%) \xsmallcitecolor{[\citet{bayer_investors_2021}]}
+     \begin{itemize} \footnotesize
+         \item Investing depends on a \alert{prediction} 
+     \end{itemize} }
+    \end{itemize} 
+\bottomleft{
+   \hyperlink{transsummarystats}{\beamergotobutton{Summary statistics}}
+   \hyperlink{datacoverage}{\beamergotobutton{Coverage plot}}
+}
+\end{frame}
+
+
+
+
+
+  
+
+
+
+
+\begin{frame}{Defining the ideal experiment}
+\only<1-3>{
+    \begin{columns}[T]
+        % Left Column (Market A)
+        \begin{column}{.5\textwidth}
+            \centering
+            \textcolor{accentblue}{Treatment Group} \\
+            {\color{accentblue}\rule{\linewidth}{2pt}}
+            \vspace{-4mm}
+                \begin{itemize}
+                    \item \textcolor{accentblue}{AI-augmented doctors}
+                \end{itemize}
+        \end{column}
+        \hfill
+        % Right Column (Market B)
+        \begin{column}{.5\textwidth}
+            \centering
+            \textcolor{raspberry}{Control Group} \\
+            {\color{raspberry}\rule{\linewidth}{2pt}}
+            \vspace{-4mm}
+                \begin{itemize}
+                    \item \textcolor{raspberry}{Doctors relying on human judgment}
+                \end{itemize}
+        \end{column}
+    \end{columns}
+    \vspace{8mm}
+    \textbf{Experimental setup for decision quality:}
+    \vspace{4mm}
+    \begin{enumerate} \small
+        \item Randomize doctors into treatment and control groups
+        \vspace{1mm}
+   \only<2-3>{     \item Turn on AI suggestions for treatment group }
+        \vspace{1mm}
+         \only<3>{   \item Compare decision quality }
+    \end{enumerate}
+}
+\only<4->{    \begin{columns}[T]
+        % Left Column (Market A)
+        \begin{column}{.5\textwidth}
+            \centering
+            \textcolor{accentblue}{Market A (Treated)} \\
+            {\color{accentblue}\rule{\linewidth}{2pt}}
+            \vspace{-4mm}
+                \begin{itemize}
+                    \item \textcolor{accentblue}{Algorithmic predictions is possible}
+                \end{itemize}
+        \end{column}        
+        \hfill
+        % Right Column (Market B)
+        \begin{column}{.5\textwidth}
+            \centering
+            \textcolor{raspberry}{Market B (Control)} \\
+            {\color{raspberry}\rule{\linewidth}{2pt}}
+            \vspace{-4mm}
+                \begin{itemize}
+                    \item \textcolor{raspberry}{Human judgment}
+                \end{itemize}
+        \end{column}
+    \end{columns}
+}
+    \vspace{8mm}
+
+    % Challenges Section
+    \onslide<5->{
+        \textbf{Three Challenges:}
+        \vspace{1mm}
+        \begin{enumerate} \footnotesize
+            \item What is the treatment?
+                \begin{itemize} \footnotesize
+                    \item \textcolor{gray}{How to make algorithmic prediction possible across a market?}
+                \end{itemize}
+                \vspace{1mm}
+                           \item Causal evidence?
+                \begin{itemize} \footnotesize
+                    \item \textcolor{gray}{Is there a source of market-level natural variation?}
+                \end{itemize}
+                \vspace{1mm}
+                \item How to measure use?
+                \begin{itemize} \footnotesize
+                    \item \textcolor{gray}{How to measure AI-augmented investors?}
+                \end{itemize}
+                \vspace{1mm}
+
+        \end{enumerate}
+    }
+\end{frame}
+
+
+
+
+
+\begin{frame}{Natural experiment: county digitization}{}\label{county_rollout}
+  \begin{columns}[T]
+    \begin{column}{.6\textwidth}
+        \begin{overprint}
+    \onslide<4->\includegraphics[width=\textwidth]{Figures/DR_figures/rodcounty_digitization_all_DR.pdf}
+   %   \onslide<6->\includegraphics[width=\textwidth]{Figures/DR_figures/rod_county_digitization_bystate_DR.pdf}
+      \end{overprint}
+    %  \note{Collected from county officials}
+    \end{column}
+    \hspace{1mm}
+    \begin{column}{.4\textwidth} 
+    \small
+    \vspace{-3mm}
+    \begin{itemize}
+    \item Machine learning depends on \textbf{machine-readable}, relevant training data
+  \only<1>{  \begin{itemize}
+        \item \gray{\footnotesize County housing records high quality training data}
+    \end{itemize} }
+    \vspace{2mm}
+        \onslide<2->{\item ``Open Government'' movement }
+        \only<2>{
+        \begin{itemize}
+        \item \gray{\footnotesize Open and machine-readable data}
+     %   \item \gray{\footnotesize First memorandum signed by President Obama}
+    \end{itemize}   }
+        \vspace{2mm}
+       \onslide<3->{  \item County digitization }
+               \begin{itemize} \footnotesize
+                \onslide<3->{      \item $\downarrow$ cost of accurate algorithmic prediction }
+               \vspace{1mm}
+      \onslide<4->{           \item Digitization dates collected from 400 counties in the sample } 
+        \end{itemize}
+    \end{itemize}
+    \end{column}
+  \end{columns}
+      \bottomleft{
+        \hyperlink{digit_statebystate}{\beamergotobutton{State by state plot}}
+        \hyperlink{simulation}{\beamergotobutton{Simulation}}
+          \hyperlink{simulationtable}{\beamergotobutton{Simulation table}}
+    }
+\end{frame}
+
+
+\begin{frame}{County digitization rollout}\label{county-balance}
+\begin{columns}[T]
+\begin{column}{0.3\textwidth}
+\small
+\textbf{Timing driven by:}
+\begin{itemize}\footnotesize
+\item Legal requirements
+\vspace{2mm}
+\item  Technical standard development
+\vspace{2mm}
+\item Record scanning logistics
+\vspace{2mm}
+\item[] \onslide<3->{$\implies$ Need to show \textbf{relevance }}
+\end{itemize}
+\end{column}
+\hspace{-8mm}
+\onslide<2->{
+\begin{column}{0.65\textwidth}
+\includegraphics[width=.85\textwidth]{Figures/24Jan2025/county_balance_earlydigit.pdf}
+\vspace{0.5em}
+\parbox{\textwidth}{\justifying \tiny \textit{Note: This figure examines whether baseline county characteristics predict early digitization, controlling for state fixed effects. The coefficients represent normalized effects (in standard deviations). Data from the Census and ACS.}}
+\end{column} }
+\end{columns}
+\end{frame}
+
+%  of the socioeconomic and demographic characteristics of the county on early digitization (before the mean county). Horizontal bars indicate 95\% confidence intervals
+% , defined as a county completing digitization before the mean county in its state
+
+
+
+
+\begin{frame}{Defining the ideal experiment}
+  \begin{columns}[T]
+        % Left Column (Market A)
+        \begin{column}{.5\textwidth}
+            \centering
+            \textcolor{accentblue}{Market A (Treated)} \\
+            {\color{accentblue}\rule{\linewidth}{2pt}}
+            \vspace{-4mm}
+                \begin{itemize}
+                    \item \textcolor{accentblue}{Algorithmic predictions is possible}
+                \end{itemize}
+        \end{column}        
+        \hfill
+        % Right Column (Market B)
+        \begin{column}{.5\textwidth}
+            \centering
+            \textcolor{raspberry}{Market B (Control)} \\
+            {\color{raspberry}\rule{\linewidth}{2pt}}
+            \vspace{-4mm}
+                \begin{itemize}
+                    \item \textcolor{raspberry}{Human judgment}
+                \end{itemize}
+        \end{column}
+    \end{columns}
+    \vspace{8mm}
+
+    % Challenges Section
+        \textbf{Three Challenges:}
+        \vspace{1mm}
+        \begin{enumerate} \footnotesize
+            \item \gray{What is the treatment?}
+                \begin{itemize} \footnotesize
+                    \item \gray{How to make algorithmic prediction possible across a market?}
+                \end{itemize}
+                \vspace{1mm}
+                \item \gray{Causal evidence?}
+                \begin{itemize} \footnotesize
+                    \item \gray{Is there a source of market-level natural variation?}
+                \end{itemize}
+                \vspace{1mm}
+                \item How to measure use?
+                \begin{itemize} \footnotesize
+                    \item How to measure AI-augmented investment?
+                \end{itemize}
+                \vspace{1mm}
+
+        \end{enumerate}
+\end{frame}
+
+% add button here to match process 
+\begin{frame}{Classifying investors}\label{categorizinginvestors} \small  
+\vspace{-2mm}
+   \textbf{Definitions:}  
+    \begin{itemize} \scriptsize
+               \item \gray{Investor: a corporate entity that purchases houses to rent out and/or resell} \xsmallcitecolor{\citet{RedfinInvestorHomePurchases, millsLargeScaleBuy2019}} 
+               \item Algorithm: a formally specified, machine executable procedure that processes input data
+               \begin{itemize}  \scriptsize
+                 \item Machine learning algorithm: a formally specified, machine executable procedure that \textbf{learns} from input data
+             \end{itemize}              
+       \onslide<2->{            \item \alert{\textbf{Algorithmic investor:}} algorithm-augmented valuation 
+                \item \raspberry{\textbf{Human investor:}} expertise and experience in local market  }
+        \end{itemize} 
+        \vspace{1mm}
+\onslide<3->{\textbf{Classification procedure:}       
+\small 
+\begin{itemize} \scriptsize
+\item Identify parent company with two-step fuzzy clustering preserving semantic and geographic similarity 
+\item Match each investor to additional data sources 
+    \end{itemize} }
+  %  \begin{itemize} \footnotesize
+  %      \item Personnel records, public filings, websites, interviews, business registration data 
+  %  \end{itemize} 
+  \onslide<4->{  
+  \begin{center}     
+\includegraphics[width=.5\textwidth]{Figures/Stock/classification/classification_rule_only.png}
+      \end{center}
+      }
+      \vspace{2mm}
+      \bottomleft{
+      \hyperlink{investormatchingdetails}{\beamergotobutton{Details}}
+     %  \hyperlink{investorviolins}{\beamergotobutton{Investor purchase graphs}}
+      
+      }
+\end{frame}
+
+
+\begin{frame}{Classifying investors: human investor example}\label{categorizinginvestors_example_human}
+ \begin{columns}[T]
+    \begin{column}{.45\textwidth}
+    \vspace{-2mm}
+        \footnotesize
+\begin{quotation}
+We look at the location of the property, what repairs are needed, the current condition of the property ... Taking the many pieces of information into consideration, we come up with a fair price that works for us and works for you, too. 
+\end{quotation} {\color{raspberry}\qquad - Myers House Buyers}
+
+\vspace{3mm}
+\centerline{\includegraphics[width=.35\textwidth]{Figures/Stock/MyersHouseBuyers_noborder.png}} 
+    \end{column}
+    \hspace{-5mm} 
+    \begin{column}{.45\textwidth}
+    \vspace{-8mm}
+\centerline{\includegraphics[width=1.3\textwidth]{Figures/Stock/Companyexamples/MyersBuyersteam_small.pdf}}
+    \end{column}
+  \end{columns}
+  \vspace{2mm}
+      \bottomleft{
+          \hyperlink{summary_stats_hi_ai}{\beamergotobutton{Investor purchases statistics}} 
+          \hyperlink{investorviolins}{\beamergotobutton{Investor purchase graphs}} 
+      }
+      \end{frame}
+
+
+
+\begin{frame}{Classifying investors: algorithmic investor example}\label{categorizinginvestors_example_algo}
+ \begin{columns}[T]
+    \begin{column}{.5\textwidth}
+    \vspace{-2mm}
+    \footnotesize
+    \begin{quotation}
+The [algorithm] uses data to identify desirable properties and generate prices... The entire process uses a vast amount of data that is impossible to distill into actionable information without the use of technology.
+\vspace{3mm}
+\end{quotation} {\color{trueblue}  \qquad- Amherst Residential}
+\vspace{3mm}
+\centerline{ \includegraphics[width=.35\textwidth]{Figures/Stock/AmhertResidentialInAction.png}}
+\smallskip
+    \end{column}
+    \begin{column}{.5\textwidth}
+
+    \stackinset{c}{0pt}{t}{70pt}
+        {\includegraphics[width=\textwidth]{Figures/Stock/Companyexamples/AmherstQuote_r.pdf}}
+        {\includegraphics[width=.8\textwidth]{Figures/Stock/Companyexamples/Amherst_CTO_only.pdf}}
+    \end{column}
+  \end{columns}
+  \vspace{2mm}
+      \bottomleft{
+          \hyperlink{summary_stats_hi_ai}{\beamergotobutton{Investor purchases statistics}} 
+          \hyperlink{investorviolins}{\beamergotobutton{Investors purchase graphs}} 
+      }
+\end{frame}
+
+\begin{frame}{Assessing classified investors}\label{classificationtests} \small  
+\vspace{-4mm}
+\textbf{Questions:}
+\begin{itemize} \footnotesize
+ \onslide<2->{   \item Are algorithmic investors exaggerating their capabilities?}
+ \onslide<3->{   \item Are some human investors secretly using machine learning algorithms? }
+\end{itemize}
+\vspace{1mm}
+\textbf{Validation tests:}
+\begin{itemize}
+\onslide<4->{    \item Human investors rely on local information $\implies$ physical proximity }
+\onslide<5->{
+    \begin{table}[htbp]
+  \centering
+  \adjustbox{max width=.5\textwidth}{
+  \begin{tabular}{l c c c}
+      \toprule
+      \textbf{Investor Type} & 
+      \cellcolor<5>{accent!15!white}\shortstack{\textbf{Same Zip as}\\\textbf{Corp. Office}} & 
+      \cellcolor<6>{accent!15!white}\shortstack{\textbf{Same County as}\\\textbf{Corp. Office}} &
+      \cellcolor<7>{accent!15!white}\shortstack{\textbf{Zip Codes}\\\textbf{Active}} \\
+      \midrule
+      Human Investors & \cellcolor<5>{accent!15!white}0.40 & \cellcolor<6>{accent!15!white}0.79 & \cellcolor<7>{accent!15!white}1.9 \\
+      Algorithmic Investors & \cellcolor<5>{accent!15!white}0.05 & \cellcolor<6>{accent!15!white}0.12 &  \cellcolor<7>{accent!15!white}291.0 \\
+      \bottomrule
+  \end{tabular}
+  } 
+\end{table} }
+\onslide<8->{\item \gray{Algorithmic investors respond strongly to data digitization}
+\item \gray{Human investors become less likely to purchase when data digitized } }
+\end{itemize}
+
+     % \bottomleft{
+     % \hyperlink{geographic_dist_investors}{\beamergotobutton{Full table}}
+           
+     %  }
+\end{frame}
+      
+
+\begin{frame}{Empirical strategy: county-level event study}\label{empstrategyprealgo}
+\vspace{-3mm}
+\begin{equation*}
+\underbrace{\frac{q^{algo}_{ct}}{q_{ct}}}_{\text{algorithmic investment share}} = 
+\alpha_{c} + \delta_{t} + 
+\sum^{J}_{j \ne -1} \overbrace{\boldsymbol{\beta_j}}^{\makebox[10pt]{\text{\shortstack{ \\ \scriptsize effect on \\ \scriptsize alg. \\ \scriptsize investment}}}} 
+(\underbrace{D_{ct}}_{\makebox[0pt]{\text{\shortstack{\scriptsize county \\ \scriptsize digitized}}}}
+\times \Ind[t=j]) + 
+\gamma X_{ct} + \varepsilon_{ct}
+\end{equation*}
+\vspace{1mm}
+\begin{itemize}  \footnotesize 
+    \item $\frac{q^{algo}_{ct}}{q_{ct}}$: quantity of algorithmic investment in county $c$ and year $t$ as share of total houses sold
+ \onslide<2->{   \item $D_{ct}$: indicator if county records are machine readable and open
+    \item  $\boldsymbol{\beta_j}$: effect of county digitization on algorithmic investment }
+   \onslide<3->{       \item $\alpha_{c} + \delta_{t}$: county and year FE
+        \item $X_{ct}$: includes controls for baseline county characteristics from Census 
+        %    \item  Data at the county ($c$) and year ($t$) level
+    \item \textcolor{gray}{Weighted by baseline county size; standard errors clustered at the county level; estimators robust to differential timing; treatment an absorbing state}
+    }%last treated as controls} }
+\end{itemize} 
+\end{frame}
+
+
+
+
+
+\begin{frame}{Agenda}
+  \begin{enumerate}
+    \item \gray{Setup}
+    \begin{itemize}
+        \item \gray{Setting: Housing}
+          \vspace{1mm}
+    \item \gray{Data and Empirical Strategy}
+    \end{itemize} 
+    \vspace{1mm}
+    \item County digitization leads to entry by algorithmic investors
+    \vspace{1mm}
+     \item \gray{Conceptual Framework}
+    \vspace{1mm}
+    \item \gray{House prices rise, particularly for minority sellers}   
+    \vspace{1mm}
+    \item \gray{Human and algorithmic investor specialization}
+  \end{enumerate}
+   \vspace{2mm}
+\end{frame}
+
+\begin{frame}{Digitization leads to algorithmic investment}\label{countyES}
+    \begin{center}
+        \begin{tabular}{cc}
+            \only<1>{\includegraphics[scale=0.5]{Figures/DR_figures/binsreg_shareq_DR_pre.pdf}}
+             \only<2->{\includegraphics[scale=0.5]{Figures/DR_figures/binsreg_shareq_DR.pdf}}
+               &
+            \only<3>{\includegraphics[scale=0.5]{Figures/DR_figures/county_ES_B_shareq_2_DR_pre.pdf}}
+            \only<4->{\includegraphics[scale=0.5]{Figures/DR_figures/county_ES_B_shareq_2_DR.pdf}}
+        \end{tabular}
+    \end{center}
+    \vspace{1mm}
+    \only<1-2>{
+ \begin{itemize} \scriptsize
+     \item[] Algorithmic investor share $=\frac{q^{algo}_{ct}}{q_{ct}}$
+     \begin{itemize} \scriptsize
+         \item $q^{algo}_{ct}$: homes purchased by algorithmic investors in county $c$ and year $t$
+         \item $q_{ct}$: total homes sold in county $c$ and year $t$
+     \end{itemize}
+ \end{itemize} }
+ \vspace{2mm}
+ \only<3->{   \bottomleft{
+        \hyperlink{altestimators_did}{\beamergotobutton{Alternative robust estimators}}
+    } }
+\end{frame}
+
+
+
+
+
+\begin{frame}{Assessing the empirical strategy}\label{robustness}
+\begin{enumerate}
+    \item  What if digitization and investor interest are driven by new factory construction?
+    \begin{itemize}
+        \item {\footnotesize Concerns around violations of the parallel trends assumption}
+    \end{itemize}
+     \vspace{4mm}
+ %        \item \textcolor{asher}{Does digitization also change human investment?}         
+ %          \vspace{4mm}
+%    \item \gray{Relevance of county data}
+ %      \vspace{4mm}
+\end{enumerate}
+\bottomleft{
+\hyperlink{AI_map}{\beamergotobutton{Map}} 
+}
+\end{frame}
+
+
+  
+  \begin{frame}{Assessing the empirical strategy}\label{empstrategyhouse}
+  \begin{columns}[T]
+    \begin{column}{.55\textwidth}
+
+      \begin{overprint}
+        \centering
+        \onslide<1>\centerline{\includegraphics[width=1\textwidth]{Figures/Icons/house_allgray.png}}
+        \onslide<2-3>\centerline{\includegraphics[width=1\textwidth]{Figures/Icons/house_blackgray.png}}
+        \onslide<4->\centerline{\includegraphics[width=1.1\textwidth]{Figures/24Jan2025/house_balance_earlydigit_shortxaxis2.pdf}}
+      \end{overprint} 
+    \end{column}
+    \begin{column}{.45\textwidth}
+        
+        \begin{itemize} \small 
+     \onslide<2->{   \item  Bureaucratic constraints create variation in timing of house digitization 
+        \begin{itemize} \footnotesize
+      \item Digitized house \includegraphics[width=.5cm]{Figures/Icons/home.png}
+        \item Not-yet-digitized house \includegraphics[width=.8cm]{Figures/Icons/home_grey.png} 
+         \end{itemize}  }
+        \vspace{5mm}
+      \only<3->{     \item Triple-difference analysis: 
+         \begin{itemize} \footnotesize
+      \item Estimate the effect of county digitization on algorithmic investment in comparable \textbf{digitized} and \gray{non-digitized} houses
+         \end{itemize} }
+        \end{itemize} 
+    \end{column}
+  \end{columns}
+        \bottomleft{
+      %  \hyperlink{house-balance}{\beamergotobutton{Hous digitization balance plot}}
+          \hyperlink{housedigitgraph}{\beamergotobutton{Graph}} 
+    }
+\end{frame}
+
+
+
+
+
+% color coefficeints based on the graph 
+\begin{frame}{Digitization leads to algorithmic investment in digitized houses}\label{triplediff}
+    \begin{overprint}
+        \only<1>{\centerline{\includegraphics[width=.7\textwidth]{Figures/DR_figures/triple_diff_BJS_shareq_AS_both0_edited.pdf} }}
+        \only<2>{\centerline{\includegraphics[width=.7\textwidth]{Figures/DR_figures/triple_diff_BJS_shareq_AS_both1_edited.pdf} }}
+        \only<3>{\centerline{\includegraphics[width=.7\textwidth]{Figures/DR_figures/triple_diff_BJS_shareq_AS_both2_edited.pdf} }}
+    \end{overprint}
+   % \includegraphics[width=.7\textwidth]{Figures/DR_figures/triple_diff_logq_AS_both2_DR.pdf}
+    \vspace{1mm}
+        \bottomleft{
+        \hyperlink{triplediffspec}{\beamergotobutton{Details}}
+    }
+\end{frame}
+
+\begin{comment}
+          \underbrace{y^{algo}_{ict}}_{\makebox[1pt]{\text{\shortstack{\scriptsize Algorithmic investor purchase}}}} = \delta_{t} + \alpha_{c} + \beta^{D}(\underbrace{D_{ct}}_{\makebox[5pt]{\text{\shortstack{\scriptsize county \\ \scriptsize  digitized}}}} \times \underbrace{D^h_{it}}_{\makebox[5pt]{\text{\shortstack{\scriptsize \\ \scriptsize house \\  \scriptsize digitized}}}} ) + \beta^{ND}(\underbrace{D_{ct}}_{\makebox[1pt]{\text{\shortstack{\scriptsize county \\ \scriptsize  digitized}}}} \times \underbrace{(1-D^h_{it})}_{\makebox[1pt]{\text{\shortstack{\scriptsize non-digitized \\
+      \scriptsize house}}}} ) + \gamma X_{ict} + \varepsilon_{ict}
+\end{comment}
+
+
+\begin{frame}{Digitization leads to algorithmic investment in digitized houses}\label{falsification_alllevels}
+ \only<1>{ 
+ \vspace{-5mm}
+ \begin{equation*}
+\underbrace{y^{algo}_{icbt}}_{\makebox[1pt]{\text{\shortstack{\scriptsize Algorithmic \\ \scriptsize investment}}}} = \delta_{t} + \alpha_{c} + \alpha_{b} + \overbrace{\beta^{D}}^{\makebox[10pt]{\text{\shortstack{\scriptsize effects on \\ \scriptsize digitized houses}}}}(\underbrace{D_{ct}}_{\makebox[5pt]{\text{\shortstack{\scriptsize county \\ \scriptsize  digitized}}}} \times \underbrace{D^h_{it}}_{\makebox[5pt]{\text{\shortstack{\scriptsize house \\ \scriptsize  digitized}}}} ) + \overbrace{\beta^{ND}}^{\makebox[8pt]{\text{\shortstack{\scriptsize effects on \\ \scriptsize non-digitized houses}}}}(D_{ct} \times \underbrace{(1-D^h_{it})}_{\makebox[5pt]{\text{\shortstack{\scriptsize house \\ \scriptsize  not digitized}}}}) + \gamma \underbrace{X_{icbt}}_{\makebox[8pt]{\text{\shortstack{\scriptsize house \\ \scriptsize characteristics}}}} + \varepsilon_{icbt}
+    \end{equation*} }
+
+    \vspace{5mm}
+ \only<2>{     \begin{adjustbox}{max width=.75\textwidth, center}
+\makebox[\linewidth]{\input{Tables/24Jan2025/neighborhood_falsification_edited1}}
+    \end{adjustbox}  }
+\only<3->{     \begin{adjustbox}{max width=.75\textwidth, center}
+\makebox[\linewidth]{\input{Tables/24Jan2025/neighborhood_falsification_edited2}}
+    \end{adjustbox}   }
+\end{frame}
+
+
+
+
+
+
+\begin{frame}{Assessing the empirical strategy}\label{robustness}
+\begin{enumerate}
+  \item   \textcolor{gray}{ What if digitization and investor interest are driven by new factory construction? }
+    \begin{itemize}
+        \item \gray{\footnotesize Concerns around violations of the parallel trends assumption}
+    \end{itemize} 
+     \vspace{4mm}
+    \item Is data from one county predictive in another?
+    \begin{itemize}
+        \item \gray{\footnotesize Simulation of predictive power across counties} \hyperlink{simulation}{\beamergotobutton{Simulation}} 
+    \end{itemize}
+       \vspace{4mm}
+\end{enumerate}
+\bottomleft{
+\hyperlink{AI_map}{\beamergotobutton{Map}} 
+%\hyperlink{human_investors_test}{\beamergotobutton{Human investor test}} 
+}
+\end{frame}
+
+
+
+\begin{frame}{Evaluating the predictive power of county data}\label{simulation}
+\vspace{-2mm}
+  \begin{adjustbox}{width = .5\textwidth, center}
+\includegraphics{Figures/24Jan2025/out_of_sample_simulation.pdf}
+  \end{adjustbox}
+    \vspace{0.5em}
+    \centering
+    \parbox{0.8\textwidth}{\justifying \tiny \textit{Note: This figure presents results from a simulation assessing whether county-level data is useful for predicting prices and whether data from one county can predict prices in another. Using only pre-digitization transactions, I train an XGBoost model on data from a randomly chosen county with 5-fold cross-validation to predict the natural log of sale price. The figure plots the mean squared error (MSE) in a hold-out sample from the same county (blue) and a hold-out sample from another randomly chosen county (red), simulated 50 times. }}
+    \vspace{1em}
+    \bottomleft{
+    \hyperlink{simulationtable}{\beamergotobutton{Table}}
+  %      \hyperlink{empstrategyhouse}{\beamergotobutton{Back to emp strategy (house)}}
+  %              \hyperlink{county_rollout}{\beamergotobutton{Back to rollout}}
+    }
+\end{frame}
+
+
+\begin{frame}{Assessing the empirical strategy}\label{robustness}
+\begin{enumerate}
+  \item   \textcolor{gray}{ What if digitization and investor interest are driven by new factory construction? }
+    \begin{itemize}
+        \item \gray{\footnotesize Concerns around violations of the parallel trends assumption}
+    \end{itemize} 
+         \vspace{4mm}
+         \item \gray{Is data from one county predictive in another?}
+    \begin{itemize}
+        \item \gray{\footnotesize Simulation of predictive power across counties} \hyperlink{simulation}{\beamergotobutton{Simulation}} 
+    \end{itemize}
+     \vspace{4mm}
+      \item  \gray{What if county digitization also impacts human investment?}
+    \begin{itemize}
+        \item \gray{\footnotesize Is digitized data also a key input into human investment?} \hyperlink{human_investors_test}{\beamergotobutton{Table}}
+    \end{itemize}
+\end{enumerate}
+\bottomleft{
+\hyperlink{AI_map}{\beamergotobutton{Map}} 
+\hyperlink{human_investors_test}{\beamergotobutton{Human investor tests}} 
+}
+\end{frame}
+
+
+
+\begin{frame}{Agenda}
+  \begin{enumerate}
+    \item \gray{Setup}
+    \begin{itemize}
+        \item \gray{Setting: Housing}
+          \vspace{1mm}
+    \item \gray{Data and Empirical Strategy}
+    \end{itemize} 
+    \vspace{1mm}
+    \item \gray{County digitization leads to entry by algorithmic investors}
+    \vspace{1mm}
+     \item Conceptual Framework
+        \begin{itemize}
+        \item How does algorithmic and human prediction differ?
+         \vspace{1mm}
+        \item Role of race in the housing market
+    \end{itemize}
+    \vspace{1mm}
+    \item \gray{House prices rise, particularly for minority sellers}   
+    \vspace{1mm}
+    \item \gray{Human and algorithmic investor specialization}
+  \end{enumerate}
+   \vspace{2mm}
+  \end{frame}
+
+
+
+
+\begin{frame}{Humans and algorithms are distinct prediction technologies}{}\label{conceptframework1}
+ %   \begin{itemize}
+%    \item House common value $Y$ depends on observables ($X$) and unobservables ($Z$)
+%\end{itemize}
+\vspace{1mm}
+  \begin{columns}[T]
+    \begin{column}{.5\textwidth} 
+ \centerline{\textcolor{raspberry}{Human investors}} 
+    {\color{raspberry}\rule{\linewidth}{2pt}}
+    \vspace{-3mm}
+\onslide<2->{ \centerline{\includegraphics[height=1.75cm, width=3.5cm]{Figures/Icons/prediction_human2.png} }
+     \vspace{-4mm}
+    $$h_i(x, z)=f(x,z)+\Delta $$  }
+    \begin{itemize}
+        \item[]  
+    \end{itemize}
+    \end{column}
+    \hfill
+        \begin{column}{.5\textwidth}
+    \centerline{\textcolor{digitalblue}{Algorithmic investors}} 
+    {\color{digitalblue}\rule{\linewidth}{2pt}}
+     \vspace{-3mm}
+ \onslide<3->{ \centerline{\includegraphics[height=1.75cm, width=3.5cm]{Figures/Icons/prediction_algo2.png} }  
+  \vspace{-4mm}
+    $$m(x)=E[f(x,z)|x]$$ }
+    \end{column}
+  \end{columns}
+  \vspace{-10mm}
+   \only<1-3>{  
+ %\textbf{Algorithm versus human prediction:}
+\begin{itemize} \footnotesize
+    \item[] $x$: Bedrooms, bathrooms, unemployment rate, average household age, lot size, house age etc.
+    \item[] $z$: Views, internal layout, roof construction quality, noise levels and sense of privacy etc.
+    \item[] $f(x,z)$: true relationship between $x$ and $z$ and house value
+\end{itemize}
+ \vspace{-4mm} }
+ \only<4->{  
+ %\textbf{Algorithm versus human prediction:}
+  \begin{equation*}
+  \small 
+    \underbrace{m(x) - h_i(x,z)}_{\text{algo-human difference}} = \underbrace{E[f(x,z)|x] - f(x,z)}_{\text{ information gap}} - \underbrace{\Delta}_{\text{ human prediction error (bias)}}
+\end{equation*} 
+ \vspace{-4mm} }
+\end{frame}
+
+
+% set up equations here and define terms 
+\begin{frame}{Humans and algorithms are distinct prediction technologies}{}\label{conceptframework2}
+\vspace{-4mm}
+  \begin{equation*}
+  \small 
+    \underbrace{m(x) - h_i(x,z)}_{\text{algo-human difference}} = \underbrace{E[f(x,z)|x] - f(x,z)}_{\text{ information gap}} - \underbrace{\Delta}_{\text{ human prediction error (bias) }}
+\end{equation*} 
+\vspace{1mm}
+
+
+%    \item[] \textbf{Important to include both $z$ and $\Delta$:}
+%    \vspace{2mm}
+\begin{enumerate} \footnotesize  %humans are just cognitively constrained algorithms
+    \item With $z$ and $\Delta$:
+        \begin{itemize} \footnotesize
+        \item Algorithm-human disagreement hard to interpret
+    \end{itemize} 
+    %algorithms are just information-constrained humans
+ \only<2->{       \item Without $\Delta$: 
+    \begin{itemize} \footnotesize
+        \item[] $\underbrace{m(x) - h_i(x,z)}_{\text{algo-human difference}} = \underbrace{E[f(x,z)|x] - f(x,z)}_{\text{ information gap}} $
+    \end{itemize}  }
+        \vspace{2mm}
+ \only<3->{    \item Without $z$: 
+    \begin{itemize} \footnotesize
+        \item[] $ \underbrace{m(x) - h_i(x,z)}_{\text{algo-human difference}} = \underbrace{\Delta}_{\text{ human prediction error (bias)}}$
+        \vspace{2mm}
+    \end{itemize}     }
+\end{enumerate} 
+\end{frame}
+
+
+
+\begin{frame}{Taking the framework to the data}{}\label{conceptframework3} 
+\begin{itemize} \small 
+\item Source of algorithmic investor outperformance: $\Delta$
+\vspace{2mm}
+\item Is there a set of houses where humans may be systematically deviating? 
+ \begin{itemize} \footnotesize 
+ \onslide<2->{   \item Long literature on $\Delta$:  \xsmallcitecolor{\citet{tverskykahneman1974, halford_how_2005, wason_failure_1960, ebbinghaus_memory_1913, tverskykahneman1974, mobiusupdating, Wistrich2017ImplicitBI, biddlebeauty, mobiusbeauty, DeprezSims2010AccentsIT, mani_poverty_2013, Levi2017DecisionFA, kaur_financial_2025, bloom_rationalizing_2025}}   }
+  \vspace{2mm} 
+\onslide<3->{    \item  Evidence from housing market emphasizes: anchoring, sentiment, bounded rationality, left-digit bias, misperception of natural hazards, gender and racial biases \xsmallcitecolor{\citet{busse2012, changRoleBuysideAnchoring2016, Pan2019SalienceAL, Baldauf2019DoesCC,  goldsmith2023gender, elsterMinoritiesPropertyValues2022, whittle2014BehaviouralEA} } }
+ \vspace{2mm} 
+ \only<4->{    \item This work focuses on the role of \textbf{race} }
+ \vspace{2mm}
+  \only<5->{   \begin{itemize}
+        \item  \textbf{Race penalty:} minority-owned homes sell for less than comparable white-owned homes \xsmallcitecolor{[\citet{ ihlanfeldtExplainingRacialGaps, perryDEVALUATIONASSETSBLACK,  box-couillard_racial_2024, bayerRacialEthnicPrice2017}]} 
+    \end{itemize} }
+\end{itemize} 
+\end{itemize}
+\end{frame}
+
+
+
+
+\begin{frame}{Agenda}
+  \begin{enumerate}
+    \item \gray{Setting: Housing}
+    \vspace{1mm}
+    \item \gray{Data and Empirical Strategy}
+    \vspace{1mm}
+    \item \gray{Digitization Leads to Algorithmic Investor Entry}
+    \vspace{1mm}
+          \item \gray{Conceptual Framework}
+    \vspace{1mm}
+        \item Price Effects
+        \begin{itemize}
+        \item Evidence on pre-existing racial disparities (race penalty)
+        \item Impact of digitization on the race penalty
+        \item Adverse selection vs arbitrage
+    \end{itemize}   
+    \vspace{1mm}
+    \item \gray{Changes in Investment}
+  \end{enumerate}
+   \vspace{2mm}
+  \end{frame}
+
+
+
+
+\begin{frame}{Estimating the race penalty}\label{racepenalty_setup}
+\small
+\vspace{-5mm}
+\begin{equation*}
+\underbrace{\ln(p_{ibt})}_{\text{log sale price}} = 
+\overbrace{\beta_M}^{\text{Race penalty}} \underbrace{\text{Minority}_{it}}_{\text{\shortstack{Indicator for seller's \\ minority status}}} + 
+\underbrace{\mathbf{X}_{ibt}'\boldsymbol{\gamma}}_{\text{\shortstack{house  \\ characteristics}}} + 
+\underbrace{\lambda_{bt}}_{\text{\shortstack{block-group-by-year \\ FE}}} + \varepsilon_{ibt}
+\end{equation*}
+\textbf{Interpreting the race penalty:}
+\begin{itemize}
+\footnotesize
+    \item $\text{Minority}_{it}$: indicator if homeowner selling house $i$ at time $t$ is Black or Hispanic
+    \begin{itemize} \scriptsize
+           \item \gray{\scriptsize Race is inferred using Bayesian Improved Surname Geocoding }
+    \end{itemize}
+    \item Comparing similar houses within neighborhoods
+    \item  Many possible mechanisms: omitted variables, discrimination, bargaining, bounded rationality, steering, credit access 
+        \xsmallcitecolor{[\citet{ ihlanfeldtExplainingRacialGaps, perryDEVALUATIONASSETSBLACK, kermaniRacialDisparitiesHousing2021, choiExplainingBlackWhiteHomeownership2019, box-couillard_racial_2024, bayerRacialEthnicPrice2017, freddiemac2021, yingerWhatHaveWe2018, howell2018NeighborhoodsRA, howelljuniaAppraisedUpdate2023} ]}
+\end{itemize}
+\vspace{1mm}
+\bottomleft{
+\hyperlink{racedetails}{\beamergotobutton{Inferring race with BISG}}
+
+}
+\end{frame}
+
+\begin{frame}{5\% race penalty before county digitization}\label{racial_disp_before_}
+\begin{figure}[ht!]
+\begin{center}
+\captionsetup{justification=centering}
+\makebox[\linewidth]{
+\begin{tabular}{cc}
+
+\includegraphics[scale=0.25]{Figures/DR_figures/prepost_race_penalty_all_DR_v2_pre.pdf}  & \pause \includegraphics[scale=0.5]{Figures/DR_figures/pre_residprice_DR.pdf} \\
+\end{tabular}
+}
+\end{center}
+\end{figure}
+\end{frame}
+
+
+
+
+
+
+\begin{frame}{Digitization leads to price convergence}\label{racial_disp_before_after}
+\vspace{-3mm}
+\begin{columns}[T]
+    \begin{column}{0.58\textwidth}
+    \centering
+        \includegraphics[width=.9\textwidth]{Figures/DR_figures/prepost_race_penalty_all_DR_v2.pdf}
+   \end{column}
+    \begin{column}{0.42\textwidth}
+    \begin{itemize} \small 
+     \vspace{2mm}
+        \item Within-neighborhood price convergence
+        \vspace{1mm}
+       \item Price penalty shrinks by 40\%
+    \end{itemize}
+    \end{column}
+\end{columns}
+
+\vspace{2mm}
+  \bottomleft{
+    \hyperlink{racepenaltycoeffdiffs}{\beamergotobutton{Coefficient equality tests}}
+    \hyperlink{racepenaltytable}{\beamergotobutton{Table}}
+  }
+\end{frame}
+
+
+\begin{frame}{Digitization leads to price convergence}\label{racial_disp_before_after_nop}
+\begin{figure}[ht!]
+\begin{center}
+\captionsetup{justification=centering}
+\makebox[\linewidth]{
+\begin{tabular}{cc}
+Before County Digitization & After County Digitization \\
+\includegraphics[scale=0.5]{Figures/DR_figures/pre_residprice_DR.pdf}  & \includegraphics[scale=0.5]{Figures/DR_figures/post_residprice_DR.pdf} \\
+\end{tabular}
+}
+\end{center}
+\end{figure}
+\centerline{Distribution of Residualized Log(Sale Price) by Seller Race}
+    \vspace{2mm}
+    \bottomleft{
+        \hyperlink{racepenaltykstests}{\beamergotobutton{Distribution tests (Kolmogorov-Smirnov)}}
+    }
+\end{frame}
+
+
+
+\begin{frame}{Digitization leads to price convergence}\label{racial_disp_before_after}
+\vspace{-3mm}
+\begin{columns}[T]
+    \begin{column}{0.58\textwidth}
+    \centering
+        \begin{overprint}
+        \onslide<1>\includegraphics[width=.9\textwidth]{Figures/DR_figures/prepost_race_penalty_all_DR_v2.pdf}
+        \onslide<2>\includegraphics[width=.9\textwidth]{Figures/DR_figures/prepost_race_penalty_all_by_entry_DR.pdf}
+        \onslide<3>\includegraphics[width=\textwidth]{{Figures/DR_figures/agg_prices_byrace_2_b_DR.pdf}}
+    \end{overprint}
+   \end{column}
+    \begin{column}{0.42\textwidth}
+    \begin{itemize} \small 
+     \vspace{2mm}
+        \item Within-neighborhood price convergence translates in average sale prices changes 
+        \vspace{2mm}
+       \only<1>{ \item Price gap shrinks by 40\%
+        \vspace{2mm}
+        \item \alert{Did digitization drive this change? }}
+         \vspace{2mm}
+        \onslide<2->{\item Price convergence occurs \textbf{only where algorithms enter}}
+         \vspace{2mm}
+        \onslide<3->{\item Smaller race penalty $\implies$ higher prices for minority homes}
+    \end{itemize}
+    \end{column}
+\end{columns}
+
+\vspace{2mm}
+  \bottomleft{
+    \hyperlink{racepenaltycoeffdiffs}{\beamergotobutton{Coefficient equality tests}}
+    \hyperlink{racepenaltytable}{\beamergotobutton{Table}}
+      \hyperlink{endog_racepenalty}{\beamergotobutton{Race penalty by house digitization}}
+           \hyperlink{iv_racepenalty}{\beamergotobutton{IV analysis}}
+  }
+\end{frame}
+
+\begin{frame}{Racial disparities shrink}\label{racial_disp_by_buyer}
+\vspace{-3mm}
+\begin{columns}[T]
+    \begin{column}{0.65\textwidth}
+    \centering
+        \begin{overprint}
+     \onslide<1>\includegraphics[width=\textwidth]{Figures/DR_figures/prepost_by_buyer_pre_post_all_DR_algo.pdf}
+       \onslide<2>\includegraphics[width=\textwidth]{Figures/DR_figures/prepost_by_buyer_pre_post_all_DR_hi_pre.pdf}
+       \onslide<3>\includegraphics[width=\textwidth]{Figures/DR_figures/prepost_by_buyer_pre_post_all_DR_hi_post.pdf}
+       \onslide<4>\includegraphics[width=\textwidth]{Figures/DR_figures/prepost_by_buyer_pre_post_all_DR_oo_pre.pdf}
+       \onslide<5-6>\includegraphics[width=\textwidth]{Figures/DR_figures/prepost_by_buyer_pre_post_all_DR.pdf}
+       \onslide<7->\includegraphics[width=\textwidth]{Figures/DR_figures/prepost_by_buyer_pre_post_all_DR_byentry.pdf}
+    \end{overprint}
+   \end{column}
+    \begin{column}{0.35\textwidth}
+    \vspace{-2mm}
+    \begin{itemize} \small 
+        \item Algorithmic investors buy race neutrally
+         \begin{itemize} \scriptsize
+            \item \gray{\scriptsize Algorithmic investors disproportionately buy from minority homeowners }
+        \only<1>{    \item \alert{What else is going on? } }
+        \end{itemize}
+         \vspace{1mm}
+      \only<3->{  \item Race penalty shrinks among human investors } \onslide<5->{and owner occupiers}
+        \vspace{1mm}
+     \only<6->{    \item $\implies$ Algorithms impact prices paid by \textbf{other buyers} through market effects 
+     \begin{itemize} \scriptsize
+         \item \gray{Algorithmic bias in markets}
+     \end{itemize}} 
+    \end{itemize}
+    \end{column}
+\end{columns}
+
+\vspace{2mm}
+  \bottomleft{
+ \hyperlink{racepenaltycoeffdiffs}{\beamergotobutton{Coefficient equality tests}}
+  \hyperlink{racepenaltytable}{\beamergotobutton{Table}}
+  \hyperlink{decomp_graph}{\beamergotobutton{Decomposition}}
+  %    \hyperlink{digitization_byrace}{\beamergotobutton{Digitization by race details}}
+    \hyperlink{raceeffects_table}{\beamergotobutton{Digitization by race table}}
+          \hyperlink{endog_racepenalty}{\beamergotobutton{Race penalty by house digitization}}
+           \hyperlink{iv_racepenalty}{\beamergotobutton{IV analysis}}
+ }
+\end{frame}
+
+
+
+
+
+\begin{frame}{Adverse selection or arbitrage?}\label{adversesetup} \small
+Finding:
+\begin{itemize} \footnotesize
+    \item  Algorithmic investors pay more for minority-owned homes, causing price convergence 
+\end{itemize}
+\vspace{1mm}
+Two possibilities:
+\only<2->{
+\begin{itemize} \footnotesize
+    \item  Adverse selection:  \gray{\footnotesize unobservables correlated with minority ownership } \xsmallcitecolor{\citet{nowak_reexamining_2018}}
+    \item  Arbitrage opportunity: \gray{\footnotesize minority-owned homes undervalued} \xsmallcitecolor{\citet{howelljuniaAppraisedUpdate2023}}
+\end{itemize} }
+
+\vspace{1mm}
+
+\onslide<3->{
+\vspace{1mm}
+Two approaches:
+\begin{itemize} \footnotesize
+    \item Construct more granular measures of houses characteristics from images \hyperlink{deeplearning_main}{\beamergotobutton{Deep learning}}
+ %   \only<3>{
+ %   \begin{itemize}\footnotesize
+  %      \item \gray{ Use a convolutional neural net to create an embedding capturing house characteristics available in images}
+  %      \item \gray{ Similar results including embeddings of house images}
+  %  \end{itemize}
+  %  }
+    \item  \gray{Compare realized returns: do algorithmic investors earn \textbf{lower} margins on homes purchased from minority vs. white homeowners? }
+ % \only<4->{  
+ %        \begin{itemize} \footnotesize
+ %            \item Resale margin: ln(Resale price) - ln(Purchase price)
+ %            \item Assessment margin: ln(Assessed value) - ln(Purchase price)
+ %        \end{itemize}
+ % }
+\end{itemize} }
+\end{frame}
+
+
+\begingroup
+\footnotesize
+\begin{frame}{Using deep learning to control for additional observables}\label{deeplearning_main}
+  \begin{columns}[T]
+    \begin{column}{.3\textwidth} 
+    \vspace{2mm}
+      \includegraphics[width=\textwidth]{Figures/Stock/IH_4728.jpg}
+    \end{column}
+    \hfill
+    \begin{column}{.7\textwidth}    
+\begin{itemize} 
+    \item Images provide rich set of additional observable characteristics
+    \vspace{1mm}
+    % Are there additional observable aspects of house quality not contained in assessor data?
+  \onslide<2->{  \item Represent house exterior photos as embeddings (numerical vectors) quantifying visual characteristics
+    \vspace{1mm}
+    \item Extract embeddings using fine-tuned model (AutoGluon Vision), pre-trained on ImageNet \citecolor{[\citet{erickson2020autogluontabular}]}
+    \begin{itemize} \footnotesize
+        \item Leverages transfer learning: general visual patterns learned from millions of images, with further fine-tuning
+    \end{itemize} }
+    \vspace{1mm}
+  \onslide<3->{  \item Images scraped from apartment and investor websites (50K houses)
+  \vspace{1mm}
+  \item Race penalty results qualitatively similar }
+\end{itemize}
+    \end{column}
+  \end{columns}
+  \vspace{1mm}
+       \bottomleft{
+          \hyperlink{race_penalty_withimages}{\beamergotobutton{Table}}
+        
+    }
+\end{frame}
+
+\endgroup
+
+
+
+\begin{frame}{Adverse selection or arbitrage?}\label{adversesetup_premargin} \small
+Finding:
+\begin{itemize} \footnotesize
+    \item  Algorithmic investors pay more for minority-owned homes, causing price convergence 
+\end{itemize}
+\vspace{1mm}
+Two possibilities:
+
+\begin{itemize} \footnotesize
+    \item  Adverse selection:  \gray{\footnotesize unobservables correlated with minority ownership } \xsmallcitecolor{\citet{nowak_reexamining_2018}}
+    \item  Arbitrage opportunity: \gray{\footnotesize minority-owned homes undervalued} \xsmallcitecolor{\citet{howelljuniaAppraisedUpdate2023}}
+\end{itemize} 
+\vspace{1mm}
+Two approaches:
+\begin{enumerate} \footnotesize
+    \item \gray{Develop more granular measures of property characteristics} 
+    \item  Compare realized returns: do algorithmic investors earn \textbf{lower} margins on homes purchased from minority vs. white homeowners? 
+        \begin{itemize} \footnotesize
+            \item Resale margin: ln(Resale price) - ln(Purchase price)
+            \item Assessment margin: ln(Assessed value) - ln(Purchase price)
+        \end{itemize}
+\end{enumerate} 
+\end{frame}
+
+% add in R2, DV mean, add in block f color 
+% add in R2, DV mean, add in block f color 
+\begin{frame}{Algorithmic investor margin does not differ by seller race}{}\label{ai_margin}
+    \centering
+\vspace{-13mm}
+\begin{align*}
+\small
+    \underbrace{\ln(p^r_{ibt}) - \ln(p^p_{ibt})}_{\text{resale margin}} = \overbrace{\alpha^{\text{resale}}_M}^{\text{\shortstack{margin difference}}}\text{PrevMinorityOwned}_{it}  + \underbrace{\mathbf{X}_{ibt}'\boldsymbol{\gamma}}_{\text{\shortstack{house \\ characteristics}}} + \underbrace{\lambda_{bt} + \delta_r}_{\text{\shortstack{geo-by-year \\ and resale year FE}}} + \varepsilon_{ibt}
+\end{align*}
+% Results Table
+\begin{table}[htbp]
+\centering
+%\caption{Algorithmic Investor Gross Margins on Minority-Owned Vs. White-Owned Homes}
+\scalebox{.65}{\makebox[\linewidth]{\input{Tables/24Jan2025/margin_regression_table_edited}}}
+\end{table}
+\vspace{1mm}
+     \bottomleft{
+          \hyperlink{resale_margin_table_full}{\beamergotobutton{Resale Table}}
+          \hyperlink{assessor_margin_table_full}{\beamergotobutton{Assessment Table}}        
+    }
+\end{frame} 
+
+
+
+
+\begin{frame}{Algorithms increase prices, particularly for minorities}\label{end_prices}
+\vspace{-3mm}
+\begin{columns}[T]
+    \begin{column}{0.6\textwidth}
+    \centering
+        \begin{overprint}
+        \onslide<1->\includegraphics[width=.9\textwidth]{Figures/DR_figures/agg_prices_byrace_2_b_DR.pdf}
+        %\onslide<2>\includegraphics[width=\textwidth]{Figures/DR_figures/agg_prices_all_b_DR.pdf}
+    \end{overprint}
+   \end{column}
+    \begin{column}{0.4\textwidth}
+    \begin{itemize} \small 
+
+             \item Spillovers to the values of occupied minority houses \hyperlink{spillovers}{\beamergotobutton{Spillovers}}
+               \vspace{1mm}
+      \onslide<2->{       \item Are there other ``arbitrage'' opportunities?   \smallcitecolor{\citet{busse2012}} 
+             \begin{itemize} \scriptsize
+                 \item Different behavioral biases in different settings (e.g. bidding on Ebay)
+             \end{itemize} }
+               \vspace{1mm}
+     \onslide<3->{       \item What about the human investors? }
+       %  \begin{itemize}
+       %      \item \gray{Total human investment remains constant}
+      %   \end{itemize}
+    \end{itemize}
+    \end{column}
+\end{columns}
+\vspace{1mm}
+\bottomleft{
+\hyperlink{investor_shares_hi_ai}{\beamergotobutton{Human investment details}}
+\hyperlink{conclusion}{\beamergotobutton{Conclusion}}
+}
+\end{frame}
+
+
+
+
+\begin{frame}{Agenda}
+  \begin{enumerate}
+    \item \gray{Setup}
+    \begin{itemize}
+        \item \gray{Setting: Housing}
+          \vspace{1mm}
+    \item \gray{Data and Empirical Strategy}
+    \end{itemize} 
+    \vspace{1mm}
+    \item \gray{County digitization leads to entry by algorithmic investors}
+    \vspace{1mm}
+     \item \gray{Conceptual Framework}
+    \vspace{1mm}
+    \item \gray{House prices rise, particularly for minority sellers}   
+    \vspace{1mm}
+    \item Human and algorithmic investor specialization
+        \begin{itemize}
+        \item \gray{Total human investment constant}
+        \item \gray{Human investment shifts towards houses that are harder to predict}
+    \end{itemize}
+  \end{enumerate}
+   \vspace{2mm}
+         \bottomleft{
+\hyperlink{conclusion}{\beamergotobutton{Conclusion}}
+}
+  \end{frame}
+
+
+\begin{frame}{Taking the framework to the data}{}\label{conceptframework4} \small 
+\only<1-2>{\vspace{-8mm}
+  \begin{equation*}
+  \underbrace{m(x) - h_i(x,z)}_{\text{algo-human difference}} = \underbrace{E[f(x,z)|x] - f(x,z)}_{\text{ information gap}} - \underbrace{\Delta}_{\text{ human errors}}
+\end{equation*} 
+\begin{itemize} \footnotesize
+%\item Human investors have a comparative advantage in houses where $z$ matters
+\item Source of human investor outperformance: $z$
+\item Measured housing data varies widely: institutions, regulations and zoning
+\end{itemize}}
+\only<2>{
+\begin{center}
+    \begin{tabular}{c c}
+     \textbf{3-bed, 3-bath home} & \textbf{3-bed, 3-bath home} \\
+ \includegraphics[height=2.75cm,width=4.25cm]{Figures/Stock/IH_5499.jpg} &
+ \includegraphics[height=2.75cm,width=4.25cm]{Figures/Stock/FlyingSaucerHouseClose.jpeg}
+\end{tabular}
+\end{center} }
+\only<3->{ \begin{center}
+    \begin{tabular}{c c}
+     \textbf{3-bed, 3-bath home} & \textbf{0-bed, 3-bath home} \\
+ \includegraphics[height=2.75cm,width=4.25cm]{Figures/Stock/IH_5499.jpg} &
+ \includegraphics[height=2.75cm,width=4.25cm]{Figures/Stock/WilsonCounty_1955Dunedin.png}
+\end{tabular}
+\end{center} }
+\only<4->{
+\footnotesize
+\begin{itemize} \footnotesize
+    \item Does human investment shift towards where humans have an informational advantage?
+    \vspace{1mm}
+    \item Two approaches to capture informational advantage:
+    \begin{itemize} \footnotesize
+        \item Manually coming up with a list of regulations
+            \vspace{1mm}
+            \item Construct a predictor $\hat{g(x)}$ using pre-digitization data
+    \end{itemize}
+    \end{itemize}
+    }
+\vspace{1mm}
+\bottomleft{
+\hyperlink{constructingpred_details}{\beamergotobutton{Constructing $\hat{g(x)}$}}
+%\hyperlink{predictability_dist}{\beamergotobutton{Predictability graph}}
+}
+\end{frame}
+
+
+\begin{frame}{Defining house predictability}{}\label{predictability_dist}
+  \begin{adjustbox}{width = 0.5\textwidth, center}
+    \includegraphics[scale=0.3]{Figures/06Jan2024/s_tr_with_race_pred_actual_predigitholdout_colored_quintile.png}
+  \end{adjustbox}
+      \vspace{-10mm}
+      \begin{itemize} \footnotesize
+        \item $\hat{g(x)}$: prediction of sale price given $x$
+        \vspace{1mm}
+        \item Classify \textit{ex-ante predictability} of house $i$ from $x_i$ using pre-digitization transactions: $y_i-\hat{g(x_i)}$ 
+        \vspace{1mm}
+  %         \item Examine heterogeneous effects according to ex-ante \textbf{predictability}
+    \end{itemize}  
+      \vspace{1mm}
+
+\end{frame}
+
+
+
+\begin{frame}{Human investment shifts after digitization}\label{shifting_hi}
+\vspace{2mm}
+\begin{columns}[T]
+    \begin{column}{0.6\textwidth}
+        \begin{overprint}
+     %   \only<1>{\centerline{\includegraphics[width=.9\textwidth]{Figures/DR_figures/digit_by_pred_DR_ai_easyonly.pdf}}}
+         \only<1>{\centerline{\includegraphics[width=.9\textwidth]{Figures/DR_figures/digit_by_pred_algo_only_LR.pdf}}}
+            \only<2>{\centerline{\includegraphics[width=.9\textwidth]{Figures/DR_figures/digit_by_pred_humanonly_LR.pdf}}}
+          %  \only<3>{\centerline{\includegraphics[width=.85\textwidth]{Figures/DR_figures/digit_by_pred_p90_DR_easy.pdf}}}
+         %   \only<5>{\centerline{\includegraphics[width=.85\textwidth]{Figures/DR_figures/digit_by_pred_p90_DR.pdf}}}
+            \only<3->{\centerline{\includegraphics[width=.85\textwidth]{Figures/DR_figures/digit_by_pred_p90_pct_change_DR.pdf}}}
+        \end{overprint}
+    \end{column}
+    
+    \begin{column}{0.4\textwidth}
+        \begin{itemize}\footnotesize
+            \only<1->{\item Algorithmic investment concentrated in predictable houses }
+            \vspace{1mm}
+            \only<3->{\item Human investment shifts towards less predictable houses}
+            \vspace{1mm}
+            \only<4->{ \item Second order effects on \textbf{``unpredictable''} houses }
+             \vspace{1mm}
+             \only<5->{\item Coexistence and specialization according to comparative advantage
+            \vspace{1mm}
+            \begin{itemize} \scriptsize
+                \item \gray{Not necessarily optimal for human investors to try to adopt algorithms}
+            \end{itemize}}
+        \end{itemize}
+    \end{column}
+\end{columns}
+
+\bottomleft{
+    \hyperlink{shifting_allocation_table}{\beamergotobutton{Table}} 
+%    \hyperlink{investor_shares_hi_ai}{\beamergotobutton{Investor shares}} 
+    \hyperlink{predictabilitycoeffdiffs}{\beamergotobutton{Coefficient tests}} 
+    
+}
+\end{frame}
+
+
+
+
+
+ 
+\begin{frame}{Conclusion}{}\label{conclusion}
+  \textbf{When algorithmic prediction becomes available:}
+  \begin{enumerate} \footnotesize
+    \item Entry by investors using algorithmic prediction 
+     \vspace{1mm} 
+ \item Home sale prices rise for minority homeowners
+ \vspace{1mm}
+ \item Coexistence and specialization among investors
+\end{enumerate}
+\vspace{2mm}
+\alert{Studying algorithms in markets matters:} 
+\begin{enumerate}\footnotesize
+    \item Consequential second order effects
+    \vspace{1mm}
+    \item Shrinking racial disparities through competition
+\end{enumerate} 
+   \vspace{2mm}
+\textcolor{raspberry}{liraymond@microsoft.com} 
+\end{frame} 
+
+
+% ------------------------------------------------------------------------------
+\appendix
+\begin{frame}[allowframebreaks,noframenumbering]{Appendix}
+  \thispagestyle{empty}
+  %\printbibliography
+\end{frame}
+
+% ------------------------------------------------------------------------------
+
+
+
+
+
+% add button here to match process 
+\begin{frame}{Investor matching procedure}\label{investormatchingdetails}
+\scriptsize
+\textbf{Step 1: Identify Parent Company with Two-Step Fuzzy Clustering}
+\begin{itemize}
+    \item Use fuzzy string matching and clustering algorithms to group entities with similar addresses.
+    \item Rank matches by combining semantic and geographic similarity metrics.
+    \item Validate matches with manual cross-referencing.
+\end{itemize}
+
+\textbf{Step 2: Manually Match Parent Company to Additional Sources}
+\begin{itemize}
+    \item Sources include: company websites, corporate filings, business registration data, articles, and LinkedIn.
+\end{itemize}
+
+\textbf{Step 3: Classification Procedure}
+\begin{itemize}
+    \item \textbf{Input:} Public information and employment data.
+    \item \textbf{Output:} Classification as \textit{Algorithmic Investor} or \textit{Human Investor}.
+    \item For each investor firm:
+        \begin{itemize}\scriptsize
+            \item If the investor relies on automated valuation engines \textbf{or} employs a data science/ML valuation team:
+            \begin{itemize} \scriptsize
+                \item Classify as an \textbf{Algorithmic Investor}.
+            \end{itemize}
+            \item Otherwise, classify as a \textbf{Human Investor}.
+        \end{itemize}
+    \end{itemize}
+\bottomleft{ 
+        \hyperlink{categorizinginvestors}{\beamergotobutton{Back}}
+  }
+\end{frame}
+
+
+
+\begin{frame}{Digitization state by state}\label{digit_statebystate}
+    \begin{adjustbox}{width=.6\textwidth, center}
+        \includegraphics{Figures/DR_figures/rod_county_digitization_bystate_DR.pdf}
+    \end{adjustbox}
+    \vspace{0.5em}
+    \centering
+    \parbox{0.8\textwidth}{\justifying \tiny \textit{Note: This figure shows the progress of county digitization on a state by state basis}}
+    \vspace{1em}
+    \bottomleft{
+        \hyperlink{county_rollout}{\beamergotobutton{Back}}
+    }
+\end{frame}
+
+\begin{frame}{Transaction summary statistics}\label{transsummarystats}
+\vspace{-2mm}
+\begin{table}
+\begin{center}
+\scalebox{.25}{\makebox[\linewidth]{\input{Tables/24Jan2025/summary_stats_house_edited}}}
+\end{center}
+\end{table} 
+    \vspace{0.5em}
+    \centering
+    \parbox{0.8\textwidth}{\justifying\tiny \textit{Note: This table reports the means and standard deviations of house characteristics for transactions in Georgia, North Carolina, South Carolina, and Tennessee from 2009 to 2021. The sample includes only arm’s-length transactions and excludes foreclosures and new construction. Column 1 presents statistics for all transactions. Column 2 includes only owner-occupiers, defined as individuals purchasing a residence to live in. Column 3 reports transactions involving human investors, while Column 4 shows houses purchased by algorithmic investors.}}
+    \vspace{1em}
+    \bottomleft{
+        \hyperlink{empstrategy}{\beamergotobutton{Back}}
+    }
+\end{frame}
+
+
+\begin{frame}{County data coverage}\label{datacoverage}
+Figure from \citet{nolte_studying_2021}
+ \vspace{0.5em}
+    \begin{adjustbox}{width=.6\textwidth, center}
+        \includegraphics{Figures/23Jan2024/Nolte_density.png}
+    \end{adjustbox}
+    \vspace{0.5em}
+    \centering
+    \parbox{0.8\textwidth}{\justifying\tiny \textit{Note: This figure shows the share of arms-length transactions reported with prices as a share of the total parcels in a county. States with large shares of red are the non-disclosure states.}}
+    \vspace{1em}
+    \bottomleft{
+        \hyperlink{empstrategy}{\beamergotobutton{Back}}
+    }
+\end{frame}
+
+\begin{frame}{Alternative robust estimators}\label{altestimators_did}
+      \centerline{\includegraphics[height=5.5cm, width=8cm]{Figures/DR_figures/ALL_ES_shareq_ols_DR_v2.pdf}}
+ \vspace{1mm}
+ \begin{itemize} \footnotesize
+     \item Algorithmic investor share $=\frac{q^{algo}_{ct}}{q_{ct}}$
+     \begin{itemize}\footnotesize
+         \item $q^{algo}_{ct}$: homes purchased by algorithmic investors in county $c$ and year $t$
+         \item $q_{ct}$: total homes sold in county $c$ and year $t$
+     \end{itemize}
+ \end{itemize}
+  \bottomleft{
+\hyperlink{countyES}{\beamergotobutton{Back}} 
+}
+  \end{frame}
+
+
+\begin{frame}{House record digitization}\label{housedigitgraph}
+\centerline{\includegraphics[width=.8\textwidth]{Figures/06Jan2024/attom_county_digitization_all_2006.png} }
+  \bottomleft{
+ \hyperlink{empstrategyhouse}{\beamergotobutton{Back}}
+ }
+\end{frame}
+
+\begin{frame}{Triple difference details}\label{triplediffspec}
+\vspace{-10mm}
+    \begin{align*}         
+   \frac{q^{\text{algo}}_{gct}}{q_{ct}} &= \alpha_{c} + \delta_{t} 
+    + \sum^{J}_{j\ne -1}\beta^{D}_{j} \big(D_{ct} \times D^{g} \times \Ind[t=j]\big)  \\
+    &+ \sum^{J}_{j\ne -1}\beta^{ND}_{j} \big(D_{ct} \times (1-D^{g}) \times \Ind[t=j]\big) + \gamma X_{ct} + \varepsilon_{gct} 
+    \end{align*}
+
+    \begin{itemize}
+        \item $D_{ct}$: indicator if county $c$ has digitized in year $t$
+        \item $D^g$: indicator for digitized group of houses 
+        \item $\alpha_{c} + \delta_{t}$: county and year FE
+        \item $X_{ct}$ baseline county size and demographics 
+        \item $q^{algo}_{gct}$: houses purchased by algorithmic investors in county $c$ and year $t$ of digitization group $g$
+    \end{itemize}
+        \bottomleft{
+        \hyperlink{triplediff}{\beamergotobutton{Back}}
+    }
+\end{frame}
+
+\begin{frame}{Digitization and human investment in counties without AI entry}\label{human_investors_test}
+\vspace{8mm}
+ \begin{adjustbox}{max width=.65\textwidth, center}
+\makebox[\linewidth]{\input{Tables/24Jan2025/human_investor_falsification1}}
+    \end{adjustbox}  
+    \bottomleft{
+\hyperlink{robustness}{\beamergotobutton{Back to robustness}} 
+}
+\end{frame}
+
+\begin{frame}{Investor purchase characteristics (graphs)}\label{investorviolins}
+    \vspace{-2mm}
+    \begin{center}
+    \begin{tabular}{cc}
+        {\footnotesize A. Sale Price} & {\footnotesize B. Bedrooms} \\
+        \includegraphics[width=0.15\textwidth]{Figures/06Oct2023/houseprice_by_investors.pdf} &
+        \includegraphics[width=0.15\textwidth]{Figures/06Oct2023/bedrooms_by_investors.pdf} \\
+        {\footnotesize C. Bathrooms } & {\footnotesize D. Active Zip Codes} \\
+        \includegraphics[width=0.15\textwidth]{Figures/06Oct2023/bathrooms_by_investors.pdf} & \includegraphics[width=0.15\textwidth]{Figures/06Oct2023/ln_activezips_by_investors.pdf}
+    \end{tabular}
+        \parbox{0.8\textwidth}{\justifying \tiny \textit{Note:  These plots compare house characteristics between human and algorithmic investors. Panels A-C show physical characteristics; D shows investment patterns. Data from ATTOM. }}
+            \end{center}
+    \bottomleft{
+    \hyperlink{categorizinginvestors_example_human}{\beamergotobutton{Back to example (human)}}
+  }
+\end{frame}
+
+
+    
+
+\begin{frame}{Geographic distribution of investment}\label{geographic_dist_investors}
+\begin{table}[htbp]
+    \centering
+    \adjustbox{max width=\textwidth}{
+\begin{tabular}{l c c c c}
+   \toprule
+   \textbf{Investor Type} & 
+   \textbf{Geographic Span} & 
+   \textbf{Same Zip as} & 
+   \textbf{Same County as} &
+   \textbf{Same State as} \\
+   & \textbf{Active Zip Codes} & 
+   \textbf{Corporate Address} & 
+   \textbf{Corporate Address} &
+   \textbf{Corporate Address} \\
+   \midrule
+   Human Investors & 1.9 & 0.40 & 0.79 & 0.89 \\
+   Algorithmic Investors & 291.0 & 0.05 & 0.12 & 0.21 \\
+   \bottomrule
+\end{tabular}
+}
+\end{table}
+    \vspace{0.5em}
+    \centering
+    \parbox{0.8\textwidth}{\justifying \tiny \textit{Note: This figure presents summary statistics on the geographic spread of human and algorithmic investor buying in the sample. Sample includes Georgia, North Carolina, South Carolina and Tennessee over 2009 -- 2021. }}
+    \vspace{1em}
+    \bottomleft{
+        \hyperlink{classificationtests}{\beamergotobutton{Back}}
+    }
+\end{frame}
+
+
+\begin{frame}{Evaluating the predictive power of county data}\label{simulation}
+\vspace{-2mm}
+  \begin{adjustbox}{width = .45\textwidth, center}
+\includegraphics{Figures/24Jan2025/out_of_sample_simulation.pdf}
+  \end{adjustbox}
+    \vspace{0.5em}
+    \centering
+    \parbox{0.8\textwidth}{\justifying \tiny \textit{Note: This figure presents results from a simulation assessing whether county-level data is useful for predicting prices and whether data from one county can predict prices in another. Using only pre-digitization years, I train an XGBoost model on data from a randomly chosen county with 5-fold cross-validation to predict the natural log of sale price. The figure plots the mean squared error (MSE) in a hold-out sample from the same county (blue) and a hold-out sample from another randomly chosen county (red), repeated 50 times. }}
+    \vspace{1em}
+    \bottomleft{
+    \hyperlink{simulationtable}{\beamergotobutton{Table}}
+        \hyperlink{empstrategyhouse}{\beamergotobutton{Back to emp strategy (house)}}
+                \hyperlink{county_rollout}{\beamergotobutton{Back to rollout}}
+    }
+\end{frame}
+
+
+\begin{frame}{Evaluating the predictive power of county data}\label{simulationtable}
+\begin{table}[htbp]
+    \centering
+    \begin{tabular}{lcc}
+        \toprule
+        \textbf{Hold-Out Data Set} & \textbf{Different County} & \textbf{Same County} \\
+        \midrule
+        Mean MSE & 1.394 & 0.659 \\
+        Median MSE & 1.125 & 0.591 \\
+        Mean Error (\$) & \$80,000 & \$30,000 \\
+        \bottomrule
+    \end{tabular}
+    \caption*{Comparison of Mean Square Error (MSE)}
+\end{table}
+    \vspace{0.5em}
+    \centering
+    \parbox{0.8\textwidth}{\justifying \tiny \textit{Note: This figure presents mean and median out-of-sample mean squared error from a simulation testing whether county-level data is useful for predicting prices and whether data from one county can predict prices in another. Using only pre-digitization years, I train an XGBoost model on data from a randomly chosen county with 5-fold cross-validation to predict the natural log of sale price, repeated 50 times.}}
+    \vspace{1em}
+    \bottomleft{
+              \hyperlink{empstrategyhouse}{\beamergotobutton{Back to emp strategy (house)}}
+                \hyperlink{county_rollout}{\beamergotobutton{Back to rollout}}
+    }
+\end{frame}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%% SUMMARY STATISTICS TABLE FOR HUMAN AND ALGO INV PURCHASES
+\begin{frame}{Investor purchases summary statistics}\label{summary_stats_hi_ai}
+% \begin{adjustbox}{width = .8\textwidth, center}
+\begin{table}
+\begin{center}
+\scalebox{.4}{\makebox[\linewidth]{\input{Tables/21Sep2023/balance_table_humans_algos_county}}}
+\end{center}
+\end{table} 
+%  \end{adjustbox} 
+    \bottomleft{
+    \hyperlink{categorizinginvestors_example_human}{\beamergotobutton{Back to example (human)}}
+    
+  }
+  \end{frame}
+  
+
+\begin{frame}{Counties with algorithmic investor activity}{}\label{AI_map}
+  \begin{adjustbox}{width = \textwidth, center}
+  \includegraphics{Figures/06Oct2023/investor_activity_13_37_45_47.png}
+  \end{adjustbox}
+        \bottomleft{
+    \hyperlink{robustness}{\beamerreturnbutton{Back to robustness}}
+  }
+\end{frame}
+
+
+\begin{frame}{Difference-in-differences specification in truncated window}{}\label{did_spec_results}
+ \begin{center}
+    {\footnotesize\textsc{Outcome:} Algorithmic Investor Purchasing \\}
+    \adjustbox{width = .9\textwidth, center}{
+    \begin{tabular}{l cccc}
+      \toprule
+      & $Ln(1+Q^{Algo})$ & $\frac{Q^{Algo}}{Q}$ & $Q^{Algo}$ & $\Ind[Q^{Algo}>0]$ \\ 
+    \midrule
+      County Digitization & 0.655* & 0.006** & 58.550** & .201*** \\
+     & (0.356)  & (0.003)  & (29.704) & (.006) \\
+      \hline
+      Year + County FE & $\checkmark$ & $\checkmark$ & $\checkmark$ & $\checkmark$ \\
+      Observations & 1,309 & 1,309 & 1,309 & 1,309 \\
+      \bottomrule
+    \end{tabular}
+    }
+     \end{center}
+         \bottomleft{
+    \hyperlink{robustness}{\beamergotobutton{Back}}
+  }
+\end{frame} 
+
+
+\begin{frame}{Race penalty, by house digitization status }\label{endog_racepenalty}
+     \begin{adjustbox}{max width=.55\textwidth, center}
+\makebox[\linewidth]{\input{Tables/24Jan2025/house_digitxracepenalty}}
+    \end{adjustbox}  
+\end{frame}
+
+
+\begin{frame}{Race penalty, IV analysis}\label{iv_racepenalty}
+     \begin{adjustbox}{max width=.45\textwidth, center}
+\makebox[\linewidth]{\input{Tables/24Jan2025/ivanalysis_prices}}
+    \end{adjustbox}  
+\end{frame}
+
+
+
+
+\begin{frame}{$\hat{g(x)}$ construction}\label{modeldetails}
+\small 
+\begin{enumerate}
+    \item $x_i$ includes house characteristics and census socioeconomics and demographics for each house $i$ in transaction in year $t$ 
+    \item Regularize over each tree (indexed by $k$), based on the number of leaves in the tree $T$ and $||w||^2 $ is the L2 norm on leaf weights, minimizing the objective:
+ \begin{align*} \label{eq:xgboostobj}
+  & \mathcal{L}(\phi)  = \sum_{i}l(\hat{y_i},y_i) +  \gamma T + \frac{1}{2}\lambda||w||^2 
+\end{align*} 
+\end{enumerate}
+\vspace{-2mm}
+\alert{Model performance}
+\begin{enumerate}
+    \item 40\% of the houses in the held-out test set are within 10\% of price 
+    \item 59\% of Zillow Zestimates are within 10\% of sales price \citecolor{[\citep{ZillowZestimate}]}
+\end{enumerate} 
+    \bottomleft{
+    \hyperlink{constructingpred}{\beamergotobutton{Back}} 
+    }
+\end{frame}
+
+\begin{frame}{Mean squared error (MSE) decomposition}\label{msedecomp}
+{\tiny
+\color{black} 
+\vspace{-0.5cm}
+\begin{align*} 
+MSE &= E[(f(x,z) - \hat{g}(x))^2] \\ 
+&= E[(f(x,z) - f^*(x) + f^*(x) - \hat{g}(x))^2] && \text{Add and subtract } f^*(x) \\ 
+&= E[(f(x,z) - f^*(x))^2 + (f^*(x) - \hat{g}(x))^2 + 2(f(x,z) - f^*(x))(f^*(x) - \hat{g}(x))] && \text{Expand square} 
+\end{align*} 
+\vspace{-.6cm}
+\begin{align*} 
+E[(f(x,z) - f^*(x))(f^*(x) - \hat{g}(x))] &= E[E[(f(x,z) - f^*(x))(f^*(x) - \hat{g}(x))|x]] && \text{Law of iterated expectations} \\ 
+&= E[(f^*(x) - \hat{g}(x))E[f(x,z) - f^*(x)|x]] && \text{Factor out terms in }x \\ 
+&= E[(f^*(x) - \hat{g}(x))(f^*(x) - f^*(x))] = 0 && \text{Since } f^*(x) = E[f(x,z)|x] 
+\end{align*} 
+\vspace{-0.5cm}
+\begin{equation*} 
+E[(f(x,z) - \hat{g}(x))^2] = \underbrace{E[(f(x,z) - f^*(x))^2]}_{\text{unmeasured data}} + \underbrace{E[(f^*(x) - \hat{g}(x))^2]}_{\text{estimation error}} 
+\end{equation*} 
+The estimation error further decomposes: 
+\vspace{-0.3cm}
+\begin{align*} 
+E[(f^*(x) - \hat{g}(x))^2] &= (E[\hat{g}(x)] - f^*(x))^2 + E[(\hat{g}(x) - E[\hat{g}(x)])^2] \\ 
+&= \text{Bias}^2 + \text{Variance} 
+\end{align*} 
+}
+    \bottomleft{
+    \hyperlink{constructingpred}{\beamergotobutton{Back}} 
+    }
+\end{frame}
+
+
+%% add notes for this table
+\begin{frame}{Impact of house digitization by predictability}{}\label{shifting_allocation_table}
+\vspace{2mm}
+\begin{table}[]
+    \centering
+\scalebox{.6}{\makebox[\linewidth]{\input{Tables/24Jan2025/allocation_by_median_pred_edited}}}
+\end{table}
+ \bottomleft{
+    \hyperlink{shifting_hi}{\beamergotobutton{Back}}
+ }
+\end{frame}
+
+
+
+
+\begingroup
+\scriptsize
+\begin{frame}{Bayesian Improved Surname Geocoding}{Homeowner race from buyer and seller name}\label{racedetails}
+\begin{itemize}
+\item Bayesian Improved Surname Geocoding \href{https://www.consumerfinance.gov/data-research/research-reports/using-publicly-available-information-to-proxy-for-unidentified-race-and-ethnicity/}{(BISG)} assigning a probability that an individual belongs to a certain group (like Black or Hispanic individuals, for example) given the prevalence of their surname and the racial/ethnic makeup of the census block where they live \citecolor{[\citep{bisg2023}]} 
+\begin{itemize}
+\scriptsize
+    \item Using the 2010 Decennial Census and additional surname files, compute probability any surname belongs to each race/ethnic group
+    \item Compute probability any arbitrary individual in U.S. Census block would belong to each race/ethnicity
+    \item Use Bayes' theorem to combine these two information into a Bayesian posterior probability that takes into account racial/ethnic distribution associated with an individual's surname and their geographical location
+\end{itemize}
+\item Widely used in fair lending analysis \citecolor{[\citet{elliottUsingCensusBureau2009}]}
+\item AUC scores, a measure of classification accuracy, are 0.94 or higher when classifying the race of Hispanic, Black, non-Hispanic White and Asian mortgage borrowers
+\end{itemize}  
+ \bottomleft{
+    \hyperlink{racepenalty_setup}{\beamergotobutton{Back}}
+ }
+\end{frame}
+\endgroup
+
+
+\begin{frame}{Algorithmic investors disproportionately buy minority-owned homes}{}\label{raceeffects_table}
+\vspace{-4mm}
+ \begin{center}
+    {\footnotesize \textsc{Impact of Digitization on the Likelihood of Algorithmic Investor Purchase \\ by Homeowner Race} \\}
+    \begin{adjustbox}{width = 0.8\textwidth}
+    \begin{tabular}{l ccc}
+      \toprule
+   Geography   & Tract (largest) & Block Group & Block (smallest) \\
+    \midrule
+     $\beta^{Minority}$ & 0.0044*** & 0.0042*** & 0.0043***  \\
+      & (0.0007)  & (0.0006)  & (0.0005)  \\
+      $\beta^{White}$ & 0.0022*** & 0.0020*** & 0.0007 *  \\
+      & (0.0011) & (0.0008) & (0.0004)  \\
+      \marktopleft{ex1} $\frac{\beta^{Minority}}{\beta^{White}}$ & 2 & 2 & 6 \markbottomright{ex1}  \\
+      \hline
+      Year + Geo FE & $\checkmark$  & $\checkmark$  & $\checkmark$  \\
+      House Attributes & $\checkmark$  & $\checkmark$  & $\checkmark$ \\
+      Observations & 6,895,957 & 6,890,606 & 6,817,554\\
+      \bottomrule
+    \end{tabular}
+    \end{adjustbox}
+     \end{center}
+ \bottomleft{
+    \hyperlink{raceeffects_figure}{\beamergotobutton{Back}}
+    \hyperlink{racial_disp_by_buyer}{\beamergotobutton{Back to Buyer Analysis}}
+ }
+\end{frame}
+
+
+
+\begin{frame}{Statistical tests of distribution equality: pre- vs post-digitization}\label{racepenaltykstests}
+\begin{table}[htbp]
+\centering
+\label{tab:coef_tests}
+\scalebox{.6}{\makebox[\linewidth]{\input{Tables/24Jan2025/race_penalty_KStests}}}
+\end{table}
+  \bottomleft{
+ \hyperlink{racial_disp_before_after_nop}{\beamergotobutton{Back}}
+ }
+  \end{frame}
+
+
+
+
+\begin{frame}{Race penalty coefficients equality tests}\label{racepenaltycoeffdiffs}
+\begin{table}[htbp]
+\centering
+\label{tab:coef_tests}
+\scalebox{.6}{\makebox[\linewidth]{\input{Tables/24Jan2025/race_penalty_coeftests}}}
+\end{table}
+  \bottomleft{
+ \hyperlink{racial_disp_before_after}{\beamergotobutton{Back}}
+ }
+  \end{frame}
+
+
+  \begin{frame}{Effects of county digitization on racial disparities}\label{racepenaltytable}
+\begin{table}[ht!]
+\label{tab:race_penalty}
+\begin{center}
+\scalebox{.38}{\makebox[\linewidth]{\input{Tables/24Jan2025/race_penalty_regression_table_edited}}}
+\end{center}
+\end{table}
+\hyperlink{racial_disp_before_after}{\beamergotobutton{Back}}
+\hyperlink{racial_disp_by_buyer}{\beamergotobutton{Back to Buyer Analysis}}
+\end{frame}
+
+
+\begin{frame}{Impact of house digitization}\label{digitization_firststage_table}
+\begin{table}[ht!]
+\begin{center}
+\scalebox{.55}{\makebox[\linewidth]{\input{Tables/06Oct2023/first_parcel2_edited}}}
+\end{center}
+\end{table}
+\hyperlink{adversesetup}{\beamergotobutton{back}}
+\end{frame}
+
+
+\begin{frame}{Impact of house digitization by homeowner race}\label{digitization_byrace}
+\begin{table}[ht!]
+\begin{center}
+\scalebox{.55}{\makebox[\linewidth]{\input{Tables/21Sep2023/first_stage_attomparcelbh_all_edited}}}
+\end{center}
+\end{table}
+\hyperlink{racial_disp_by_buyer}{\beamergotobutton{back}}
+\end{frame}
+
+\begin{frame}{Digitization effect is larger for minority-owned homes}{}\label{raceeffects_figure}
+\vspace{2mm}
+\centerline{\includegraphics[width=.5\textwidth]{Figures/20Jan2024/fs_6.png}  }
+     \bottomleft{
+          \hyperlink{racial_disp_by_buyer}{\beamergotobutton{Back}}
+    }
+\end{frame}
+
+
+
+
+
+\begin{frame}{Race penalty, with house images}{}\label{race_penalty_withimages}
+    \centering
+\begin{table}[htbp]
+\centering
+\scalebox{.58}{\makebox[\linewidth]{\input{Tables/16Sep2023/main_racediscount_images}}}
+\parbox{0.8\textwidth}{\justifying \tiny \textit{Note: This table estimates racial disparities in house sale prices between White and minority sellers. House exterior features are controlled for using deep learning-generated image embeddings created by a convolutional neural net. All specifications include house characteristics, year and geography fixed effects, with standard errors clustered at the geographic level. Data from ATTOM, Zillow, and investor websites}}
+    \vspace{1em}
+\end{table}
+     \bottomleft{
+          \hyperlink{deeplearning_main}{\beamergotobutton{Back}}
+    }
+\end{frame} 
+
+
+\begin{frame}{Resale margin table}{}\label{resale_margin_table_full}
+    \centering
+
+\begin{table}[htbp]
+\centering
+\scalebox{.58}{\makebox[\linewidth]{\input{Tables/06Oct2023/ln_resale_margin_all_edited}}}
+\end{table}
+     \bottomleft{
+          \hyperlink{ai_margin}{\beamergotobutton{Back}}
+    }
+\end{frame} 
+
+\begin{frame}{Assessor margin table}{}\label{assessor_margin_table_full}
+    \centering
+
+\begin{table}[htbp]
+\centering
+\scalebox{.58}{\makebox[\linewidth]{\input{Tables/06Oct2023/lntaxmark_margin_all_edited}}}
+\end{table}
+     \bottomleft{
+          \hyperlink{ai_margin}{\beamergotobutton{Back}}
+    }
+\end{frame}
+
+
+
+
+
+\begin{frame}{Owner occupiers responsible for most of the price gap effect}{}\label{decomp_graph}
+    \vspace{5mm}
+    \centering 
+    \centerline{\includegraphics[width=.6\textwidth]{Figures/24Jan2025/decomposition_differences.pdf}}
+     \bottomleft{
+        \hyperlink{racial_disp_by_buyer}{\beamergotobutton{Back}}
+          \hyperlink{decompdetails}{\beamergotobutton{Details}}       
+    }
+\end{frame} 
+
+
+\begin{frame}{Shift share analysis details}\label{decompdetails}
+\vspace{-8mm}
+\footnotesize
+\begin{align*} 
+\footnotesize
+\Delta\beta &= \underbrace{\sum_j (s_{j1} - s_{j0})\beta_{j0}}_{\text{composition effect}} + \underbrace{\sum_j s_{j1}(\beta_{j1} - \beta_{j0})}_{\text{price gap effect}} 
+\end{align*}
+\alert{For each buyer group $j$:}
+\begin{itemize}
+\footnotesize
+   \item Market shares: $s_{j0}$, $s_{j1}$: (\# homes bought by group $j$ in period $t$) / (total homes sold in period $t$)
+   \item Minority price gaps: $\beta_{j0}$, $\beta_{j1}$ 
+\end{itemize}
+\alert{Total Effect Shares:}
+\begin{itemize}
+\footnotesize
+    \item Share due to composition: $\frac{\sum_j (s_{j1} - s_{j0})\beta_{j0}}{\Delta\beta} \times 100\%$
+    \item Share due to price gaps: $\frac{\sum_j s_{j1}(\beta_{j1} - \beta_{j0})}{\Delta\beta} \times 100\%$
+\end{itemize}
+
+\alert{Group-Specific Shares:}
+\begin{itemize}
+\footnotesize
+    \item Group $j$'s share of composition effect: $\frac{(s_{j1} - s_{j0})\beta_{j0}}{\sum_j (s_{j1} - s_{j0})\beta_{j0}} \times 100\%$
+    \item Group $j$'s share of price gap effect: $\frac{s_{j1}(\beta_{j1} - \beta_{j0})}{\sum_j s_{j1}(\beta_{j1} - \beta_{j0})} \times 100\%$
+\end{itemize}
+     \bottomleft{
+          \hyperlink{decomp_discussion}{\beamergotobutton{Back}}       
+    }
+\end{frame}
+
+
+\begin{frame}[label=racediscount_pre_by_geo]{Pre-digitization race penalty by geography}
+\begin{figure}
+    \centering
+    \makebox[\linewidth]{
+    \includegraphics[scale=0.55]{Figures/21Sep2023/race_penalty_preperiod.pdf} 
+}
+\end{figure}
+\begin{itemize}
+    \item Census block: about 33 people or 10-15 households
+    \item Census block group: about 300 households
+\end{itemize} 
+\end{frame}
+
+\begin{frame}{Spillovers to occupied housing values}{}\label{spillovers}
+\begin{itemize}\small
+\item How do sales prices affect occupied home values?
+\begin{itemize}\small
+\item Home values are a key component of household wealth
+\end{itemize}
+\vspace{2mm}
+\item Empirical challenge: Accounting for spatial and observable differences between sold and occupied homes
+\vspace{2mm}
+\item Solution: Propensity score reweighting \smallcitecolor{[\citet{hirano2003}]} \hyperlink{propscorereweighting}{\beamergotobutton{Details}}
+\begin{itemize}
+\item Relies on selection on observables
+\end{itemize}
+\vspace{2mm}
+\item Result: 4\% increase in minority homeowner property values
+\begin{itemize}
+\item Represents 15\% of median Black family wealth and 10\% of Hispanic family wealth \smallcitecolor{\citep{bhuttaDisparitiesWealthRace2020}}
+\end{itemize}
+\end{itemize}
+% stat comes from the 2019 Survey of Consumer Finances
+ \bottomleft{
+    \hyperlink{end_prices}{\beamergotobutton{Back}} 
+    }
+\end{frame} 
+
+\begin{frame}{Propensity score reweighting details}{\small From sold to owned properties}\label{propscorereweighting}
+    \vspace{-2mm}
+    {\footnotesize Reweight treatment effect on sold houses ($S$) ($E[P|S=1]$) to estimate impact on unsold ($U$) houses ($E[P|U=1]$)}
+
+    \scalebox{0.8}{
+    {\parbox{.7\linewidth}{% % scalebox must wrap a container
+    \begin{align*}
+        E[P|U=1] &= \sum_{X} p(X|U=1)E[P|U=1, X] \\[0.15em]
+        &= \sum_{X} \frac{p(U=1|X)p(X)}{p(U=1)}E[P|U=1, X] \\[0.15em]
+        &= \frac{1}{p(U=1)}\sum_{X} p(U=1|X)p(X)E[P|U=1, X]\frac{p(X|S=1)p(S=1)}{p(S=1|X)p(X)} \\[0.15em]
+        &= \frac{p(S=1)}{p(U=1)}\sum_{X} E[P|S=1, X]\frac{p(U=1|X)p(X|S=1)}{p(S=1|X)} \\[0.15em]
+        &= \frac{p(S=1)}{p(U=1)}E\left[\frac{p(U=1|X)}{p(S=1|X)}P\middle|S=1\right] \tag{\theequation}\label{decompeqn}
+    \end{align*} } } }
+\end{frame}
+
+
+\begin{frame}{Constructing a measure of predictability}\label{constructingpred_details}
+{\small
+\begin{enumerate}
+    \item Construct a predictor $\hat{g(x)}$ on observed $(x, y)$:
+        \begin{itemize}
+        \footnotesize
+            \item Use a gradient-boosted trees 
+            \begin{itemize}
+            \scriptsize
+                \item[] An ensemble of trees that minimize prediction error
+            \end{itemize}
+            \item Split pre-digitization data into training/test sets
+                \begin{itemize}
+                 \footnotesize
+                    \item[] $x$: observed housing + census characteristics
+                    \item[] $y$: log(price)
+                \end{itemize}
+            \item 5-fold cross validation to tune hyper parameters (trees, tree depth, learning rate etc) \hyperlink{modeldetails}{\beamergotobutton{Details}} 
+            \item For each house in the test sample ($i$), calculate prediction error $e_i = (y_i - \hat{g}(x_i))$
+        \end{itemize} 
+    \item Group houses in test sample that appear after digitization by their ex-ante predictability: $e_i$
+    \item Assumptions:
+     \footnotesize
+        \begin{itemize}
+        \footnotesize
+            \item True model of house prices: $\text{y} = f(x,z)$
+            \item Comparisons across houses reflect unmeasured data \hyperlink{msedecomp}{\beamergotobutton{Details}} 
+        \end{itemize}
+\end{enumerate}
+}
+    \bottomleft{
+    \hyperlink{conceptframework4}{\beamergotobutton{Back}} 
+    }
+\end{frame}
+
+\begin{frame}{House predictability}{}\label{predictability_dist}
+  \begin{adjustbox}{width = 0.5\textwidth, center}
+    \includegraphics[scale=0.4]{Figures/06Jan2024/s_tr_with_race_pred_actual_predigitholdout_colored_quintile.png}
+  \end{adjustbox}
+    \bottomleft{
+    \hyperlink{shifting_hi}{\beamergotobutton{Back}} 
+    }
+\end{frame}
+
+
+
+\begin{frame}{Predictability analysis coefficients equality tests}\label{predictabilitycoeffdiffs}
+\begin{table}[htbp]
+\centering
+\label{tab:coef_tests}
+\scalebox{.6}{\makebox[\linewidth]{\input{Tables/24Jan2025/pred_diffs_coeftests}}}
+\end{table}
+  \bottomleft{
+ \hyperlink{shifting_hi}{\beamergotobutton{Back}}
+ }
+  \end{frame}
+
+
+\begin{frame}{Houses purchased, by investor type}{Raw data}\label{investor_shares_hi_ai}
+  \begin{adjustbox}{width = 0.73\textwidth, center}
+    \includegraphics{Figures/27Oct2023/lnq_a_h_investor_tofrom_digit_algo2.pdf}
+  \end{adjustbox}
+    \bottomleft{
+    \hyperlink{end_prices}{\beamergotobutton{Back}} 
+    }
+\end{frame}
+
+\end{document}
+

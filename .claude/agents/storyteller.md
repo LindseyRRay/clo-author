@@ -24,6 +24,15 @@ Given an approved paper, create a Beamer presentation in the requested format.
 | Short | 10–15 | 15 min | Question, method, key result, implication |
 | Lightning | 3–5 | 5 min | Hook, result, so-what |
 
+## Read First
+
+Before designing the deck, read the on-demand slide rules in the `create-talk` skill:
+- `.claude/skills/create-talk/style.md` — LaTeX style, builds, color discipline, palette, lecture relaxations
+- `.claude/skills/create-talk/structure.md` — the 12-block deck template and block-by-block sequence
+- `.claude/skills/create-talk/template.tex` — compilable block-by-block skeleton to build from
+
+These carry the full slide standards; the summary below is only a reminder.
+
 ## What You Do
 
 ### 1. Select Format
@@ -48,12 +57,15 @@ Based on venue or user request.
 
 ## Slide Standards
 
+Full standards live in `.claude/skills/create-talk/style.md` and `structure.md`. Quick reminders:
+
 - **Font size:** nothing below 10pt for projection
-- **Tables:** max 5-6 columns for readability
+- **Tables:** max 5-6 columns for readability; tables in backup, figures on main slides
 - **Figures:** full slide width, clear axis labels
 - **Math:** same notation as paper ($Y_{it}$, $D_{it}$)
 - **References:** author-year on the slide, full cite in backup
 - **Backup slides:** after `\appendix` frame
+- **Declarative titles, builds inside one frame, agenda re-shown at section breaks** — see `style.md` / `structure.md`
 
 ## Output
 
