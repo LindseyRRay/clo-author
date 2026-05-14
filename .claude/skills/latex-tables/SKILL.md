@@ -140,6 +140,48 @@ date_str = datetime.now().strftime("%d%b%Y")
 
 ---
 
+## Optional: Project Table Utilities (`table_config.py`)
+
+Some projects keep a small `table_config.py` of shared cell-formatting helpers so
+tables format consistently without redefining helpers inline. A starter ships in
+`templates/table_config.py` — copy it to your project (repo root or `src/`) and
+import it. **If the project has one, always import from it rather than redefining
+formatting inline.**
+
+```python
+import table_config as tc
+
+tc.fmt(val, dec=1)     # "1234.5"   — number with dec decimal places, "--" for NaN
+tc.fmt_sd(val, dec=1)  # "(1234.5)" — standard deviation in parentheses
+tc.fmt_pct(val)        # "63.5%"    — proportion formatted as a percentage
+tc.fmt_int(val)        # "1,234"    — integer with comma separators
+```
+
+**Summary-stats pattern.** Build a dict-of-dicts of pre-formatted strings, convert
+to a DataFrame, then export with the fragment-only convention:
+
+```python
+import pandas as pd
+import table_config as tc
+
+rows = {}
+for label, key, dec in [("Mean headcount", "count", 1),
+                        ("Avg hire rate", "hire_rate", 3)]:
+    rows[label]         = {g: tc.fmt(stats[g][f"{key}_mean"], dec) for g in groups}
+    rows["\\quad (SD)"] = {g: tc.fmt_sd(stats[g][f"{key}_sd"], dec) for g in groups}
+rows["N (firms)"] = {g: tc.fmt_int(stats[g]["N"]) for g in groups}
+
+df = pd.DataFrame(rows).T
+df.columns = col_headers
+export_latex_table(df, output_path)   # see Python Export Pipeline below
+```
+
+This is optional — projects without a `table_config.py` use the export functions
+below directly. Extend `table_config.py` with project-specific decimal conventions
+or an exporter as needed; keep it the single source for formatting helpers.
+
+---
+
 ## Decimal Places by Variable Type
 
 | Variable type | Decimal places | Example |
@@ -450,7 +492,9 @@ def strip_table_wrapper(tex_path: Path) -> None:
 
 ### Step 1: Read CLAUDE.md
 
-Check the project's output path conventions and table naming.
+Check the project's output path conventions and table naming. Also check whether
+the project has a `table_config.py` — if so, import its formatting helpers rather
+than redefining them inline (see "Optional: Project Table Utilities" above).
 
 ### Step 2: Determine Table Type and Style
 
